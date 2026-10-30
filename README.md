@@ -2,6 +2,10 @@
 
 LunaCommander ist ein zweispaltiger Dateimanager für Debian 13 (Trixie) und Raspberry Pi OS auf ARM64.
 
+![LunaCommander](lunacommander.png)
+
+[Github Seite](https://github.com/Angonikro/LunaCommander/)
+
 ## Funktionen
 
 - Zwei Dateifenster mit unabhängiger Navigation.
