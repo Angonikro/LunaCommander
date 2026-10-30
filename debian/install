@@ -1,0 +1,3 @@
+main.py usr/share/lunacommander/
+lunacommander usr/bin/
+debian/lunacommander.desktop usr/share/applications/

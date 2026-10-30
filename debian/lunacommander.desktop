@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=LunaCommander
+Comment=Qt6 dual-pane file manager
+Exec=lunacommander
+Icon=system-file-manager
+Terminal=false
+Type=Application
+Categories=System;FileTools;FileManager;

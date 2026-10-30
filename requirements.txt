@@ -1,0 +1,2 @@
+# Debian 13 packages are installed through apt, not pip.
+# Runtime dependencies: python3-pyside6.qtwidgets, python3-paramiko, xdg-utils, 7zip, unar, unrar-free
