@@ -2,21 +2,121 @@
 """LunaCommander Qt6 edition."""
 import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfile, subprocess, mimetypes
 from pathlib import Path
-from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent
-from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor
+from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
+from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
 from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser)
 
 
+
+
+def archive_icon(filename):
+    """Return a distinctive built-in icon for supported archive formats."""
+    name=str(filename).lower()
+    if name.endswith('.deb'):
+        kind, color = 'DEB', QColor('#b83232')
+    elif name.endswith('.zip'):
+        kind, color = 'ZIP', QColor('#2878c8')
+    elif name.endswith('.rar'):
+        kind, color = 'RAR', QColor('#7852a9')
+    elif name.endswith('.7z'):
+        kind, color = '7z', QColor('#278b67')
+    elif name.endswith(('.tar', '.tar.gz', '.tgz', '.tar.xz', '.txz',
+                        '.tar.bz2', '.tbz2', '.tbz', '.tar.zst', '.tzst')):
+        kind, color = 'TAR', QColor('#bd782c')
+    else:
+        return QIcon()
+
+    pix = QPixmap(28, 28)
+    pix.fill(Qt.transparent)
+    painter = QPainter(pix)
+    painter.setRenderHint(QPainter.Antialiasing, True)
+    painter.setPen(QPen(QColor('#d9e5ef'), 1))
+    if kind == 'RAR':
+        # Three offset archive books with a visible binding strap.
+        painter.setBrush(QColor('#563b83'))
+        painter.drawRoundedRect(4, 4, 19, 7, 2, 2)
+        painter.setBrush(QColor('#8b65b5'))
+        painter.drawRoundedRect(3, 10, 21, 7, 2, 2)
+        painter.setBrush(QColor('#b18ad2'))
+        painter.drawRoundedRect(5, 16, 19, 7, 2, 2)
+        painter.setPen(QPen(QColor('#f5e8c8'), 2))
+        painter.drawLine(10, 4, 10, 23)
+        painter.setPen(QPen(QColor('#38264f'), 1))
+        painter.drawLine(10, 4, 10, 23)
+    else:
+        painter.setBrush(color)
+        painter.drawRoundedRect(4, 2, 20, 24, 3, 3)
+        painter.setPen(QPen(QColor('#ffffff'), 1))
+        painter.drawLine(8, 7, 20, 7)
+        painter.drawLine(8, 10, 20, 10)
+        if kind == 'DEB':
+            # Distinct Debian package: red package face with a clear DEB label.
+            painter.setPen(QPen(QColor('#ffe7e7'), 1))
+            painter.setFont(QFont('Sans', 6, QFont.Bold))
+            painter.drawText(5, 21, 'DEB')
+            painter.setPen(QPen(QColor('#ffd0d0'), 1))
+            painter.drawLine(8, 13, 20, 13)
+        elif kind == 'ZIP':
+            painter.setPen(QPen(QColor('#f5d76e'), 2))
+            painter.drawLine(14, 12, 14, 23)
+            painter.setPen(QPen(QColor('#fff2b8'), 1))
+            for y in (13, 17, 21):
+                painter.drawPoint(14, y)
+        elif kind == '7z':
+            painter.setPen(QPen(QColor('#ffffff'), 1))
+            painter.setFont(QFont('Sans', 7, QFont.Bold))
+            painter.drawText(6, 21, '7z')
+        else:
+            painter.setPen(QPen(QColor('#fff1d7'), 1))
+            painter.setFont(QFont('Sans', 6, QFont.Bold))
+            painter.drawText(6, 21, 'TAR')
+    painter.end()
+    return QIcon(pix)
+
+
+def filetype_icon(filename):
+    """Draw a recognizable, compact icon for common non-image file types."""
+    ext=Path(str(filename).lower()).suffix
+    groups={
+      'audio': {'.mp3','.wav','.flac','.ogg','.opus','.m4a','.aac','.wma','.aiff','.aif','.ape','.alac','.mid','.midi','.amr','.ac3','.dts','.dsf','.wv'},
+      'video': {'.mp4','.mkv','.avi','.mov','.wmv','.webm','.mpeg','.mpg','.m4v','.ts','.mts','.m2ts','.flv','.vob','.ogv','.3gp'},
+      'pdf': {'.pdf'},
+      'document': {'.doc','.docx','.odt','.rtf','.txt','.md','.epub','.mobi'},
+      'sheet': {'.xls','.xlsx','.ods','.csv'},
+      'slide': {'.ppt','.pptx','.odp'},
+      'disc': {'.iso','.img','.cue','.bin'},
+      'code': {'.py','.sh','.desktop','.js','.html','.css','.json','.xml','.yml','.yaml'},
+      'subtitle': {'.srt','.ass','.ssa','.sub','.idx'},
+      'package': {'.rpm','.appimage','.exe'},
+      'torrent': {'.torrent'},
+    }
+    kind=next((k for k,v in groups.items() if ext in v),None)
+    if not kind: return QIcon()
+    colors={'audio':'#2479bd','video':'#8b4bb5','pdf':'#c43b3b','document':'#3978b9','sheet':'#27845b','slide':'#c47732','disc':'#64748b','code':'#397f83','subtitle':'#6574a8','package':'#a45d32','torrent':'#558b45'}
+    labels={'audio':'♪','video':'▶','pdf':'PDF','document':'DOC','sheet':'XLS','slide':'PPT','disc':'ISO','code':'</>','subtitle':'SUB','package':'PKG','torrent':'TOR'}
+    pix=QPixmap(32,32); pix.fill(Qt.transparent)
+    q=QPainter(pix); q.setRenderHint(QPainter.Antialiasing,True)
+    q.setPen(QPen(QColor('#e8edf2'),1)); q.setBrush(QColor(colors[kind])); q.drawRoundedRect(3,2,26,28,4,4)
+    q.setPen(QColor('white'))
+    if kind=='audio':
+        q.setPen(QPen(QColor('white'),2.5)); q.drawLine(18,7,18,22); q.drawLine(18,8,25,6); q.setBrush(QColor('white')); q.drawEllipse(10,19,9,7); q.drawEllipse(18,17,9,7)
+    elif kind=='video':
+        q.setBrush(QColor('white')); q.setPen(Qt.NoPen); q.drawPolygon([QPoint(11,8),QPoint(24,16),QPoint(11,24)])
+    else:
+        q.setFont(QFont('Sans',6 if len(labels[kind])>3 else 8,QFont.Bold)); q.drawText(pix.rect(),Qt.AlignCenter,labels[kind])
+    q.end(); return QIcon(pix)
+
+
 TRANSLATIONS = {
-'de': {'rar_binary': 'RAR-Programm (rar)','rar_auto': 'Automatisch gefunden','rar_browse': 'RAR-Datei auswählen…','rar_missing': 'RAR-Programm nicht gefunden. Bitte in den Einstellungen den Pfad zu rar eintragen.','create_rar': 'RAR-Archiv erstellen','open':'Öffnen','back':'Zurück','up':'Eine Ebene höher','home':'Startordner','name':'Name','type':'Typ','size':'Größe','folder':'Ordner','file':'Datei','ready':'Bereit','queue':'Übertragungswarteschlange','new':'Neu','copy':'Kopieren','move':'Verschieben','delete':'Löschen','rename':'Umbenennen','properties':'Eigenschaften','refresh':'Aktualisieren','archive':'Archiv','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Trennen','search':'Suchen','settings':'Einstellungen','help':'Hilfe','menu':'Menü','view':'Anzeigen','edit':'Bearbeiten','new_folder':'Neuer Ordner','exit':'Beenden','file_menu':'Datei','connection':'Verbindung','view_menu':'Ansicht','theme':'Design wechseln','about':'Über LunaCommander','single':'Einfachklick zum Öffnen','double':'Doppelklick zum Öffnen','open_mode':'Dateien und Ordner öffnen','language':'Sprache','scheme':'Farbschema','dark':'Dunkel','light':'Hell','ok':'OK','cancel':'Abbrechen','connect':'Verbinden','server':'Server','port':'Port','user':'Benutzer','password':'Passwort','open_other':'In anderem Fenster öffnen','move_other':'In anderes Fenster verschieben','cut':'Ausschneiden','paste':'Einfügen','new_file':'Neue Datei','pack':'Packen','create_zip':'ZIP-Archiv erstellen','create_targz':'TAR.GZ-Archiv erstellen','create_tarxz':'TAR.XZ-Archiv erstellen','create_tarbz2':'TAR.BZ2-Archiv erstellen','create_7z':'7z-Archiv erstellen','remember_dirs':'Letzte Ordner beim Start wiederherstellen','default_left':'Standardordner links','default_right':'Standardordner rechts','browse':'Durchsuchen…','start_folders':'Startordner','sort':'Sortieren','sort_by':'Sortieren nach','sort_name':'Name','sort_date':'Datum','sort_size':'Größe','sort_type':'Typ','ascending':'Aufsteigend','descending':'Absteigend'},
-'en': {'rar_binary': 'RAR executable','rar_auto': 'Automatically detected','rar_browse': 'Select RAR executable…','rar_missing': 'RAR executable not found. Set the path to rar in Settings.','create_rar': 'Create RAR archive','open':'Open','back':'Back','up':'Up one level','home':'Home folder','name':'Name','type':'Type','size':'Size','folder':'Folder','file':'File','ready':'Ready','queue':'Transfer queue','new':'New','copy':'Copy','move':'Move','delete':'Delete','rename':'Rename','properties':'Properties','refresh':'Refresh','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnect','search':'Search','settings':'Settings','help':'Help','menu':'Menu','view':'View','edit':'Edit','new_folder':'New folder','exit':'Exit','file_menu':'File','connection':'Connection','view_menu':'View','theme':'Toggle theme','about':'About LunaCommander','single':'Single-click to open','double':'Double-click to open','open_mode':'Open files and folders','language':'Language','scheme':'Color scheme','dark':'Dark','light':'Light','ok':'OK','cancel':'Cancel','connect':'Connect','server':'Server','port':'Port','user':'User','password':'Password','open_other':'Open in other pane','move_other':'Move to other pane','cut':'Cut','paste':'Paste','new_file':'New file','pack':'Create archive','create_zip':'Create ZIP archive','create_targz':'Create TAR.GZ archive','create_tarxz':'Create TAR.XZ archive','create_tarbz2':'Create TAR.BZ2 archive','create_7z':'Create 7z archive','remember_dirs':'Restore last folders at startup','default_left':'Default folder (left)','default_right':'Default folder (right)','browse':'Browse…','start_folders':'Startup folders','sort':'Sort','sort_by':'Sort by','sort_name':'Name','sort_date':'Date','sort_size':'Size','sort_type':'Type','ascending':'Ascending','descending':'Descending'},
-'fr': {'rar_binary': 'Exécutable RAR','rar_auto': 'Détecté automatiquement','rar_browse': 'Choisir l’exécutable RAR…','rar_missing': 'Exécutable RAR introuvable. Indiquez son chemin dans les paramètres.','create_rar': 'Créer une archive RAR','open':'Ouvrir','back':'Retour','up':'Niveau supérieur','home':'Dossier personnel','name':'Nom','type':'Type','size':'Taille','folder':'Dossier','file':'Fichier','ready':'Prêt','queue':'File de transferts','new':'Nouveau','copy':'Copier','move':'Déplacer','delete':'Supprimer','rename':'Renommer','properties':'Propriétés','refresh':'Actualiser','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Déconnecter','search':'Rechercher','settings':'Paramètres','help':'Aide','menu':'Menu','view':'Afficher','edit':'Modifier','new_folder':'Nouveau dossier','exit':'Quitter','file_menu':'Fichier','connection':'Connexion','view_menu':'Affichage','theme':'Changer le thème','about':'À propos de LunaCommander','single':'Clic simple pour ouvrir','double':'Double-clic pour ouvrir','open_mode':'Ouvrir fichiers et dossiers','language':'Langue','scheme':'Thème de couleurs','dark':'Sombre','light':'Clair','ok':'OK','cancel':'Annuler','connect':'Connecter','server':'Serveur','port':'Port','user':'Utilisateur','password':'Mot de passe','open_other':'Ouvrir dans l’autre panneau','move_other':'Déplacer vers l’autre panneau','cut':'Couper','paste':'Coller','new_file':'Nouveau fichier','pack':'Compresser','create_zip':'Créer une archive ZIP','create_targz':'Créer une archive TAR.GZ','create_tarxz':'Créer une archive TAR.XZ','create_tarbz2':'Créer une archive TAR.BZ2','create_7z':'Créer une archive 7z','remember_dirs':'Restaurer les derniers dossiers au démarrage','default_left':'Dossier par défaut (gauche)','default_right':'Dossier par défaut (droite)','browse':'Parcourir…','start_folders':'Dossiers de démarrage','sort':'Trier','sort_by':'Trier par','sort_name':'Nom','sort_date':'Date','sort_size':'Taille','sort_type':'Type','ascending':'Croissant','descending':'Décroissant'},
-'it': {'rar_binary': 'Eseguibile RAR','rar_auto': 'Rilevato automaticamente','rar_browse': 'Seleziona eseguibile RAR…','rar_missing': 'Eseguibile RAR non trovato. Imposta il percorso nelle impostazioni.','create_rar': 'Crea archivio RAR','open':'Apri','back':'Indietro','up':'Livello superiore','home':'Cartella iniziale','name':'Nome','type':'Tipo','size':'Dimensione','folder':'Cartella','file':'File','ready':'Pronto','queue':'Coda trasferimenti','new':'Nuovo','copy':'Copia','move':'Sposta','delete':'Elimina','rename':'Rinomina','properties':'Proprietà','refresh':'Aggiorna','archive':'Archivio','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnetti','search':'Cerca','settings':'Impostazioni','help':'Aiuto','menu':'Menu','view':'Visualizza','edit':'Modifica','new_folder':'Nuova cartella','exit':'Esci','file_menu':'File','connection':'Connessione','view_menu':'Visualizza','theme':'Cambia tema','about':'Informazioni su LunaCommander','single':'Clic singolo per aprire','double':'Doppio clic per aprire','open_mode':'Apri file e cartelle','language':'Lingua','scheme':'Schema colori','dark':'Scuro','light':'Chiaro','ok':'OK','cancel':'Annulla','connect':'Connetti','server':'Server','port':'Porta','user':'Utente','password':'Password','open_other':'Apri nell’altro pannello','move_other':'Sposta nell’altro pannello','cut':'Taglia','paste':'Incolla','new_file':'Nuovo file','pack':'Crea archivio','create_zip':'Crea archivio ZIP','create_targz':'Crea archivio TAR.GZ','create_tarxz':'Crea archivio TAR.XZ','create_tarbz2':'Crea archivio TAR.BZ2','create_7z':'Crea archivio 7z','remember_dirs':'Ripristina le ultime cartelle all’avvio','default_left':'Cartella predefinita (sinistra)','default_right':'Cartella predefinita (destra)','browse':'Sfoglia…','start_folders':'Cartelle iniziali','sort':'Ordina','sort_by':'Ordina per','sort_name':'Nome','sort_date':'Data','sort_size':'Dimensione','sort_type':'Tipo','ascending':'Crescente','descending':'Decrescente'},
-'nl': {'rar_binary': 'RAR-programma','rar_auto': 'Automatisch gevonden','rar_browse': 'RAR-programma selecteren…','rar_missing': 'RAR-programma niet gevonden. Stel het pad in bij Instellingen.','create_rar': 'RAR-archief maken','open':'Openen','back':'Terug','up':'Een niveau omhoog','home':'Thuismap','name':'Naam','type':'Type','size':'Grootte','folder':'Map','file':'Bestand','ready':'Gereed','queue':'Overdrachtwachtrij','new':'Nieuw','copy':'Kopiëren','move':'Verplaatsen','delete':'Verwijderen','rename':'Hernoemen','properties':'Eigenschappen','refresh':'Vernieuwen','archive':'Archief','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Verbinding verbreken','search':'Zoeken','settings':'Instellingen','help':'Help','menu':'Menu','view':'Weergeven','edit':'Bewerken','new_folder':'Nieuwe map','exit':'Afsluiten','file_menu':'Bestand','connection':'Verbinding','view_menu':'Beeld','theme':'Thema wisselen','about':'Over LunaCommander','single':'Enkele klik om te openen','double':'Dubbelklik om te openen','open_mode':'Bestanden en mappen openen','language':'Taal','scheme':'Kleurenschema','dark':'Donker','light':'Licht','ok':'OK','cancel':'Annuleren','connect':'Verbinden','server':'Server','port':'Poort','user':'Gebruiker','password':'Wachtwoord','open_other':'Openen in ander venster','move_other':'Verplaatsen naar ander venster','cut':'Knippen','paste':'Plakken','new_file':'Nieuw bestand','pack':'Archiveren','create_zip':'ZIP-archief maken','create_targz':'TAR.GZ-archief maken','create_tarxz':'TAR.XZ-archief maken','create_tarbz2':'TAR.BZ2-archief maken','create_7z':'7z-archief maken','remember_dirs':'Vorige mappen herstellen bij opstarten','default_left':'Standaardmap (links)','default_right':'Standaardmap (rechts)','browse':'Bladeren…','start_folders':'Startmappen','sort':'Sorteren','sort_by':'Sorteren op','sort_name':'Naam','sort_date':'Datum','sort_size':'Grootte','sort_type':'Type','ascending':'Oplopend','descending':'Aflopend'}
+'de': {'open_with':'Öffnen mit','choose_application':'Andere Anwendung auswählen…','application_filter':'Programme','app_launch_error':'Die ausgewählte Anwendung konnte nicht gestartet werden.','rar_binary': 'RAR-Programm (rar)','rar_auto': 'Automatisch gefunden','rar_browse': 'RAR-Datei auswählen…','rar_missing': 'RAR-Programm nicht gefunden. Bitte in den Einstellungen den Pfad zu rar eintragen.','create_rar': 'RAR-Archiv erstellen','open':'Öffnen','back':'Zurück','up':'Eine Ebene höher','home':'Startordner','name':'Name','type':'Typ','size':'Größe','folder':'Ordner','file':'Datei','ready':'Bereit','queue':'Übertragungswarteschlange','new':'Neu','copy':'Kopieren','move':'Verschieben','delete':'Löschen','rename':'Umbenennen','properties':'Eigenschaften','refresh':'Aktualisieren','archive':'Archiv','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Trennen','search':'Suchen','settings':'Einstellungen','help':'Hilfe','menu':'Menü','view':'Anzeigen','edit':'Bearbeiten','new_folder':'Neuer Ordner','exit':'Beenden','file_menu':'Datei','connection':'Verbindung','view_menu':'Ansicht','theme':'Design wechseln','about':'Über LunaCommander','single':'Einfachklick zum Öffnen','double':'Doppelklick zum Öffnen','open_mode':'Dateien und Ordner öffnen','language':'Sprache','scheme':'Farbschema','dark':'Dunkel','light':'Hell','ok':'OK','cancel':'Abbrechen','connect':'Verbinden','server':'Server','port':'Port','user':'Benutzer','password':'Passwort','open_other':'In anderem Fenster öffnen','move_other':'In anderes Fenster verschieben','cut':'Ausschneiden','paste':'Einfügen','new_file':'Neue Datei','pack':'Packen','create_zip':'ZIP-Archiv erstellen','create_targz':'TAR.GZ-Archiv erstellen','create_tarxz':'TAR.XZ-Archiv erstellen','create_tarbz2':'TAR.BZ2-Archiv erstellen','create_7z':'7z-Archiv erstellen','remember_dirs':'Letzte Ordner beim Start wiederherstellen','default_left':'Standardordner links','default_right':'Standardordner rechts','browse':'Durchsuchen…','start_folders':'Startordner','show_hidden':'Versteckte Dateien und Ordner anzeigen','photo_preview':'Bild-Miniaturansichten in der Dateiliste anzeigen','no_photo_preview':'Kein Foto ausgewählt','sort':'Sortieren','sort_by':'Sortieren nach','sort_name':'Name','sort_date':'Datum','sort_size':'Größe','sort_type':'Typ','ascending':'Aufsteigend','descending':'Absteigend'},
+'en': {'open_with':'Open with','choose_application':'Choose another application…','application_filter':'Applications','app_launch_error':'The selected application could not be started.','rar_binary': 'RAR executable','rar_auto': 'Automatically detected','rar_browse': 'Select RAR executable…','rar_missing': 'RAR executable not found. Set the path to rar in Settings.','create_rar': 'Create RAR archive','open':'Open','back':'Back','up':'Up one level','home':'Home folder','name':'Name','type':'Type','size':'Size','folder':'Folder','file':'File','ready':'Ready','queue':'Transfer queue','new':'New','copy':'Copy','move':'Move','delete':'Delete','rename':'Rename','properties':'Properties','refresh':'Refresh','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnect','search':'Search','settings':'Settings','help':'Help','menu':'Menu','view':'View','edit':'Edit','new_folder':'New folder','exit':'Exit','file_menu':'File','connection':'Connection','view_menu':'View','theme':'Toggle theme','about':'About LunaCommander','single':'Single-click to open','double':'Double-click to open','open_mode':'Open files and folders','language':'Language','scheme':'Color scheme','dark':'Dark','light':'Light','ok':'OK','cancel':'Cancel','connect':'Connect','server':'Server','port':'Port','user':'User','password':'Password','open_other':'Open in other pane','move_other':'Move to other pane','cut':'Cut','paste':'Paste','new_file':'New file','pack':'Create archive','create_zip':'Create ZIP archive','create_targz':'Create TAR.GZ archive','create_tarxz':'Create TAR.XZ archive','create_tarbz2':'Create TAR.BZ2 archive','create_7z':'Create 7z archive','remember_dirs':'Restore last folders at startup','default_left':'Default folder (left)','default_right':'Default folder (right)','browse':'Browse…','start_folders':'Startup folders','show_hidden':'Show hidden files and folders','photo_preview':'Show image thumbnails in the file list','no_photo_preview':'No photo selected','sort':'Sort','sort_by':'Sort by','sort_name':'Name','sort_date':'Date','sort_size':'Size','sort_type':'Type','ascending':'Ascending','descending':'Descending'},
+'fr': {'open_with':'Ouvrir avec','choose_application':'Choisir une autre application…','application_filter':'Applications','app_launch_error':'Impossible de démarrer l’application sélectionnée.','rar_binary': 'Exécutable RAR','rar_auto': 'Détecté automatiquement','rar_browse': 'Choisir l’exécutable RAR…','rar_missing': 'Exécutable RAR introuvable. Indiquez son chemin dans les paramètres.','create_rar': 'Créer une archive RAR','open':'Ouvrir','back':'Retour','up':'Niveau supérieur','home':'Dossier personnel','name':'Nom','type':'Type','size':'Taille','folder':'Dossier','file':'Fichier','ready':'Prêt','queue':'File de transferts','new':'Nouveau','copy':'Copier','move':'Déplacer','delete':'Supprimer','rename':'Renommer','properties':'Propriétés','refresh':'Actualiser','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Déconnecter','search':'Rechercher','settings':'Paramètres','help':'Aide','menu':'Menu','view':'Afficher','edit':'Modifier','new_folder':'Nouveau dossier','exit':'Quitter','file_menu':'Fichier','connection':'Connexion','view_menu':'Affichage','theme':'Changer le thème','about':'À propos de LunaCommander','single':'Clic simple pour ouvrir','double':'Double-clic pour ouvrir','open_mode':'Ouvrir fichiers et dossiers','language':'Langue','scheme':'Thème de couleurs','dark':'Sombre','light':'Clair','ok':'OK','cancel':'Annuler','connect':'Connecter','server':'Serveur','port':'Port','user':'Utilisateur','password':'Mot de passe','open_other':'Ouvrir dans l’autre panneau','move_other':'Déplacer vers l’autre panneau','cut':'Couper','paste':'Coller','new_file':'Nouveau fichier','pack':'Compresser','create_zip':'Créer une archive ZIP','create_targz':'Créer une archive TAR.GZ','create_tarxz':'Créer une archive TAR.XZ','create_tarbz2':'Créer une archive TAR.BZ2','create_7z':'Créer une archive 7z','remember_dirs':'Restaurer les derniers dossiers au démarrage','default_left':'Dossier par défaut (gauche)','default_right':'Dossier par défaut (droite)','browse':'Parcourir…','start_folders':'Dossiers de démarrage','show_hidden':'Afficher les fichiers et dossiers cachés','photo_preview':'Afficher les miniatures dans la liste des fichiers','no_photo_preview':'Aucune photo sélectionnée','sort':'Trier','sort_by':'Trier par','sort_name':'Nom','sort_date':'Date','sort_size':'Taille','sort_type':'Type','ascending':'Croissant','descending':'Décroissant'},
+'it': {'open_with':'Apri con','choose_application':'Scegli un’altra applicazione…','application_filter':'Applicazioni','app_launch_error':'Impossibile avviare l’applicazione selezionata.','rar_binary': 'Eseguibile RAR','rar_auto': 'Rilevato automaticamente','rar_browse': 'Seleziona eseguibile RAR…','rar_missing': 'Eseguibile RAR non trovato. Imposta il percorso nelle impostazioni.','create_rar': 'Crea archivio RAR','open':'Apri','back':'Indietro','up':'Livello superiore','home':'Cartella iniziale','name':'Nome','type':'Tipo','size':'Dimensione','folder':'Cartella','file':'File','ready':'Pronto','queue':'Coda trasferimenti','new':'Nuovo','copy':'Copia','move':'Sposta','delete':'Elimina','rename':'Rinomina','properties':'Proprietà','refresh':'Aggiorna','archive':'Archivio','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnetti','search':'Cerca','settings':'Impostazioni','help':'Aiuto','menu':'Menu','view':'Visualizza','edit':'Modifica','new_folder':'Nuova cartella','exit':'Esci','file_menu':'File','connection':'Connessione','view_menu':'Visualizza','theme':'Cambia tema','about':'Informazioni su LunaCommander','single':'Clic singolo per aprire','double':'Doppio clic per aprire','open_mode':'Apri file e cartelle','language':'Lingua','scheme':'Schema colori','dark':'Scuro','light':'Chiaro','ok':'OK','cancel':'Annulla','connect':'Connetti','server':'Server','port':'Porta','user':'Utente','password':'Password','open_other':'Apri nell’altro pannello','move_other':'Sposta nell’altro pannello','cut':'Taglia','paste':'Incolla','new_file':'Nuovo file','pack':'Crea archivio','create_zip':'Crea archivio ZIP','create_targz':'Crea archivio TAR.GZ','create_tarxz':'Crea archivio TAR.XZ','create_tarbz2':'Crea archivio TAR.BZ2','create_7z':'Crea archivio 7z','remember_dirs':'Ripristina le ultime cartelle all’avvio','default_left':'Cartella predefinita (sinistra)','default_right':'Cartella predefinita (destra)','browse':'Sfoglia…','start_folders':'Cartelle iniziali','show_hidden':'Mostra file e cartelle nascosti','photo_preview':'Mostra miniature delle immagini nell’elenco file','no_photo_preview':'Nessuna foto selezionata','sort':'Ordina','sort_by':'Ordina per','sort_name':'Nome','sort_date':'Data','sort_size':'Dimensione','sort_type':'Tipo','ascending':'Crescente','descending':'Decrescente'},
+'nl': {'open_with':'Openen met','choose_application':'Andere toepassing kiezen…','application_filter':'Toepassingen','app_launch_error':'De geselecteerde toepassing kon niet worden gestart.','rar_binary': 'RAR-programma','rar_auto': 'Automatisch gevonden','rar_browse': 'RAR-programma selecteren…','rar_missing': 'RAR-programma niet gevonden. Stel het pad in bij Instellingen.','create_rar': 'RAR-archief maken','open':'Openen','back':'Terug','up':'Een niveau omhoog','home':'Thuismap','name':'Naam','type':'Type','size':'Grootte','folder':'Map','file':'Bestand','ready':'Gereed','queue':'Overdrachtwachtrij','new':'Nieuw','copy':'Kopiëren','move':'Verplaatsen','delete':'Verwijderen','rename':'Hernoemen','properties':'Eigenschappen','refresh':'Vernieuwen','archive':'Archief','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Verbinding verbreken','search':'Zoeken','settings':'Instellingen','help':'Help','menu':'Menu','view':'Weergeven','edit':'Bewerken','new_folder':'Nieuwe map','exit':'Afsluiten','file_menu':'Bestand','connection':'Verbinding','view_menu':'Beeld','theme':'Thema wisselen','about':'Over LunaCommander','single':'Enkele klik om te openen','double':'Dubbelklik om te openen','open_mode':'Bestanden en mappen openen','language':'Taal','scheme':'Kleurenschema','dark':'Donker','light':'Licht','ok':'OK','cancel':'Annuleren','connect':'Verbinden','server':'Server','port':'Poort','user':'Gebruiker','password':'Wachtwoord','open_other':'Openen in ander venster','move_other':'Verplaatsen naar ander venster','cut':'Knippen','paste':'Plakken','new_file':'Nieuw bestand','pack':'Archiveren','create_zip':'ZIP-archief maken','create_targz':'TAR.GZ-archief maken','create_tarxz':'TAR.XZ-archief maken','create_tarbz2':'TAR.BZ2-archief maken','create_7z':'7z-archief maken','remember_dirs':'Vorige mappen herstellen bij opstarten','default_left':'Standaardmap (links)','default_right':'Standaardmap (rechts)','browse':'Bladeren…','start_folders':'Startmappen','show_hidden':'Verborgen bestanden en mappen tonen','photo_preview':'Afbeeldingsminiaturen in de bestandslijst tonen','no_photo_preview':'Geen foto geselecteerd','sort':'Sorteren','sort_by':'Sorteren op','sort_name':'Naam','sort_date':'Datum','sort_size':'Grootte','sort_type':'Type','ascending':'Oplopend','descending':'Aflopend'}
 }
 
 # Extended translations for every visible dialog, prompt and archive action.
-for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.43 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.43 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.43 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.43 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.43 – Qt6', 'about_help': 'Help'}}.items():
+for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.55 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.55 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.55 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.55 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.55 – Qt6', 'about_help': 'Help'}}.items():
     TRANSLATIONS[_lang].update(_entries)
 
 for _lang, _entries in {'de': {'archive_label': 'Archiv', 'insert': 'Einfügen', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'archive_entries': 'Einträge', 'connected': 'verbunden', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'moved': 'Verschoben: ', 'copied': 'Kopiert: '}, 'en': {'archive_label': 'Archive', 'insert': 'Paste', 'archive_duplicate': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'select_entry': 'Please select a file or folder in the active pane first.', 'archive_entries': 'entries', 'connected': 'connected', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'moved': 'Moved: ', 'copied': 'Copied: '}, 'fr': {'archive_label': 'Archive', 'insert': 'Coller', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'archive_entries': 'entrées', 'connected': 'connecté', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: '}, 'it': {'archive_label': 'Archivio', 'insert': 'Incolla', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'archive_entries': 'elementi', 'connected': 'connesso', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'moved': 'Spostato: ', 'copied': 'Copiato: '}, 'nl': {'archive_label': 'Archief', 'insert': 'Plakken', 'archive_duplicate': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'archive_entries': 'items', 'connected': 'verbonden', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: '}}.items():
@@ -79,9 +179,42 @@ class Remote:
 HELP_CONTENT = {'de': '<h1>LunaCommander – Hilfe</h1><p>Dieser Dateimanager zeigt zwei Verzeichnisse nebeneinander. So kannst du Dateien zwischen beiden Fenstern verwalten.</p>\n<h2>1. Die zwei Dateifenster</h2><ul><li>Links und rechts wird jeweils ein eigener Ordner angezeigt.</li><li>Klicke auf einen Ordner, um ihn zu öffnen. Mit „..“ gehst du eine Ebene zurück.</li><li>Über das Pfadfeld kannst du einen Pfad direkt eingeben. Die Schaltflächen daneben dienen zum Zurückgehen, eine Ebene nach oben und zum Home-Ordner.</li><li>Das aktive Fenster ist die Quelle für Dateiaktionen; das andere Fenster ist häufig das Ziel.</li></ul>\n<h2>2. Dateien und Ordner markieren</h2><ul><li>Einfacher Linksklick markiert einen Eintrag.</li><li><b>STRG + Linksklick</b>: einzelne Einträge zur Auswahl hinzufügen oder aus ihr entfernen.</li><li><b>SHIFT + Linksklick</b>: einen zusammenhängenden Bereich auswählen.</li><li>Mehrere markierte Einträge können gemeinsam über das Archiv-Menü gepackt werden. Beim Rechtsklick auf einen bereits markierten Eintrag bleibt die Auswahl erhalten.</li></ul>\n<h2>3. Dateien verwalten</h2><ul><li><b>Kopieren / Verschieben</b>: überträgt den ausgewählten Eintrag in das jeweils andere Dateifenster.</li><li><b>Ausschneiden, Kopieren, Einfügen</b>: verwendet die Zwischenablage innerhalb des Dateimanagers.</li><li><b>Neu</b>: erstellt eine Datei oder einen Ordner.</li><li><b>Umbenennen</b>: benennt den ausgewählten Eintrag um.</li><li><b>Löschen</b>: entfernt den ausgewählten Eintrag nach Rückfrage.</li><li><b>Eigenschaften</b>: zeigt Informationen zum ausgewählten Eintrag.</li><li><b>Suchen</b>: sucht im aktiven lokalen Ordner.</li></ul>\n<h2>4. Archive erstellen und entpacken</h2><ul><li>Über <b>Archiv → Packen</b> kannst du ZIP, RAR, 7z, TAR, TAR.GZ, TAR.XZ oder TAR.BZ2 erstellen.</li><li>Markiere vor dem Packen mehrere Dateien oder Ordner, um sie gemeinsam zu archivieren.</li><li>Zum Erstellen werden die externen Programme verwendet, deren Pfade unter <b>Einstellungen → Archivprogramme</b> hinterlegt sind.</li><li>TAR, TAR.GZ, TAR.XZ und TAR.BZ2 verwenden gemeinsam den Programmeintrag „TAR“.</li><li>Über „Hier entpacken“ oder „In Ordner entpacken“ kannst du unterstützte Archive extrahieren.</li><li>Ein unterstütztes Archiv kann durch Öffnen im Dateifenster durchsucht werden.</li></ul>\n<h2>5. FTP, FTPS und SFTP</h2><ul><li>Wähle FTP, FTPS oder SFTP in der oberen Leiste, um eine Serververbindung einzurichten.</li><li>Gib Serveradresse, Port und – falls erforderlich – Benutzername und Passwort ein.</li><li>Nach erfolgreicher Verbindung kannst du entfernte Dateien im aktiven Fenster durchsuchen und Dateien übertragen.</li><li>Mit „Trennen“ beendest du die Verbindung.</li></ul>\n<h2>6. Einstellungen</h2><ul><li><b>Sprache</b>: Deutsch, Englisch, Französisch, Italienisch oder Niederländisch.</li><li><b>Farbschema</b>: dunkles oder helles Design.</li><li><b>Öffnen</b>: Einfach- oder Doppelklick zum Öffnen von Dateien und Ordnern.</li><li><b>Startordner</b>: Standardordner für das linke und rechte Fenster festlegen und auf Wunsch die zuletzt verwendeten Ordner wiederherstellen.</li><li><b>Archivprogramme</b>: ausführbare Programme automatisch erkennen lassen oder den Programmpfad manuell auswählen. Der Status zeigt, ob die Datei ausführbar vorhanden ist.</li></ul>\n<h2>7. Funktionstasten</h2><ul><li><b>F1</b> Hilfe</li><li><b>F2</b> Menü</li><li><b>F3</b> Anzeigen / ausgewählten Eintrag öffnen</li><li><b>F4</b> Bearbeiten / ausgewählten Eintrag öffnen</li><li><b>F5</b> In das andere Fenster kopieren</li><li><b>F6</b> In das andere Fenster verschieben</li><li><b>F7</b> Neuen Ordner erstellen</li><li><b>F8</b> Löschen</li><li><b>F9</b> Einstellungen</li><li><b>F10</b> LunaCommander beenden</li></ul>\n<p><i>Tipp:</i> Wenn eine Aktion nicht verfügbar ist, prüfe zuerst, ob im aktiven Dateifenster ein passender Eintrag ausgewählt ist.</p>', 'en': "<h1>LunaCommander – Help</h1><p>This file manager displays two folders side by side, making it easy to manage and transfer files between them.</p>\n<h2>1. The two file panes</h2><ul><li>The left and right panes each display a separate folder.</li><li>Open a folder by clicking it. Select “..” to go up one level.</li><li>Type a path directly into the path field. The nearby buttons navigate back, up one level, or to the home folder.</li><li>The active pane is the source for file operations; the other pane is commonly the destination.</li></ul>\n<h2>2. Selecting files and folders</h2><ul><li>A normal left-click selects an item.</li><li><b>CTRL + left-click</b>: add an individual item to the selection or remove it.</li><li><b>SHIFT + left-click</b>: select a continuous range.</li><li>Multiple selected items can be archived together. Right-clicking an already selected item keeps the current selection.</li></ul>\n<h2>3. Managing files</h2><ul><li><b>Copy / Move</b>: transfer the selected item to the other file pane.</li><li><b>Cut, Copy, Paste</b>: use the file manager's clipboard.</li><li><b>New</b>: create a file or folder.</li><li><b>Rename</b>: rename the selected item.</li><li><b>Delete</b>: remove the selected item after confirmation.</li><li><b>Properties</b>: display information about the selected item.</li><li><b>Search</b>: search the active local folder.</li></ul>\n<h2>4. Creating and extracting archives</h2><ul><li>Use <b>Archive → Pack</b> to create ZIP, RAR, 7z, TAR, TAR.GZ, TAR.XZ, or TAR.BZ2 archives.</li><li>Select multiple files or folders first to put them into one archive.</li><li>Archive creation uses the external programs configured under <b>Settings → Archive programs</b>.</li><li>TAR, TAR.GZ, TAR.XZ, and TAR.BZ2 share one “TAR” program entry.</li><li>Use “Extract here” or “Extract to folder” to extract supported archives.</li><li>Open a supported archive in the file pane to browse its contents.</li></ul>\n<h2>5. FTP, FTPS, and SFTP</h2><ul><li>Choose FTP, FTPS, or SFTP in the top bar to configure a server connection.</li><li>Enter the server address, port, and username and password when required.</li><li>After connecting, browse remote files in the active pane and transfer files.</li><li>Choose “Disconnect” to close the connection.</li></ul>\n<h2>6. Settings</h2><ul><li><b>Language</b>: German, English, French, Italian, or Dutch.</li><li><b>Color scheme</b>: dark or light theme.</li><li><b>Open behavior</b>: single- or double-click to open files and folders.</li><li><b>Startup folders</b>: choose the default folder for each pane and optionally restore the last folders on startup.</li><li><b>Archive programs</b>: detect executables automatically or browse to a program path. The status indicates whether the selected file exists and is executable.</li></ul>\n<h2>7. Function keys</h2><ul><li><b>F1</b> Help</li><li><b>F2</b> Menu</li><li><b>F3</b> View / open selected item</li><li><b>F4</b> Edit / open selected item</li><li><b>F5</b> Copy to the other pane</li><li><b>F6</b> Move to the other pane</li><li><b>F7</b> Create a new folder</li><li><b>F8</b> Delete</li><li><b>F9</b> Settings</li><li><b>F10</b> Exit LunaCommander</li></ul>\n<p><i>Tip:</i> If an action is unavailable, first check that a suitable item is selected in the active file pane.</p>", 'fr': '<h1>LunaCommander – Aide</h1><p>Ce gestionnaire de fichiers affiche deux dossiers côte à côte pour faciliter la gestion et le transfert des fichiers.</p>\n<h2>1. Les deux panneaux</h2><ul><li>Les panneaux gauche et droit affichent chacun un dossier différent.</li><li>Cliquez sur un dossier pour l’ouvrir. Choisissez « .. » pour remonter d’un niveau.</li><li>Saisissez directement un chemin dans le champ correspondant. Les boutons voisins permettent de revenir en arrière, de monter d’un niveau ou d’ouvrir le dossier personnel.</li><li>Le panneau actif sert de source pour les opérations ; l’autre panneau sert généralement de destination.</li></ul>\n<h2>2. Sélectionner des fichiers et dossiers</h2><ul><li>Un clic gauche normal sélectionne un élément.</li><li><b>CTRL + clic gauche</b> : ajouter un élément à la sélection ou le désélectionner.</li><li><b>MAJ + clic gauche</b> : sélectionner une plage continue.</li><li>Plusieurs éléments sélectionnés peuvent être archivés ensemble. Un clic droit sur un élément déjà sélectionné conserve la sélection.</li></ul>\n<h2>3. Gérer les fichiers</h2><ul><li><b>Copier / Déplacer</b> : transférer l’élément sélectionné vers l’autre panneau.</li><li><b>Couper, Copier, Coller</b> : utiliser le presse-papiers du gestionnaire.</li><li><b>Nouveau</b> : créer un fichier ou un dossier.</li><li><b>Renommer</b> : renommer l’élément sélectionné.</li><li><b>Supprimer</b> : supprimer l’élément après confirmation.</li><li><b>Propriétés</b> : afficher les informations de l’élément sélectionné.</li><li><b>Rechercher</b> : rechercher dans le dossier local actif.</li></ul>\n<h2>4. Créer et extraire des archives</h2><ul><li>Utilisez <b>Archive → Compresser</b> pour créer des archives ZIP, RAR, 7z, TAR, TAR.GZ, TAR.XZ ou TAR.BZ2.</li><li>Sélectionnez plusieurs fichiers ou dossiers avant de les regrouper dans une archive.</li><li>La création utilise les programmes externes configurés dans <b>Paramètres → Programmes d’archivage</b>.</li><li>TAR, TAR.GZ, TAR.XZ et TAR.BZ2 partagent une seule entrée de programme « TAR ».</li><li>Utilisez « Extraire ici » ou « Extraire vers un dossier » pour extraire les archives prises en charge.</li><li>Ouvrez une archive prise en charge dans le panneau pour parcourir son contenu.</li></ul>\n<h2>5. FTP, FTPS et SFTP</h2><ul><li>Choisissez FTP, FTPS ou SFTP dans la barre supérieure pour configurer une connexion serveur.</li><li>Saisissez l’adresse du serveur, le port et, si nécessaire, le nom d’utilisateur et le mot de passe.</li><li>Après la connexion, parcourez les fichiers distants dans le panneau actif et transférez-les.</li><li>Choisissez « Déconnecter » pour fermer la connexion.</li></ul>\n<h2>6. Paramètres</h2><ul><li><b>Langue</b> : allemand, anglais, français, italien ou néerlandais.</li><li><b>Thème</b> : sombre ou clair.</li><li><b>Ouverture</b> : simple ou double clic pour ouvrir les fichiers et dossiers.</li><li><b>Dossiers de démarrage</b> : définir le dossier par défaut de chaque panneau et restaurer éventuellement les derniers dossiers utilisés.</li><li><b>Programmes d’archivage</b> : détecter automatiquement les exécutables ou choisir leur chemin. L’état indique si le fichier existe et est exécutable.</li></ul>\n<h2>7. Touches de fonction</h2><ul><li><b>F1</b> Aide</li><li><b>F2</b> Menu</li><li><b>F3</b> Afficher / ouvrir l’élément sélectionné</li><li><b>F4</b> Modifier / ouvrir l’élément sélectionné</li><li><b>F5</b> Copier vers l’autre panneau</li><li><b>F6</b> Déplacer vers l’autre panneau</li><li><b>F7</b> Créer un dossier</li><li><b>F8</b> Supprimer</li><li><b>F9</b> Paramètres</li><li><b>F10</b> Quitter LunaCommander</li></ul>\n<p><i>Conseil :</i> Si une action n’est pas disponible, vérifiez qu’un élément approprié est sélectionné dans le panneau actif.</p>', 'it': '<h1>LunaCommander – Guida</h1><p>Questo file manager mostra due cartelle affiancate e consente di gestire e trasferire facilmente i file tra i due pannelli.</p>\n<h2>1. I due pannelli</h2><ul><li>Il pannello sinistro e quello destro mostrano cartelle separate.</li><li>Fai clic su una cartella per aprirla. Seleziona « .. » per salire di un livello.</li><li>Puoi inserire direttamente un percorso nel campo del percorso. I pulsanti vicini consentono di tornare indietro, salire di un livello o aprire la cartella Home.</li><li>Il pannello attivo è la sorgente delle operazioni; l’altro pannello è normalmente la destinazione.</li></ul>\n<h2>2. Selezionare file e cartelle</h2><ul><li>Un normale clic sinistro seleziona un elemento.</li><li><b>CTRL + clic sinistro</b>: aggiunge un elemento alla selezione oppure lo deseleziona.</li><li><b>MAIUSC + clic sinistro</b>: seleziona un intervallo continuo.</li><li>Più elementi selezionati possono essere archiviati insieme. Il clic destro su un elemento già selezionato mantiene la selezione.</li></ul>\n<h2>3. Gestire i file</h2><ul><li><b>Copia / Sposta</b>: trasferisce l’elemento selezionato nell’altro pannello.</li><li><b>Taglia, Copia, Incolla</b>: usa gli appunti del file manager.</li><li><b>Nuovo</b>: crea un file o una cartella.</li><li><b>Rinomina</b>: rinomina l’elemento selezionato.</li><li><b>Elimina</b>: rimuove l’elemento dopo la conferma.</li><li><b>Proprietà</b>: mostra le informazioni sull’elemento selezionato.</li><li><b>Cerca</b>: cerca nella cartella locale attiva.</li></ul>\n<h2>4. Creare ed estrarre archivi</h2><ul><li>Usa <b>Archivio → Comprimi</b> per creare archivi ZIP, RAR, 7z, TAR, TAR.GZ, TAR.XZ o TAR.BZ2.</li><li>Seleziona prima più file o cartelle per inserirli nello stesso archivio.</li><li>La creazione usa i programmi esterni configurati in <b>Impostazioni → Programmi di archiviazione</b>.</li><li>TAR, TAR.GZ, TAR.XZ e TAR.BZ2 condividono un’unica voce di programma «TAR».</li><li>Usa «Estrai qui» o «Estrai in una cartella» per estrarre gli archivi supportati.</li><li>Apri un archivio supportato nel pannello per esplorarne il contenuto.</li></ul>\n<h2>5. FTP, FTPS e SFTP</h2><ul><li>Scegli FTP, FTPS o SFTP nella barra superiore per configurare una connessione al server.</li><li>Inserisci indirizzo del server, porta e, se richiesti, nome utente e password.</li><li>Dopo la connessione puoi esplorare i file remoti nel pannello attivo e trasferirli.</li><li>Seleziona «Disconnetti» per chiudere la connessione.</li></ul>\n<h2>6. Impostazioni</h2><ul><li><b>Lingua</b>: tedesco, inglese, francese, italiano o olandese.</li><li><b>Tema</b>: scuro o chiaro.</li><li><b>Apertura</b>: clic singolo o doppio per aprire file e cartelle.</li><li><b>Cartelle iniziali</b>: imposta la cartella predefinita per ciascun pannello e, se vuoi, ripristina all’avvio le ultime cartelle utilizzate.</li><li><b>Programmi di archiviazione</b>: rileva automaticamente gli eseguibili o seleziona manualmente il percorso. Lo stato indica se il file esiste ed è eseguibile.</li></ul>\n<h2>7. Tasti funzione</h2><ul><li><b>F1</b> Guida</li><li><b>F2</b> Menu</li><li><b>F3</b> Visualizza / apri elemento selezionato</li><li><b>F4</b> Modifica / apri elemento selezionato</li><li><b>F5</b> Copia nell’altro pannello</li><li><b>F6</b> Sposta nell’altro pannello</li><li><b>F7</b> Crea nuova cartella</li><li><b>F8</b> Elimina</li><li><b>F9</b> Impostazioni</li><li><b>F10</b> Esci da LunaCommander</li></ul>\n<p><i>Suggerimento:</i> Se un’azione non è disponibile, verifica prima che nel pannello attivo sia selezionato un elemento adatto.</p>', 'nl': '<h1>LunaCommander – Help</h1><p>Deze bestandsbeheerder toont twee mappen naast elkaar. Zo kun je bestanden tussen beide vensters beheren en overzetten.</p>\n<h2>1. De twee bestandspanelen</h2><ul><li>Het linker- en rechterpaneel tonen elk een eigen map.</li><li>Klik op een map om deze te openen. Kies „..” om één niveau omhoog te gaan.</li><li>Je kunt een pad rechtstreeks in het padveld invoeren. De knoppen ernaast gaan terug, één niveau omhoog of naar de thuismap.</li><li>Het actieve paneel is de bron voor bestandsacties; het andere paneel is meestal de bestemming.</li></ul>\n<h2>2. Bestanden en mappen selecteren</h2><ul><li>Een gewone linkermuisklik selecteert een item.</li><li><b>CTRL + linkermuisklik</b>: voeg afzonderlijke items toe aan de selectie of verwijder ze eruit.</li><li><b>SHIFT + linkermuisklik</b>: selecteer een aaneengesloten bereik.</li><li>Meerdere geselecteerde items kunnen samen worden gearchiveerd. Rechtsklikken op een al geselecteerd item behoudt de selectie.</li></ul>\n<h2>3. Bestanden beheren</h2><ul><li><b>Kopiëren / Verplaatsen</b>: zet het geselecteerde item over naar het andere paneel.</li><li><b>Knippen, Kopiëren, Plakken</b>: gebruik het klembord van de bestandsbeheerder.</li><li><b>Nieuw</b>: maak een bestand of map.</li><li><b>Hernoemen</b>: wijzig de naam van het geselecteerde item.</li><li><b>Verwijderen</b>: verwijder het geselecteerde item na bevestiging.</li><li><b>Eigenschappen</b>: toon informatie over het geselecteerde item.</li><li><b>Zoeken</b>: zoek in de actieve lokale map.</li></ul>\n<h2>4. Archieven maken en uitpakken</h2><ul><li>Gebruik <b>Archief → Inpakken</b> om ZIP-, RAR-, 7z-, TAR-, TAR.GZ-, TAR.XZ- of TAR.BZ2-archieven te maken.</li><li>Selecteer eerst meerdere bestanden of mappen om ze samen in één archief te plaatsen.</li><li>Voor het maken worden de externe programma’s gebruikt die zijn ingesteld onder <b>Instellingen → Archiveringsprogramma’s</b>.</li><li>TAR, TAR.GZ, TAR.XZ en TAR.BZ2 delen één programma-instelling „TAR”.</li><li>Gebruik „Hier uitpakken” of „Uitpakken naar map” om ondersteunde archieven uit te pakken.</li><li>Open een ondersteund archief in het bestandspaneel om de inhoud te bekijken.</li></ul>\n<h2>5. FTP, FTPS en SFTP</h2><ul><li>Kies FTP, FTPS of SFTP in de bovenste balk om een serververbinding in te stellen.</li><li>Voer het serveradres, de poort en indien nodig de gebruikersnaam en het wachtwoord in.</li><li>Na het verbinden kun je externe bestanden in het actieve paneel bekijken en overzetten.</li><li>Kies „Verbreken” om de verbinding te sluiten.</li></ul>\n<h2>6. Instellingen</h2><ul><li><b>Taal</b>: Duits, Engels, Frans, Italiaans of Nederlands.</li><li><b>Kleurenschema</b>: donker of licht.</li><li><b>Openen</b>: enkel- of dubbelklik om bestanden en mappen te openen.</li><li><b>Startmappen</b>: stel de standaardmap voor elk paneel in en herstel desgewenst de laatst gebruikte mappen bij het starten.</li><li><b>Archiveringsprogramma’s</b>: laat uitvoerbare programma’s automatisch detecteren of kies handmatig een programmapad. De status geeft aan of het bestand bestaat en uitvoerbaar is.</li></ul>\n<h2>7. Functietoetsen</h2><ul><li><b>F1</b> Help</li><li><b>F2</b> Menu</li><li><b>F3</b> Weergeven / geselecteerd item openen</li><li><b>F4</b> Bewerken / geselecteerd item openen</li><li><b>F5</b> Kopiëren naar het andere paneel</li><li><b>F6</b> Verplaatsen naar het andere paneel</li><li><b>F7</b> Nieuwe map maken</li><li><b>F8</b> Verwijderen</li><li><b>F9</b> Instellingen</li><li><b>F10</b> LunaCommander afsluiten</li></ul>\n<p><i>Tip:</i> Als een actie niet beschikbaar is, controleer dan eerst of in het actieve bestandspaneel een geschikt item is geselecteerd.</p>'}
 
 
+class FileTreeWidget(QTreeWidget):
+    """Tree view that exports selected local files as standard file URLs."""
+    def __init__(self, pane=None, parent=None):
+        super().__init__(parent)
+        self.pane = pane
+
+    def mimeData(self, items):
+        mime = QMimeData()
+        pane = self.pane
+        urls = []
+        if pane is not None and not pane.remote and pane.archive_file is None:
+            seen = set()
+            for item in items:
+                row = item.data(0, Qt.UserRole)
+                if not row:
+                    continue
+                name = row[0]
+                if not name or name == '..':
+                    continue
+                path = Path(pane.path) / name
+                try:
+                    resolved = path.resolve(strict=True)
+                except (OSError, RuntimeError):
+                    continue
+                key = str(resolved)
+                if key in seen:
+                    continue
+                seen.add(key)
+                urls.append(QUrl.fromLocalFile(key))
+        mime.setUrls(urls)
+        return mime
+
+
 class Pane(QWidget):
     def __init__(self,app):
-        super().__init__(); self.app=app; self.remote=None; self.path=str(Path.home()); self.rows=[]; self.history=[]; self.archive_file=None; self.archive_inner='' 
+        super().__init__(); self.app=app; self.remote=None; self.path=str(Path.home()); self.rows=[]; self.history=[]; self.forward_history=[]; self.archive_file=None; self.archive_inner=''; self._thumbnail_generation=0 
         v=QVBoxLayout(self); v.setContentsMargins(3,3,3,3)
         nav=QHBoxLayout(); nav.setContentsMargins(0,0,0,0); nav.setSpacing(4)
         self.path_edit=QLineEdit(self.path); nav.addWidget(self.path_edit,1)
@@ -91,15 +224,72 @@ class Pane(QWidget):
             b=QPushButton(); b.setIcon(QApplication.style().standardIcon(getattr(QStyle,icon_name))); b.setIconSize(QSize(18,18)); b.setFixedSize(34,32); b.setToolTip(app.tr(key)); b.setAccessibleName(app.tr(key)); b.clicked.connect(fn); nav.addWidget(b); self.nav_buttons.append(b)
         b=QPushButton(app.tr('open')); b.setIcon(QApplication.style().standardIcon(QStyle.SP_DialogOpenButton)); b.setIconSize(QSize(16,16)); b.clicked.connect(self.go); nav.addWidget(b); self.nav_buttons.append(b)
         v.addLayout(nav)
-        self.tree=QTreeWidget(); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); self.tree.setIconSize(QSize(28,28)); self.tree.setUniformRowHeights(True); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(lambda *_: setattr(self.app,'active',self)); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
+        self.tree=FileTreeWidget(self); self.tree.setDragEnabled(True); self.tree.setDragDropMode(QAbstractItemView.DragOnly); self.tree.setDefaultDropAction(Qt.CopyAction); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); self.tree.setIconSize(QSize(72,72) if self.app.config.get('photo_preview', False) else QSize(28,28)); self.tree.setUniformRowHeights(not self.app.config.get('photo_preview', False)); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(self.on_current_item_changed); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
         self.path_edit.returnPressed.connect(self.go); self.load(self.path)
+    def on_current_item_changed(self, *_):
+        self.app.active=self
+
+    def set_thumbnail_mode(self, enabled):
+        self.tree.setIconSize(QSize(72,72) if enabled else QSize(28,28))
+        self.tree.setUniformRowHeights(not enabled)
+        self.load(self.path, remember=False)
+
+    def item_icon(self, name, is_dir, full_path=None):
+        """Return a fast placeholder; image decoding happens in ThumbnailWorker."""
+        base=(QApplication.style().standardIcon(QStyle.SP_DirIcon) if is_dir else
+              (archive_icon(name) if not archive_icon(name).isNull() else
+               (filetype_icon(name) if not filetype_icon(name).isNull() else
+                QApplication.style().standardIcon(QStyle.SP_FileIcon))))
+        if self.app.config.get('photo_preview', False):
+            small=base.pixmap(QSize(28,28))
+            canvas=QPixmap(76,76); canvas.fill(Qt.transparent)
+            painter=QPainter(canvas)
+            painter.drawPixmap((76-small.width())//2,(76-small.height())//2,small)
+            painter.end()
+            return QIcon(canvas)
+        return base
+
+    def queue_thumbnail(self, name, full_path):
+        if not self.app.config.get('photo_preview', False) or not full_path:
+            return
+        if Path(name).suffix.lower() not in {'.jpg','.jpeg','.png','.gif','.bmp','.webp','.tif','.tiff','.jfif','.avif'}:
+            return
+        worker=ThumbnailWorker(self._thumbnail_generation,name,full_path)
+        worker.signals.ready.connect(self.on_thumbnail_ready)
+        QThreadPool.globalInstance().start(worker)
+
+    def on_thumbnail_ready(self, generation, name, image):
+        if generation != self._thumbnail_generation or not self.app.config.get('photo_preview', False):
+            return
+        for index in range(self.tree.topLevelItemCount()):
+            item=self.tree.topLevelItem(index)
+            data=item.data(0,Qt.UserRole)
+            if data and data[0] == name and not data[1]:
+                pix=QPixmap.fromImage(image)
+                canvas=QPixmap(76,76); canvas.fill(Qt.transparent)
+                painter=QPainter(canvas)
+                painter.drawPixmap((76-pix.width())//2,(76-pix.height())//2,pix)
+                painter.end()
+                item.setIcon(0,QIcon(canvas))
+                break
+
     def eventFilter(self,obj,event):
         # Keep the active pane in sync even when focus changes without a row click.
         if event.type() in (QEvent.FocusIn,QEvent.MouseButtonPress):
             self.app.active=self
         # Remember modifier state before QTreeWidget emits itemClicked.
-        if event.type()==QEvent.MouseButtonPress and obj in (self.tree, self.tree.viewport()):
-            self._modifier_selection_click=bool(event.modifiers() & (Qt.ControlModifier|Qt.ShiftModifier))
+        if event.type()==QEvent.MouseButtonPress and obj in (self.tree, self.tree.viewport(), self.path_edit):
+            # Browser-style thumb buttons navigate the history of this pane only.
+            if event.button() == Qt.BackButton:
+                self.app.active=self
+                self.back()
+                return True
+            if event.button() == Qt.ForwardButton:
+                self.app.active=self
+                self.forward()
+                return True
+            if obj in (self.tree, self.tree.viewport()):
+                self._modifier_selection_click=bool(event.modifiers() & (Qt.ControlModifier|Qt.ShiftModifier))
         # QTreeWidget reserves F2 for inline rename and can swallow function keys.
         # Handle the file-manager bindings before the widget processes them.
         if event.type()==QEvent.KeyPress:
@@ -112,19 +302,42 @@ class Pane(QWidget):
                 return True
         return super().eventFilter(obj,event)
     def load(self,path,remember=True):
+        self._thumbnail_generation += 1
+        self.tree.setDragEnabled(not bool(self.remote))
         self.archive_file=None; self.archive_inner=''
         try:
-            if remember and path!=self.path:self.history.append(self.path)
+            if remember and path!=self.path:
+                self.history.append(self.path)
+                self.forward_history.clear()
             if self.remote: path=posixpath.normpath(path or '/'); rows=self.remote.list(path)
             else:
                 p=Path(path).expanduser().resolve(); path=str(p); rows=[('..',True,0)] if p.parent!=p else []
-                rows+=sorted([(x.name,x.is_dir(),x.stat().st_size if x.is_file() else 0) for x in p.iterdir()],key=folder_sort_key)
+                mtime_by_name={}
+                entries=[]
+                with os.scandir(p) as scan:
+                    for entry in scan:
+                        try:
+                            info=entry.stat(follow_symlinks=True)
+                            is_dir=entry.is_dir(follow_symlinks=True)
+                            entries.append((entry.name,is_dir,0 if is_dir else info.st_size))
+                            mtime_by_name[entry.name]=info.st_mtime
+                        except (OSError, PermissionError):
+                            # Keep the name visible even if its target/metadata cannot be read.
+                            try: is_dir=entry.is_dir(follow_symlinks=False)
+                            except OSError: is_dir=False
+                            entries.append((entry.name,is_dir,0))
+                            mtime_by_name[entry.name]=0
+                rows+=sorted(entries,key=folder_sort_key)
+            if not self.app.config.get('show_hidden', False):
+                rows=[row for row in rows if row[0]=='..' or not row[0].startswith('.')]
             self.path=path; self.path_edit.setText(path); self.rows=rows; self.tree.clear(); self.app.store_pane_path(self, path)
             for n,d,s in rows:
                 it=QTreeWidgetItem([n,self.app.tr('folder') if d else self.app.tr('file'),'' if d else f'{s:,} B']); it.setData(0,Qt.UserRole,(n,d,s))
-                try: it.setData(0,Qt.UserRole+1,Path(path,n).stat().st_mtime if n!='..' and not self.remote else 0)
-                except Exception: it.setData(0,Qt.UserRole+1,0)
-                it.setIcon(0,QApplication.style().standardIcon(QStyle.SP_DirIcon if d else QStyle.SP_FileIcon)); self.tree.addTopLevelItem(it)
+                it.setData(0,Qt.UserRole+1,mtime_by_name.get(n,0) if not self.remote else 0)
+                full_path=(Path(path)/n) if not self.remote and n!='..' else None
+                it.setIcon(0,self.item_icon(n,d,full_path)); self.tree.addTopLevelItem(it)
+                if full_path and not d:
+                    self.queue_thumbnail(n,full_path)
             self.tree.resizeColumnToContents(0)
         except Exception as e:self.app.statusBar().showMessage(f'Fehler: {e}')
     def sort_entries(self, field, descending=False):
@@ -182,6 +395,7 @@ class Pane(QWidget):
             self.activate(it,col)
     def target(self,n): return posixpath.join(self.path,n) if self.remote else str(Path(self.path)/n)
     def load_archive(self, archive, inner='', remember=True):
+        self.tree.setDragEnabled(False)
         archive=Path(archive).resolve()
         if remember and self.archive_file is None and str(archive)!=self.path:
             self.history.append(self.path)
@@ -236,7 +450,7 @@ class Pane(QWidget):
         self.rows=sorted(rows,key=folder_sort_key); self.tree.clear()
         for n,d,size in self.rows:
             it=QTreeWidgetItem([n,'Ordner' if d else 'Datei','' if d else f'{size:,} B'])
-            it.setData(0,Qt.UserRole,(n,d,size)); it.setIcon(0,QApplication.style().standardIcon(QStyle.SP_DirIcon if d else QStyle.SP_FileIcon)); self.tree.addTopLevelItem(it)
+            it.setData(0,Qt.UserRole,(n,d,size)); it.setIcon(0,self.item_icon(n,d,None)); self.tree.addTopLevelItem(it)
         self.tree.resizeColumnToContents(0)
         self.app.statusBar().showMessage(f"{self.app.tr('archive_label')}: {archive.name}  |  {len(entries)} {self.app.tr('archive_entries')}")
     def activate(self,it,col=0):
@@ -265,7 +479,23 @@ class Pane(QWidget):
             self.tree.clearSelection()
             self.tree.setCurrentItem(it)
         m=QMenu(self)
-        actions=[(self.app.tr('open'),lambda:self.activate(self.tree.currentItem()) if self.tree.currentItem() else None),(self.app.tr('copy')+' → '+self.app.tr('open_other'),self.app.copy_other),(self.app.tr('move')+' → '+self.app.tr('move_other'),self.app.move_other),(self.app.tr('rename'),self.app.rename),(self.app.tr('delete'),self.app.delete),(self.app.tr('properties'),self.app.properties),(self.app.tr('new_folder'),self.app.new_folder),(self.app.tr('new_file'),self.app.new_file),(self.app.tr('cut'),self.app.cut),(self.app.tr('copy'),self.app.copy),(self.app.tr('paste'),self.app.paste),(self.app.tr('refresh'),lambda:self.load(self.path))]
+        actions=[(self.app.tr('open'),lambda:self.activate(self.tree.currentItem()) if self.tree.currentItem() else None)]
+        if it and not self.remote and not self.archive_file:
+            row=it.data(0,Qt.UserRole)
+            if row and not row[1]:
+                open_with=m.addMenu(self.app.tr('open_with'))
+                target=Path(self.target(row[0]))
+                suggestions=self.app.open_with_suggestions(target)
+                for app_name, program, remembered in suggestions:
+                    label=(app_name + ('  ★' if remembered else ''))
+                    action=open_with.addAction(label)
+                    action.setToolTip(program)
+                    action.triggered.connect(lambda checked=False,item=it,exe=program:self.launch_with_application(item,exe,True))
+                if suggestions:
+                    open_with.addSeparator()
+                choose=open_with.addAction(self.app.tr('choose_application'))
+                choose.triggered.connect(lambda checked=False,item=it:self.open_with_application(item))
+        actions += [(self.app.tr('copy')+' → '+self.app.tr('open_other'),self.app.copy_other),(self.app.tr('move')+' → '+self.app.tr('move_other'),self.app.move_other),(self.app.tr('rename'),self.app.rename),(self.app.tr('delete'),self.app.delete),(self.app.tr('properties'),self.app.properties),(self.app.tr('new_folder'),self.app.new_folder),(self.app.tr('new_file'),self.app.new_file),(self.app.tr('cut'),self.app.cut),(self.app.tr('copy'),self.app.copy),(self.app.tr('paste'),self.app.paste),(self.app.tr('refresh'),lambda:self.load(self.path))]
         for label,fn in actions:
             a=m.addAction(label); a.triggered.connect(fn)
         m.addSeparator()
@@ -286,12 +516,49 @@ class Pane(QWidget):
             desc=field_menu.addAction(self.app.tr('descending'))
             desc.triggered.connect(lambda checked=False,f=field:self.sort_entries(f,True))
         m.exec(self.tree.viewport().mapToGlobal(pos))
+    def open_with_application(self, item):
+        """Choose an executable, remember it for this extension and launch it."""
+        if not item or self.remote or self.archive_file:
+            return
+        row=item.data(0,Qt.UserRole)
+        if not row or row[1]:
+            return
+        target=Path(self.target(row[0]))
+        program,_=QFileDialog.getOpenFileName(self, self.app.tr('open_with'), '/usr/bin', self.app.tr('application_filter')+' (*)')
+        if program:
+            self.launch_with_application(item,program,True)
+
+    def launch_with_application(self, item, program, remember=True):
+        if not item or self.remote or self.archive_file:
+            return
+        row=item.data(0,Qt.UserRole)
+        if not row or row[1]:
+            return
+        target=Path(self.target(row[0]))
+        if not os.path.isfile(program) or not os.access(program,os.X_OK):
+            QMessageBox.warning(self,self.app.tr('open_with'),self.app.tr('app_launch_error'))
+            return
+        if not QProcess.startDetached(program, [str(target)]):
+            QMessageBox.warning(self,self.app.tr('open_with'),self.app.tr('app_launch_error'))
+            return
+        if remember:
+            self.app.remember_open_with(target,program)
+
     def back(self):
-        if self.archive_file:
-            self.archive_file=None; self.archive_inner=''
-            if self.history:self.load(self.history.pop(),False)
-            else:self.load(str(Path.home()),False)
-        elif self.history:self.load(self.history.pop(),False)
+        if not self.history:
+            return
+        current = self.path
+        previous = self.history.pop()
+        self.forward_history.append(current)
+        self.load(previous, False)
+
+    def forward(self):
+        if not self.forward_history:
+            return
+        current = self.path
+        next_path = self.forward_history.pop()
+        self.history.append(current)
+        self.load(next_path, False)
     def up(self):
         if self.archive_file:
             if self.archive_inner:self.load_archive(self.archive_file,self.archive_inner.rsplit('/',1)[0] if '/' in self.archive_inner else '',False)
@@ -299,6 +566,30 @@ class Pane(QWidget):
         else:self.load(posixpath.dirname(self.path.rstrip('/')) or '/' if self.remote else str(Path(self.path).parent))
     def home(self):self.archive_file=None; self.archive_inner=''; self.load('/' if self.remote else str(Path.home()))
     def go(self):self.load(self.path_edit.text())
+
+
+
+class ThumbnailSignals(QObject):
+    ready = Signal(int, str, QImage)
+
+class ThumbnailWorker(QRunnable):
+    """Decode and scale image thumbnails off the GUI thread."""
+    def __init__(self, generation, name, path):
+        super().__init__()
+        self.generation=generation
+        self.name=name
+        self.path=str(path)
+        self.signals=ThumbnailSignals()
+
+    def run(self):
+        try:
+            image=QImage(self.path)
+            if not image.isNull():
+                image=image.scaled(72,72,Qt.KeepAspectRatio,Qt.SmoothTransformation)
+                self.signals.ready.emit(self.generation,self.name,image)
+        except Exception:
+            pass
+
 
 class TransferSignals(QObject):
     progress = Signal(int)
@@ -921,6 +1212,12 @@ class Main(QMainWindow):
         f.addRow(QLabel('<b>'+self.tr('start_folders')+'</b>'))
         remember=QCheckBox(self.tr('remember_dirs')); remember.setChecked(bool(self.config.get('remember_last_dirs', True)))
         f.addRow(remember)
+        show_hidden=QCheckBox(self.tr('show_hidden'))
+        show_hidden.setChecked(bool(self.config.get('show_hidden', False)))
+        f.addRow(show_hidden)
+        photo_preview=QCheckBox(self.tr('photo_preview'))
+        photo_preview.setChecked(bool(self.config.get('photo_preview', False)))
+        f.addRow(photo_preview)
         left_row=QWidget(); left_layout=QHBoxLayout(left_row); left_layout.setContentsMargins(0,0,0,0)
         left_path=QLineEdit(str(self.config.get('default_left', str(Path.home())))); left_browse=QPushButton(self.tr('browse'))
         left_browse.clicked.connect(lambda: (lambda chosen: left_path.setText(chosen) if chosen else None)(QFileDialog.getExistingDirectory(d,self.tr('default_left'),left_path.text() or str(Path.home()))))
@@ -968,12 +1265,20 @@ class Main(QMainWindow):
             self.dark=(theme.currentIndex()==0); self.click_mode=click.currentData(); self.language=lang.currentData()
             self.config['click_mode']=self.click_mode; self.config['language']=self.language
             self.config['remember_last_dirs']=remember.isChecked()
+            hidden_changed=bool(self.config.get('show_hidden', False)) != show_hidden.isChecked()
+            self.config['show_hidden']=show_hidden.isChecked()
+            self.config['photo_preview']=photo_preview.isChecked()
             self.config['archive_binaries']={fmt: field.text().strip() for fmt,field in archive_fields.items()}
             self.config['rar_binary']=self.config['archive_binaries'].get('rar','')
             for key, field in (('default_left', left_path), ('default_right', right_path)):
                 candidate=Path(field.text()).expanduser()
                 self.config[key]=str(candidate.resolve()) if candidate.is_dir() else str(Path.home())
             self.save_config()
+            self.left.set_thumbnail_mode(photo_preview.isChecked())
+            self.right.set_thumbnail_mode(photo_preview.isChecked())
+            if hidden_changed:
+                self.left.load(self.left.path, remember=False)
+                self.right.load(self.right.path, remember=False)
             if not remember.isChecked():
                 self.left.load(self.config['default_left'], remember=False)
                 self.right.load(self.config['default_right'], remember=False)
@@ -1156,6 +1461,49 @@ class Main(QMainWindow):
         except Exception:self.config={}
     def save_config(self):
         self.config_path.parent.mkdir(parents=True,exist_ok=True); self.config_path.write_text(json.dumps(self.config,indent=2)); os.chmod(self.config_path,0o600)
+    def remember_open_with(self, target, program):
+        name=target.name.lower()
+        ext=next((x for x in ('.tar.gz','.tar.xz','.tar.bz2') if name.endswith(x)),target.suffix.lower()) or '[no-extension]'
+        apps=self.config.setdefault('open_with_apps',{})
+        apps[ext]={'program':str(Path(program).resolve()),'name':Path(program).name}
+        self.save_config()
+
+    def open_with_suggestions(self, target):
+        """Return installed, sensible applications for a file type; remembered choice first."""
+        name=target.name.lower()
+        ext=next((x for x in ('.tar.gz','.tar.xz','.tar.bz2') if name.endswith(x)),target.suffix.lower())
+        groups={
+            'video': ('.mp4','.mkv','.avi','.mov','.wmv','.webm','.mpeg','.mpg','.m4v','.ts','.mts','.m2ts','.flv','.vob','.ogv','.3gp'),
+            'audio': ('.mp3','.wav','.flac','.ogg','.opus','.m4a','.aac','.wma','.aiff','.aif','.ape','.alac','.mid','.midi','.amr','.ac3','.dts','.dsf','.wv'),
+            'image': ('.jpg','.jpeg','.png','.gif','.bmp','.webp','.tif','.tiff','.avif','.svg'),
+            'pdf': ('.pdf',),
+            'text': ('.txt','.md','.log','.csv','.json','.xml','.yaml','.yml','.ini','.conf','.py','.sh','.html','.css','.js','.desktop'),
+            'office': ('.doc','.docx','.odt','.rtf','.xls','.xlsx','.ods','.ppt','.pptx','.odp'),
+            'archive': ('.zip','.rar','.7z','.tar','.gz','.tgz','.xz','.bz2','.tar.gz','.tar.xz','.tar.bz2'),
+            'ebook': ('.epub','.mobi'),
+        }
+        candidates={
+            'video': [('VLC','vlc'),('MPV','mpv')],
+            'audio': [('VLC','vlc'),('MPV','mpv'),('Audacious','audacious')],
+            'image': [('Bildbetrachter','loupe'),('Ristretto','ristretto'),('Eye of GNOME','eog'),('Gwenview','gwenview'),('Feh','feh')],
+            'pdf': [('Document Viewer','evince'),('Atril','atril'),('Okular','okular'),('Xreader','xreader')],
+            'text': [('Mousepad','mousepad'),('Geany','geany'),('Kate','kate'),('Gedit','gedit'),('Xed','xed')],
+            'office': [('LibreOffice','libreoffice'),('OnlyOffice','onlyoffice-desktopeditors')],
+            'archive': [('Engrampa','engrampa'),('File Roller','file-roller'),('Ark','ark'),('Xarchiver','xarchiver')],
+            'ebook': [('Calibre','ebook-viewer'),('Foliate','foliate'),('Okular','okular')],
+        }
+        kind=next((k for k,extensions in groups.items() if ext in extensions),None)
+        result=[]; seen=set()
+        remembered=self.config.get('open_with_apps',{}).get(ext,{})
+        if remembered:
+            program=remembered.get('program','')
+            if program and Path(program).is_file() and os.access(program,os.X_OK):
+                result.append((remembered.get('name') or Path(program).name,program,True)); seen.add(os.path.realpath(program))
+        for name,command in candidates.get(kind,[]):
+            program=shutil.which(command)
+            if program and os.path.realpath(program) not in seen:
+                result.append((name,program,False)); seen.add(os.path.realpath(program))
+        return result
     def connect_remote(self,proto):
         d=QDialog(self);d.setWindowTitle(proto+' '+self.tr('connect').lower());f=QFormLayout(d);last=self.config.get('last_connection',{}); host=QLineEdit(last.get('host',''));port=QLineEdit(str(last.get('port',{'FTP':21,'FTPS':21,'SFTP':22}[proto])));user=QLineEdit(last.get('user',''));pw=QLineEdit(last.get('password',''));pw.setEchoMode(QLineEdit.Password)
         for label,w in [('Server',host),('Port',port),('Benutzer',user),('Passwort',pw)]:f.addRow(label,w)

@@ -1,3 +1,71 @@
+# Changelog
+
+## 0.6.55
+- Markierte lokale Dateien und Ordner können per Drag-and-drop aus beiden Dateifenstern in andere Dateimanager oder auf den Desktop gezogen werden.
+- Mehrfachauswahl wird als gemeinsamer Datei-URL-Transfer exportiert; Archivansichten und Remote-Verbindungen bleiben vom lokalen Drag-and-drop ausgeschlossen.
+- Standardaktion ist Kopieren; das Zielprogramm kann je nach Dateimanager und Modifikatortaste eine passende Aktion anbieten.
+
+
+## 0.6.54
+- Das Kontextmenü „Öffnen mit“ schlägt passende installierte Programme automatisch abhängig vom Dateityp vor.
+- Gespeicherte Programmwahl wird pro Dateiendung zuerst vorgeschlagen; die Zuordnung bleibt in den LunaCommander-Einstellungen erhalten.
+- „Andere Anwendung auswählen…“ bleibt jederzeit verfügbar; die systemweiten Dateizuordnungen werden nicht verändert.
+- Versionsangaben und Installationsanleitung für ZIP und DEB aktualisiert.
+
+## 0.6.53
+- Added browser-style mouse Back/Forward side-button navigation with separate history per pane.
+
+0.6.52
+- Added a localized “Open with” submenu to the right-click menu for local files. Choose an executable from the system to open the selected file.
+- Updated the new menu labels in German, English, French, Italian and Dutch.
+
+## 0.6.51
+- Ergänzt eigene, kompakte Symbole für Audio-, Video-, Dokument-, Tabellen-, Präsentations-, Disc-Image-, Code-, Untertitel-, Paket- und Torrent-Dateien.
+- Bestehende Bild-Miniaturen sowie Archiv- und DEB-Symbole bleiben unverändert.
+- Versionsanzeige in der Anwendung und Paketmetadaten aktualisiert.
+
+## 0.6.50
+- Eigenes rotes DEB-Symbol für `.deb`-Installationspakete ergänzt.
+- Das Symbol erscheint in beiden Dateifenstern und bleibt auch bei aktivierten Foto-Miniaturen sichtbar.
+- Kein zusätzliches Icon-Paket erforderlich.
+
+## 0.6.49
+- Auf Basis der vom Nutzer bereitgestellten Version 0.6.47 neu aufgebaut.
+- Startordner-Wiederherstellung und Standardpfadlogik aus 0.6.47 unverändert übernommen.
+- Foto-Miniaturen werden in Hintergrund-Threads dekodiert und skaliert.
+- Fehler beim Lesen einzelner Dateimetadaten brechen das Laden eines gesamten Ordners nicht mehr ab.
+- Veraltete Miniatur-Aufträge werden beim Ordnerwechsel verworfen.
+
+## 0.6.48
+- Laden und Skalieren der Foto-Miniaturen in Hintergrund-Threads verlegt.
+- Die Dateiliste zeigt zunächst Platzhalter; Vorschaubilder erscheinen nach und nach, ohne die Bedienoberfläche während der Bilddecodierung zu blockieren.
+- Veraltete Miniatur-Aufträge werden nach einem Ordnerwechsel ignoriert.
+- Verzeichnis-Metadaten werden pro Eintrag nur einmal gelesen, statt Dateigröße und Änderungszeit mehrfach separat abzufragen.
+
+## 0.6.47
+- Foto-Vorschau vollständig in die Dateiliste verlegt: Bilder erscheinen als erkennbare 72×72-Pixel-Miniaturen direkt neben dem Dateinamen.
+- Separate Vorschaufläche unter der Dateiliste entfernt.
+- Einstellung zum Ein-/Ausschalten bleibt erhalten und ist in Deutsch, Englisch, Französisch, Italienisch und Niederländisch beschriftet.
+- Ordner- und Archivsymbole bleiben erhalten und werden bei aktivierten Miniaturen kompakt in der größeren Symbolfläche zentriert.
+
+## 0.6.46
+- Optionale Foto-Vorschau unter Einstellungen ergänzt.
+- Bei Auswahl eines Bildes wird im jeweiligen Dateifenster unter der Dateiliste eine skalierte Vorschau angezeigt.
+- Unterstützte Formate: JPG, JPEG, PNG, GIF, BMP, WebP, TIFF und AVIF (abhängig von den Qt-Bildplugins).
+- Vorschau ist standardmäßig ausgeschaltet und wird in den Einstellungen dauerhaft gespeichert.
+- Beschriftungen in Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
+
+## 0.6.45
+- Einstellung zum Ein- und Ausblenden versteckter Dateien und Ordner ergänzt.
+- Versteckte Einträge (Namen mit Punkt am Anfang) sind standardmäßig ausgeblendet.
+- Die Einstellung wird gespeichert und aktualisiert beide Dateifenster sofort nach dem Ändern.
+- Beschriftung in Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
+
+## 0.6.44
+- Eigene Symbole für ZIP, RAR, 7Z und TAR-Archive ergänzt; alle TAR-Kompressionsvarianten verwenden dasselbe Symbol.
+- Archivsymbole erscheinen in beiden Dateifenstern und beim Durchsuchen von Archiven.
+- Symbole werden direkt mit Qt gezeichnet; keine zusätzlichen Bilddateien oder Icon-Themes erforderlich.
+
 ## 0.6.43
 - Mehrfach-Löschen arbeitet jetzt als ein einzelner Batch-Hintergrundjob statt mehrere Löschjobs über die Warteschlange zu verketten.
 - Alle markierten Einträge werden nacheinander abgearbeitet; Fehler bei einzelnen Einträgen verhindern die übrigen Löschversuche nicht.

@@ -1,110 +1,100 @@
-# LunaCommander 0.6.43
+# LunaCommander 0.6.55
 
-LunaCommander ist ein zweispaltiger Dateimanager für Debian 13 (Trixie) und Raspberry Pi OS auf ARM64.
-
-![LunaCommander](lunacommander.png)
-
-[Github Seite](https://github.com/Angonikro/LunaCommander/)
+LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
 ## Funktionen
 
-- Zwei Dateifenster mit unabhängiger Navigation.
-- Dateien und Ordner markieren: **STRG + Linksklick** für einzelne Einträge, **SHIFT + Linksklick** für einen zusammenhängenden Bereich.
-- Dateien und Ordner erstellen, kopieren, verschieben, löschen (auch mehrere markierte Einträge gemeinsam), umbenennen und Eigenschaften anzeigen.
+- Zwei Dateifenster mit unabhängiger Navigation und eigener Zurück-/Vorwärts-Historie; unterstützt auch die seitlichen Maus-Back-/Forward-Tasten.
+- Mehrfachauswahl mit **STRG + Linksklick** und **SHIFT + Linksklick**.
+- Markierte lokale Dateien und Ordner lassen sich per gedrückter linker Maustaste aus dem Dateifenster in den Desktop oder andere Dateimanager ziehen; mehrere ausgewählte Einträge werden gemeinsam als Datei-URLs übergeben.
+- Dateien und Ordner erstellen, kopieren, verschieben, löschen, umbenennen und deren Eigenschaften anzeigen.
 - FTP-, FTPS- und SFTP-Verbindungen.
-- Archive erstellen: ZIP, RAR, 7z, TAR, TAR.GZ, TAR.XZ und TAR.BZ2.
-- Archive entpacken und unterstützte Archive im Dateifenster durchsuchen.
-- Externe Archivprogramme unter **Einstellungen → Archivprogramme** konfigurieren. TAR, TAR.GZ, TAR.XZ und TAR.BZ2 verwenden gemeinsam den Programmeintrag **TAR**.
-- Dunkles/helles Farbschema, Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
-- Einzel- oder Doppelklick zum Öffnen sowie getrennte Startordner.
-- F1–F10 für Hilfe, Menü, Anzeigen, Bearbeiten, Kopieren, Verschieben, Neuer Ordner, Löschen, Einstellungen und Beenden.
+- Archive erstellen: ZIP, RAR, 7z, TAR, TAR.GZ, TAR.XZ und TAR.BZ2; unterstützte Archive lassen sich im Dateifenster durchsuchen.
+- Dateityp-Symbole für Audio, Video, Bilder, PDF, Dokumente, Tabellen, Präsentationen, Datenträger-Images, Quellcode, Untertitel, Pakete und Torrents.
+- Optionale Bild-Miniaturen direkt in der Dateiliste; Hintergrundverarbeitung hält die Oberfläche bedienbar.
+- Kontextmenü **Öffnen mit**: LunaCommander schlägt passende installierte Programme abhängig vom Dateityp vor (zum Beispiel VLC/MPV für Video und Audio, Bildbetrachter für Bilder, PDF-Viewer für PDF, LibreOffice für Office-Dateien und Archivmanager für Archive).
+- Gewählte Programme werden pro Dateiendung gespeichert und beim nächsten Mal zuerst vorgeschlagen. Die Zuordnung bleibt in `~/.config/lunacommander/settings.json` und ändert nicht die systemweiten Dateizuordnungen.
+- Weitere Programme können über **Andere Anwendung auswählen…** gewählt werden.
+- Dunkles/helles Farbschema sowie Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
+- Einzel- oder Doppelklick zum Öffnen, getrennte Startordner und F1–F10-Funktionstasten.
 
-## Optionale RAR-Unterstützung
+## RAR-Hinweis
 
-Für das Erstellen von RAR-Archiven wird das externe RARLAB-Programm `rar` benötigt. Es ist keine freie Standardabhängigkeit von Debian und wird deshalb nicht automatisch installiert. Wenn `rar` vorhanden ist, erkennt LunaCommander es automatisch. Andernfalls kann der vollständige Programmpfad unter **Einstellungen → Archivprogramme → RAR** eingetragen werden.
+Für das Erstellen von RAR-Archiven wird das externe RARLAB-Programm `rar` benötigt. Es wird nicht automatisch installiert. Wenn `rar` vorhanden ist, wird es erkannt; andernfalls kann der Programmpfad in **Einstellungen → Archivprogramme → RAR** angegeben werden. Zum Entpacken werden die installierten Debian-Werkzeuge verwendet.
 
-## Speicherort der Einstellungen
+## Einstellungen und gespeicherte Öffnen-mit-Zuordnungen
 
-Persönliche Einstellungen wie Sprache, Farbschema, Klickverhalten und Startordner werden hier gespeichert:
+Die persönlichen Einstellungen befinden sich hier:
 
 ```text
 ~/.config/lunacommander/settings.json
-
----
-
-# Installation mit DEB-Paket
-
-Wenn du stattdessen das Debian-Paket verwenden möchtest, lade `lunacommander_0.6.43_all.deb` herunter. Öffne ein Terminal im Download-Ordner und führe aus:
-
-```bash
-sudo apt update
-sudo apt install ./lunacommander_0.6.43_all.deb
 ```
 
-APT installiert die im DEB-Paket angegebenen Abhängigkeiten automatisch.
+Dort speichert LunaCommander unter anderem Sprache, Farbschema, Klickverhalten, Startordner und die selbst gewählten **Öffnen mit**-Programme pro Dateiendung. Diese gespeicherten Zuordnungen überschreiben nicht die systemweiten Standardprogramme.
 
-## LunaCommander nach der DEB-Installation starten
+## Hilfe
 
-Über den Eintrag **LunaCommander** im Anwendungsmenü oder im Terminal:
+Die integrierte Hilfe öffnest du mit **F1** oder über das Menü **Hilfe**. Sie ist in Deutsch, Englisch, Französisch, Italienisch und Niederländisch verfügbar.
 
-```bash
-lunacommander
-```
+## Voraussetzungen und Abhängigkeiten
 
-# Installation ohne DEB (ZIP-Version)
-
-Diese Anleitung installiert die benötigten Systempakete und startet LunaCommander direkt aus dem entpackten ZIP-Ordner. **Dafür wird kein DEB-Paket und kein pip benötigt.**
-
-## 1. Abhängigkeiten installieren
-
-Terminal öffnen und diesen Befehl vollständig kopieren:
+Für Debian 13 / Raspberry Pi OS (ARM64):
 
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-pyside6.qtwidgets python3-paramiko xdg-utils zip tar gzip xz-utils bzip2 7zip unar unrar-free
 ```
 
-## 2. ZIP herunterladen und entpacken
+Optionale Programme für **Öffnen mit** werden nur angeboten, wenn sie installiert und im PATH verfügbar sind. Beispiele:
 
-Wenn die ZIP-Datei im Ordner `Downloads` liegt:
+```bash
+sudo apt install vlc mpv ristretto evince atril okular mousepad geany libreoffice engrampa file-roller xarchiver
+```
+
+Du musst nicht alle optionalen Programme installieren. Verwende nur die Anwendungen, die du tatsächlich benötigst.
+
+## Installation aus dem ZIP (ohne DEB)
+
+1. ZIP-Archiv herunterladen und entpacken.
+2. Terminal im entpackten Ordner `lunacommander` öffnen.
+3. Starten mit:
+
+```bash
+python3 main.py
+```
+
+Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.6.43_GITHUB.zip -d ~/Programme
-```
-
-## 3. In den Programmordner wechseln
-
-```bash
-cd ~/Programme/lunacommander
-```
-
-Falls du das ZIP in einen anderen Ordner entpackt hast, passe den Pfad entsprechend an. In diesem Ordner muss die Datei `main.py` liegen.
-
-## 4. LunaCommander starten
-
-```bash
-python3 main.py
-```
-
-Zum späteren erneuten Starten genügt wieder:
-
-```bash
+unzip ~/Downloads/LunaCommander_0.6.55_GITHUB.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
 
-## Technische Hinweise
+## Installation mit Debian-Paket
 
-- Das DEB-Paket installiert LunaCommander unter `/usr/share/lunacommander`.
-- Der Startbefehl des DEB-Pakets lautet `lunacommander`.
-- Debian-Paketarchitektur: `all`.
-- Es wird keine virtuelle Python-Umgebung angelegt.
-- Bei der ZIP-Version startet `python3 main.py` die Anwendung direkt aus dem Quellverzeichnis.
-- Während der Installation wird kein `pip` ausgeführt.
+Im Download-Ordner ausführen:
 
-## Integrierte Hilfe
+```bash
+sudo apt update
+sudo apt install ./lunacommander_0.6.55_all.deb
+```
 
-Mit **F1** oder über das Menü **Hilfe** öffnest du die Bedienungsanleitung. Sie ist in Deutsch, Englisch, Französisch, Italienisch und Niederländisch verfügbar.
+Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
+
+```bash
+lunacommander
+```
+
+Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den Programmstarter im Anwendungsmenü an. Die Paketarchitektur ist `all`; es wird keine virtuelle Python-Umgebung angelegt und während der Installation wird kein `pip` ausgeführt.
+
+## Projektinformationen
+
+- Projekt: LunaCommander
+- Version: 0.6.54
+- Maintainer: LunaProject
+- Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
+- Lizenz: siehe Projekt-/Quellcodehinweise im Repository.
 
 73 de DO2QG Andreas
