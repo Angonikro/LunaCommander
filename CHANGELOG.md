@@ -6,7 +6,10 @@
 - Konfigurierbare Anwendungsschriftgröße hinzugefügt. 
 - Die feste Dateireihenhöhe wurde entfernt, damit der Abstand kompakt bleibt. 
 - Übersetzungen für Deutsch, Englisch, Französisch, Italienisch und Niederländisch hinzugefügt. 
-- Aktualisierte Anwendungsversion und Dokumentation.
+- Aktualisierte Anwendungsversion und Dokumentation. 
+- Hilfe in Deutsch, Englisch, Französisch, Italienisch und Niederländisch aktualisiert: Schriftgröße, Datei-/Ordnersymbolgröße, automatische Ordnerüberwachung und benutzerdefinierte Archivnamen sind jetzt dokumentiert.
+
+# Changelog
 
 ## 0.6.59
 - Beim Erstellen eines Archivs kann jetzt vor dem Start ein eigener Archivname eingegeben werden.
