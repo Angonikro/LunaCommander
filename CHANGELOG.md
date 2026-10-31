@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.6.55
+## 0.6.57
+- Sortiermodus (Kriterium und auf-/absteigend) wird jetzt dauerhaft für linkes und rechtes Dateifenster separat gespeichert und nach einem Neustart wiederhergestellt.
+
+## 0.6.56
+
+- Sortiermodus wird für jedes Dateifenster separat beibehalten. Aktualisieren sortiert nicht mehr automatisch wieder nach Name.
 - Markierte lokale Dateien und Ordner können per Drag-and-drop aus beiden Dateifenstern in andere Dateimanager oder auf den Desktop gezogen werden.
 - Mehrfachauswahl wird als gemeinsamer Datei-URL-Transfer exportiert; Archivansichten und Remote-Verbindungen bleiben vom lokalen Drag-and-drop ausgeschlossen.
 - Standardaktion ist Kopieren; das Zielprogramm kann je nach Dateimanager und Modifikatortaste eine passende Aktion anbieten.

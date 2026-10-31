@@ -1,10 +1,6 @@
-# LunaCommander 0.6.55
+# LunaCommander 0.6.57
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
-
-![LunaCommander](lunacommander.png)
-
-[Github Seite](https://github.com/Angonikro/LunaCommander/)
 
 ## Funktionen
 
@@ -71,7 +67,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.6.55_GITHUB.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.6.57_GITHUB.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -82,7 +78,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.6.55_all.deb
+sudo apt install ./lunacommander_0.6.57_all.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -96,9 +92,13 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.6.54
+- Version: 0.6.57
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.
+
+
+## Sortierung
+Der gewählte Sortiermodus wird für das linke und rechte Dateifenster separat beibehalten. Auch nach „Aktualisieren“ bleibt die gewählte Sortierung erhalten.
 
 73 de DO2QG Andreas
