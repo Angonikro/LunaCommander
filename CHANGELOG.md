@@ -1,7 +1,16 @@
-# Changelog
+# LunaCommander Changelog
 
-## 0.6.57
-- Sortiermodus (Kriterium und auf-/absteigend) wird jetzt dauerhaft für linkes und rechtes Dateifenster separat gespeichert und nach einem Neustart wiederhergestellt.
+## 0.6.60
+- Gebündelte Datei- und Ordnersymbolsätze in 24-, 32-, 40-, 48- und 64-Pixel-Varianten hinzugefügt. 
+- Einstellung hinzugefügt, um die Größe des Datei-/Ordnersymbols auszuwählen; Beide Dateifenster werden sofort neu geladen. 
+- Konfigurierbare Anwendungsschriftgröße hinzugefügt. 
+- Die feste Dateireihenhöhe wurde entfernt, damit der Abstand kompakt bleibt. 
+- Übersetzungen für Deutsch, Englisch, Französisch, Italienisch und Niederländisch hinzugefügt. 
+- Aktualisierte Anwendungsversion und Dokumentation.
+
+## 0.6.59
+- Beim Erstellen eines Archivs kann jetzt vor dem Start ein eigener Archivname eingegeben werden.
+- Die passende Dateiendung wird automatisch für das gewählte Archivformat ergänzt und nicht doppelt angehängt.
 
 ## 0.6.56
 
@@ -295,3 +304,6 @@
 - Each sort criterion supports ascending and descending order.
 - Sorting labels are translated in German, English, French, Italian, and Dutch.
 - Parent-folder entry remains at the top while sorting.
+
+## 0.6.59
+- Added automatic monitoring of the open local folders. New, deleted, renamed and changed files now appear automatically; the option can be disabled in Settings.
