@@ -1,4 +1,4 @@
-# LunaCommander 0.6.60
+# LunaCommander 0.6.61
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
@@ -21,6 +21,15 @@ LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. 
 - Weitere Programme können über **Andere Anwendung auswählen…** gewählt werden.
 - Dunkles/helles Farbschema sowie Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
 - Einzel- oder Doppelklick zum Öffnen, getrennte Startordner und F1–F10-Funktionstasten.
+
+
+## Zwischenablage und MATE/Caja
+
+LunaCommander 0.6.61 unterstützt den System-Datei-Clipboard unter MATE/Caja für lokale Dateien und Ordner. Dadurch können Dateien aus LunaCommander über **Kopieren** oder **Ausschneiden** in Caja oder auf dem MATE-Desktop eingefügt werden.
+
+- **Kopieren:** Die Quelldatei bleibt erhalten und kann im Ziel eingefügt werden.
+- **Ausschneiden:** Die Datei wird als Verschiebevorgang an das Ziel übergeben und erst beim Einfügen verschoben.
+- Die Zwischenablage verwendet das MATE-kompatible Dateiformat; normaler Klartext bleibt für Programme erhalten, die einen Dateipfad einfügen.
 
 ## RAR-Hinweis
 
@@ -71,7 +80,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.6.60_GITHUB.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.6.61_CAJA_CUT_CLEAN_ICONS.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -82,7 +91,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.6.60_all.deb
+sudo apt install ./lunacommander_0.6.61_all_CAJA_CUT_CLEAN_ICONS.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -96,7 +105,7 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.6.60
+- Version: 0.6.61
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.
