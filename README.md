@@ -1,4 +1,4 @@
-# LunaCommander 0.6.62
+# LunaCommander 0.6.63
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
@@ -7,6 +7,11 @@ LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. 
 [Github Seite](https://github.com/Angonikro/LunaCommander/)
 
 ## Funktionen
+
+- Komfortable Dateisuche im eigenen Dialog; die Suche läuft im Hintergrund, Treffer erscheinen laufend, mit Fortschrittsanzeige und Abbruchfunktion.
+
+- Komfortabler Suchdialog mit Pfadauswahl, Unterordnersuche, versteckten Dateien, Dateityp- und Größenfiltern sowie Ergebnisliste.
+- Die Archivfunktionen sind weiterhin über das Menü und die Kontextmenüs erreichbar; der separate Archiv-Button wurde aus der oberen Symbolleiste entfernt.
 
 - Zwei Dateifenster mit unabhängiger Navigation und eigener Zurück-/Vorwärts-Historie; unterstützt auch die seitlichen Maus-Back-/Forward-Tasten.
 - Mehrfachauswahl mit **STRG + Linksklick** und **SHIFT + Linksklick**.
@@ -80,7 +85,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.6.62_CAJA_CUT_CLEAN_ICONS.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.6.63_CAJA_CUT_CLEAN_ICONS.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -91,7 +96,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.6.62_all_CAJA_CUT_CLEAN_ICONS.deb
+sudo apt install ./lunacommander_0.6.63_all_CAJA_CUT_CLEAN_ICONS.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -105,7 +110,7 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.6.62
+- Version: 0.6.63
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.

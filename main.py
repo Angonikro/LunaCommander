@@ -4,7 +4,7 @@ import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfi
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
-from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser)
+from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QTabWidget,QListWidget,QListWidgetItem,QSpinBox)
 
 
 
@@ -186,7 +186,20 @@ for _lang, _entries in {
 
 
 # Extended translations for every visible dialog, prompt and archive action.
-for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.62 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.62 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.62 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.62 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.62 – Qt6', 'about_help': 'Help'}}.items():
+for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Help'}}.items():
+    TRANSLATIONS[_lang].update(_entries)
+
+
+SEARCH_TRANSLATIONS = {
+'de': {'search_title':'Suchen – LunaCommander','search_subtitle':'Dateien und Ordner schnell finden – mit praktischen Filtern.','search_path':'Suchpfad:','browse':'Durchsuchen …','search_term':'Suchbegriff:','search_placeholder':'Datei- oder Ordnername …','search_case':'Groß-/Kleinschreibung beachten','search_whole':'Nur ganze Wörter','search_recursive':'In Unterordnern suchen','search_hidden':'Versteckte Dateien und Ordner einbeziehen','search_tab_general':'Allgemein','search_tab_types':'Dateityp','search_tab_size':'Größe','search_filetypes':'Dateimuster:','search_min_size':'Mindestgröße:','search_max_size':'Höchstgröße:','search_size_note':'0 bedeutet keine Begrenzung. Größenfilter gelten für Dateien.','search_presets':'Vorgaben …','search_preset_documents':'Dokumente','search_preset_images':'Bilder','search_preset_archives':'Archive','search_run':'Suchen','search_invalid_path':'Der Suchpfad ist kein gültiger Ordner.','search_size_invalid':'Die Mindestgröße darf nicht größer als die Höchstgröße sein.','search_open_folder':'Ordner öffnen','search_copy_path':'Pfad kopieren'},
+'en': {'search_title':'Search – LunaCommander','search_subtitle':'Find files and folders quickly with practical filters.','search_path':'Search path:','browse':'Browse …','search_term':'Search for:','search_placeholder':'File or folder name …','search_case':'Match case','search_whole':'Whole words only','search_recursive':'Search subfolders','search_hidden':'Include hidden files and folders','search_tab_general':'General','search_tab_types':'File type','search_tab_size':'Size','search_filetypes':'File patterns:','search_min_size':'Minimum size:','search_max_size':'Maximum size:','search_size_note':'0 means no limit. Size filters apply to files.','search_presets':'Presets …','search_preset_documents':'Documents','search_preset_images':'Images','search_preset_archives':'Archives','search_run':'Search','search_invalid_path':'The search path is not a valid folder.','search_size_invalid':'Minimum size cannot exceed maximum size.','search_open_folder':'Open folder','search_copy_path':'Copy path'},
+'fr': {'search_title':'Rechercher – LunaCommander','search_subtitle':'Retrouvez rapidement des fichiers et dossiers grâce aux filtres.','search_path':'Dossier :','browse':'Parcourir …','search_term':'Recherche :','search_placeholder':'Nom du fichier ou dossier …','search_case':'Respecter la casse','search_whole':'Mots entiers uniquement','search_recursive':'Rechercher dans les sous-dossiers','search_hidden':'Inclure les fichiers et dossiers cachés','search_tab_general':'Général','search_tab_types':'Type de fichier','search_tab_size':'Taille','search_filetypes':'Motifs :','search_min_size':'Taille minimale :','search_max_size':'Taille maximale :','search_size_note':'0 signifie aucune limite. Le filtre s’applique aux fichiers.','search_presets':'Préréglages …','search_preset_documents':'Documents','search_preset_images':'Images','search_preset_archives':'Archives','search_run':'Rechercher','search_invalid_path':'Le dossier indiqué est invalide.','search_size_invalid':'La taille minimale dépasse la taille maximale.','search_open_folder':'Ouvrir le dossier','search_copy_path':'Copier le chemin'},
+'it': {'search_title':'Cerca – LunaCommander','search_subtitle':'Trova rapidamente file e cartelle con filtri pratici.','search_path':'Percorso:','browse':'Sfoglia …','search_term':'Cerca:','search_placeholder':'Nome file o cartella …','search_case':'Distingui maiuscole/minuscole','search_whole':'Solo parole intere','search_recursive':'Cerca nelle sottocartelle','search_hidden':'Includi file e cartelle nascosti','search_tab_general':'Generale','search_tab_types':'Tipo file','search_tab_size':'Dimensione','search_filetypes':'Modelli file:','search_min_size':'Dimensione minima:','search_max_size':'Dimensione massima:','search_size_note':'0 significa nessun limite. Il filtro vale per i file.','search_presets':'Preimpostazioni …','search_preset_documents':'Documenti','search_preset_images':'Immagini','search_preset_archives':'Archivi','search_run':'Cerca','search_invalid_path':'Il percorso non è una cartella valida.','search_size_invalid':'La dimensione minima supera quella massima.','search_open_folder':'Apri cartella','search_copy_path':'Copia percorso'},
+'nl': {'search_title':'Zoeken – LunaCommander','search_subtitle':'Vind snel bestanden en mappen met handige filters.','search_path':'Zoekpad:','browse':'Bladeren …','search_term':'Zoeken naar:','search_placeholder':'Bestands- of mapnaam …','search_case':'Hoofdlettergevoelig','search_whole':'Alleen hele woorden','search_recursive':'Zoeken in submappen','search_hidden':'Verborgen bestanden en mappen opnemen','search_tab_general':'Algemeen','search_tab_types':'Bestandstype','search_tab_size':'Grootte','search_filetypes':'Bestandspatronen:','search_min_size':'Minimumgrootte:','search_max_size':'Maximumgrootte:','search_size_note':'0 betekent geen limiet. Groottefilter geldt voor bestanden.','search_presets':'Voorinstellingen …','search_preset_documents':'Documenten','search_preset_images':'Afbeeldingen','search_preset_archives':'Archieven','search_run':'Zoeken','search_invalid_path':'Het zoekpad is geen geldige map.','search_size_invalid':'Minimumgrootte mag niet groter zijn dan maximumgrootte.','search_open_folder':'Map openen','search_copy_path':'Pad kopiëren'}
+}
+for _lang, _entries in SEARCH_TRANSLATIONS.items():
+    TRANSLATIONS[_lang].update(_entries)
+for _lang, _entries in {'de': {'search_running': 'Suche läuft …', 'search_stopping': 'Suche wird abgebrochen …', 'search_cancelled': 'Suche abgebrochen', 'search_complete': 'Suche abgeschlossen', 'search_stop': 'Abbrechen'}, 'en': {'search_running': 'Searching …', 'search_stopping': 'Stopping search …', 'search_cancelled': 'Search cancelled', 'search_complete': 'Search complete', 'search_stop': 'Stop'}, 'fr': {'search_running': 'Recherche en cours …', 'search_stopping': 'Arrêt de la recherche …', 'search_cancelled': 'Recherche annulée', 'search_complete': 'Recherche terminée', 'search_stop': 'Arrêter'}, 'it': {'search_running': 'Ricerca in corso …', 'search_stopping': 'Interruzione della ricerca …', 'search_cancelled': 'Ricerca annullata', 'search_complete': 'Ricerca completata', 'search_stop': 'Interrompi'}, 'nl': {'search_running': 'Zoeken …', 'search_stopping': 'Zoeken stoppen …', 'search_cancelled': 'Zoeken geannuleerd', 'search_complete': 'Zoeken voltooid', 'search_stop': 'Stoppen'}}.items():
     TRANSLATIONS[_lang].update(_entries)
 
 for _lang, _entries in {'de': {'archive_label': 'Archiv', 'insert': 'Einfügen', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'archive_entries': 'Einträge', 'connected': 'verbunden', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'moved': 'Verschoben: ', 'copied': 'Kopiert: '}, 'en': {'archive_label': 'Archive', 'insert': 'Paste', 'archive_duplicate': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'select_entry': 'Please select a file or folder in the active pane first.', 'archive_entries': 'entries', 'connected': 'connected', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'moved': 'Moved: ', 'copied': 'Copied: '}, 'fr': {'archive_label': 'Archive', 'insert': 'Coller', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'archive_entries': 'entrées', 'connected': 'connecté', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: '}, 'it': {'archive_label': 'Archivio', 'insert': 'Incolla', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'archive_entries': 'elementi', 'connected': 'connesso', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'moved': 'Spostato: ', 'copied': 'Copiato: '}, 'nl': {'archive_label': 'Archief', 'insert': 'Plakken', 'archive_duplicate': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'archive_entries': 'items', 'connected': 'verbonden', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: '}}.items():
@@ -796,6 +809,95 @@ class ThumbnailWorker(QRunnable):
             pass
 
 
+class SearchSignals(QObject):
+    batch = Signal(list)
+    finished = Signal(int, bool, str)
+
+
+class SearchWorker(QRunnable):
+    """Search the filesystem in a pool thread and stream result batches to the GUI."""
+    def __init__(self, base, query, case_sensitive, whole_word, recursive,
+                 include_hidden, masks, min_bytes, max_bytes, limit=1000):
+        super().__init__()
+        self.base = str(base)
+        self.query = query
+        self.case_sensitive = case_sensitive
+        self.whole_word = whole_word
+        self.recursive = recursive
+        self.include_hidden = include_hidden
+        self.masks = list(masks)
+        self.min_bytes = min_bytes
+        self.max_bytes = max_bytes
+        self.limit = limit
+        self.cancel_event = threading.Event()
+        self.signals = SearchSignals()
+
+    def cancel(self):
+        self.cancel_event.set()
+
+    def run(self):
+        import fnmatch, re
+        count = 0
+        batch = []
+        try:
+            needle = self.query if self.case_sensitive else self.query.casefold()
+            def matches_name(name):
+                candidate = name if self.case_sensitive else name.casefold()
+                if self.whole_word:
+                    return re.search(r'(?<![\\w])' + re.escape(needle) + r'(?![\\w])', candidate) is not None
+                if '*' in needle or '?' in needle:
+                    return fnmatch.fnmatch(candidate, needle)
+                return needle in candidate
+
+            def walk_error(_error):
+                # Permission-denied folders are skipped; the rest of the search continues.
+                return
+
+            if self.recursive:
+                walker = os.walk(self.base, onerror=walk_error)
+            else:
+                try:
+                    entries = list(Path(self.base).iterdir())
+                except OSError:
+                    entries = []
+                walker = [(self.base,
+                           [x.name for x in entries if x.is_dir()],
+                           [x.name for x in entries if x.is_file()])]
+            for folder, dirs, files in walker:
+                if self.cancel_event.is_set():
+                    break
+                if not self.include_hidden:
+                    dirs[:] = [name for name in dirs if not name.startswith('.')]
+                    files = [name for name in files if not name.startswith('.')]
+                for name, is_dir in [(name, True) for name in dirs] + [(name, False) for name in files]:
+                    if self.cancel_event.is_set() or count >= self.limit:
+                        break
+                    if not matches_name(name):
+                        continue
+                    if not any(fnmatch.fnmatch(name.casefold(), mask.casefold()) for mask in self.masks):
+                        continue
+                    full = Path(folder) / name
+                    try:
+                        size = full.stat().st_size if not is_dir else 0
+                    except OSError:
+                        continue
+                    if not is_dir and (size < self.min_bytes or
+                                       (self.max_bytes is not None and size > self.max_bytes)):
+                        continue
+                    batch.append(str(full))
+                    count += 1
+                    if len(batch) >= 25:
+                        self.signals.batch.emit(batch)
+                        batch = []
+                if count >= self.limit:
+                    break
+            if batch:
+                self.signals.batch.emit(batch)
+            self.signals.finished.emit(count, self.cancel_event.is_set(), '')
+        except Exception as exc:
+            self.signals.finished.emit(count, self.cancel_event.is_set(), str(exc))
+
+
 class TransferSignals(QObject):
     progress = Signal(int)
     finished = Signal(str, bool, str)
@@ -1281,7 +1383,7 @@ class Main(QMainWindow):
         top_bar=QWidget(); top_bar.setObjectName('topActionBar')
         top_layout=QHBoxLayout(top_bar); top_layout.setContentsMargins(0,0,0,0); top_layout.setSpacing(2)
         toolbar_actions=[
-            ('new','SP_FileDialogNewFolder',self.new_file),('copy','SP_FileIcon',self.copy),('move','SP_ArrowForward',self.move_other),('delete','SP_TrashIcon',self.delete),('rename','SP_FileDialogDetailedView',self.rename),('properties','SP_MessageBoxInformation',self.properties),('refresh','SP_BrowserReload',self.refresh),('archive','SP_DirOpenIcon',self.show_menu),('ftp','SP_DriveNetIcon',lambda:self.connect_remote('FTP')),('sftp','SP_DriveNetIcon',lambda:self.connect_remote('SFTP')),('ftps','SP_DriveNetIcon',lambda:self.connect_remote('FTPS')),('disconnect','SP_DialogCancelButton',self.disconnect),('search','SP_FileDialogContentsView',self.search_files),('settings','SP_FileDialogInfoView',self.settings_dialog)
+            ('new','SP_FileDialogNewFolder',self.new_file),('copy','SP_FileIcon',self.copy),('move','SP_ArrowForward',self.move_other),('delete','SP_TrashIcon',self.delete),('rename','SP_FileDialogDetailedView',self.rename),('properties','SP_MessageBoxInformation',self.properties),('refresh','SP_BrowserReload',self.refresh),('ftp','SP_DriveNetIcon',lambda:self.connect_remote('FTP')),('sftp','SP_DriveNetIcon',lambda:self.connect_remote('SFTP')),('ftps','SP_DriveNetIcon',lambda:self.connect_remote('FTPS')),('disconnect','SP_DialogCancelButton',self.disconnect),('search','SP_FileDialogContentsView',self.search_files),('settings','SP_FileDialogInfoView',self.settings_dialog)
         ]
         self.toolbar_actions=[]; self.toolbar_buttons=[]
         for key,icon_name,fn in toolbar_actions:
@@ -1716,20 +1818,286 @@ class Main(QMainWindow):
             QDesktopServices.openUrl(QUrl.fromLocalFile(str(target)))
         except Exception as e: QMessageBox.warning(self,self.tr('open_archive_error'),str(e))
     def search_files(self):
-        p=self.active or self.left
-        term,ok=QInputDialog.getText(self,self.tr('search'),self.tr('search_prompt'))
-        if not ok or not term:return
-        if p.remote:
-            QMessageBox.information(self,self.tr('search'),self.tr('remote_search_unavailable')); return
-        matches=[]
-        try:
-            for root,dirs,files in os.walk(p.path):
-                for name in dirs+files:
-                    if term.casefold() in name.casefold(): matches.append(str(Path(root)/name))
-                    if len(matches)>=500: break
-                if len(matches)>=500: break
-            QMessageBox.information(self,self.tr('search_results'), '\\n'.join(matches[:80]) if matches else self.tr('no_matches'))
-        except Exception as e: QMessageBox.warning(self,self.tr('search_error'),str(e))
+        """Open the integrated, filterable file search dialog."""
+        pane = self.active or self.left
+        if pane.remote:
+            QMessageBox.information(self, self.tr('search'), self.tr('remote_search_unavailable'))
+            return
+        if pane.archive_file:
+            QMessageBox.information(self, self.tr('search'), self.tr('archive_local_only'))
+            return
+
+        d = QDialog(self)
+        d.setWindowTitle(self.tr('search_title'))
+        d.setMinimumSize(690, 520)
+        d.resize(760, 570)
+        d.setObjectName('searchDialog')
+        outer = QVBoxLayout(d)
+        outer.setContentsMargins(18, 16, 18, 16)
+        outer.setSpacing(12)
+
+        intro = QLabel(self.tr('search_subtitle'))
+        intro.setObjectName('searchIntro')
+        outer.addWidget(intro)
+
+        path_row = QHBoxLayout()
+        path_label = QLabel(self.tr('search_path'))
+        path_label.setMinimumWidth(105)
+        path = QLineEdit(str(Path(pane.path).expanduser()))
+        path.setClearButtonEnabled(True)
+        browse = QPushButton(self.tr('browse'))
+        path_row.addWidget(path_label)
+        path_row.addWidget(path, 1)
+        path_row.addWidget(browse)
+        outer.addLayout(path_row)
+
+        term_row = QHBoxLayout()
+        term_label = QLabel(self.tr('search_term'))
+        term_label.setMinimumWidth(105)
+        term = QLineEdit()
+        term.setPlaceholderText(self.tr('search_placeholder'))
+        term.setClearButtonEnabled(True)
+        term_row.addWidget(term_label)
+        term_row.addWidget(term, 1)
+        outer.addLayout(term_row)
+
+        tabs = QTabWidget()
+        general = QWidget()
+        general_layout = QVBoxLayout(general)
+        case_sensitive = QCheckBox(self.tr('search_case'))
+        whole_word = QCheckBox(self.tr('search_whole'))
+        recursive = QCheckBox(self.tr('search_recursive'))
+        recursive.setChecked(True)
+        hidden = QCheckBox(self.tr('search_hidden'))
+        general_layout.addWidget(case_sensitive)
+        general_layout.addWidget(whole_word)
+        general_layout.addWidget(recursive)
+        general_layout.addWidget(hidden)
+        general_layout.addStretch(1)
+        tabs.addTab(general, self.tr('search_tab_general'))
+
+        types = QWidget()
+        types_layout = QFormLayout(types)
+        patterns = QLineEdit()
+        patterns.setPlaceholderText('*.pdf; *.jpg; *.zip')
+        patterns.setText('*')
+        types_layout.addRow(self.tr('search_filetypes'), patterns)
+        tabs.addTab(types, self.tr('search_tab_types'))
+
+        size_tab = QWidget()
+        size_layout = QFormLayout(size_tab)
+        min_size = QSpinBox(); min_size.setRange(0, 2_000_000); min_size.setSuffix(' MB')
+        max_size = QSpinBox(); max_size.setRange(0, 2_000_000); max_size.setSuffix(' MB')
+        size_layout.addRow(self.tr('search_min_size'), min_size)
+        size_layout.addRow(self.tr('search_max_size'), max_size)
+        size_note = QLabel(self.tr('search_size_note'))
+        size_note.setWordWrap(True)
+        size_layout.addRow(size_note)
+        tabs.addTab(size_tab, self.tr('search_tab_size'))
+        outer.addWidget(tabs, 1)
+
+        result_header = QHBoxLayout()
+        result_title = QLabel(self.tr('search_results'))
+        result_title.setObjectName('searchResultTitle')
+        count_label = QLabel('')
+        count_label.setObjectName('searchCount')
+        result_header.addWidget(result_title)
+        result_header.addStretch(1)
+        result_header.addWidget(count_label)
+        outer.addLayout(result_header)
+
+        results = QListWidget()
+        results.setObjectName('searchResults')
+        results.setAlternatingRowColors(True)
+        results.setSelectionMode(QAbstractItemView.SingleSelection)
+        results.setMinimumHeight(115)
+        outer.addWidget(results, 1)
+
+        progress_row = QHBoxLayout()
+        progress = QProgressBar()
+        progress.setRange(0, 0)
+        progress.setTextVisible(False)
+        progress.setFixedHeight(9)
+        progress.hide()
+        search_status = QLabel('')
+        search_status.setObjectName('searchCount')
+        progress_row.addWidget(progress, 1)
+        progress_row.addWidget(search_status)
+        outer.addLayout(progress_row)
+
+        footer = QHBoxLayout()
+        presets = QComboBox()
+        presets.addItem(self.tr('search_presets'))
+        presets.addItem(self.tr('search_preset_documents'))
+        presets.addItem(self.tr('search_preset_images'))
+        presets.addItem(self.tr('search_preset_archives'))
+        footer.addWidget(presets)
+        footer.addStretch(1)
+        search_button = QPushButton(self.tr('search_run'))
+        search_button.setObjectName('searchPrimary')
+        cancel_button = QPushButton(self.tr('cancel'))
+        footer.addWidget(search_button)
+        footer.addWidget(cancel_button)
+        outer.addLayout(footer)
+
+        def browse_folder():
+            chosen = QFileDialog.getExistingDirectory(d, self.tr('search_path'), path.text() or str(Path.home()))
+            if chosen:
+                path.setText(chosen)
+
+        def apply_preset(index):
+            values = {1: '*.pdf;*.odt;*.doc;*.docx;*.txt;*.rtf',
+                      2: '*.png;*.jpg;*.jpeg;*.gif;*.webp;*.svg',
+                      3: '*.zip;*.7z;*.rar;*.tar;*.tar.gz;*.tgz'}
+            if index in values:
+                patterns.setText(values[index])
+
+        browse.clicked.connect(browse_folder)
+        presets.currentIndexChanged.connect(apply_preset)
+        active_worker = {'worker': None}
+        cancel_button.clicked.connect(stop_or_close)
+
+        found_paths = []
+        def add_results(batch):
+            for full in batch:
+                found_paths.append(full)
+                item = QListWidgetItem(full)
+                item.setToolTip(full)
+                results.addItem(item)
+            count_label.setText(str(len(found_paths)) + ('+' if len(found_paths) >= 1000 else ''))
+
+        def search_finished(count, was_cancelled, error):
+            progress.hide()
+            search_button.setEnabled(True)
+            cancel_button.setText(self.tr('cancel'))
+            cancel_button.setEnabled(True)
+            active_worker['worker'] = None
+            if error:
+                search_status.setText(self.tr('search_error'))
+                QMessageBox.warning(d, self.tr('search_error'), error)
+            elif was_cancelled:
+                search_status.setText(self.tr('search_cancelled'))
+            else:
+                search_status.setText(self.tr('search_complete'))
+            if not found_paths:
+                results.addItem(self.tr('no_matches'))
+            count_label.setText(str(count) + ('+' if count >= 1000 else ''))
+
+        def run_search():
+            query = term.text().strip()
+            base = Path(path.text()).expanduser()
+            if not query:
+                term.setFocus()
+                return
+            if not base.is_dir():
+                QMessageBox.warning(d, self.tr('search_error'), self.tr('search_invalid_path'))
+                path.setFocus()
+                return
+            if min_size.value() and max_size.value() and min_size.value() > max_size.value():
+                QMessageBox.warning(d, self.tr('search_error'), self.tr('search_size_invalid'))
+                return
+            previous = active_worker.get('worker')
+            if previous:
+                previous.cancel()
+            found_paths.clear()
+            results.clear()
+            count_label.clear()
+            search_status.setText(self.tr('search_running'))
+            progress.show()
+            search_button.setEnabled(False)
+            cancel_button.setText(self.tr('search_stop'))
+            cancel_button.setEnabled(True)
+            masks = [x.strip() for x in patterns.text().split(';') if x.strip()] or ['*']
+            worker = SearchWorker(
+                base=base, query=query,
+                case_sensitive=case_sensitive.isChecked(),
+                whole_word=whole_word.isChecked(),
+                recursive=recursive.isChecked(),
+                include_hidden=hidden.isChecked(),
+                masks=masks,
+                min_bytes=min_size.value() * 1024 * 1024,
+                max_bytes=max_size.value() * 1024 * 1024 if max_size.value() else None)
+            active_worker['worker'] = worker
+            worker.signals.batch.connect(add_results)
+            worker.signals.finished.connect(search_finished)
+            QThreadPool.globalInstance().start(worker)
+
+        def stop_or_close():
+            worker = active_worker.get('worker')
+            if worker:
+                worker.cancel()
+                search_status.setText(self.tr('search_stopping'))
+                cancel_button.setEnabled(False)
+            else:
+                d.reject()
+
+        def open_result(item=None):
+            item = item or results.currentItem()
+            if not item or item.text() == self.tr('no_matches'):
+                return
+            target = Path(item.text())
+            try:
+                from PySide6.QtGui import QDesktopServices
+                from PySide6.QtCore import QUrl
+                QDesktopServices.openUrl(QUrl.fromLocalFile(str(target)))
+            except Exception as exc:
+                QMessageBox.warning(d, self.tr('search_error'), str(exc))
+
+        search_button.clicked.connect(run_search)
+        results.itemDoubleClicked.connect(open_result)
+        term.returnPressed.connect(run_search)
+        results.setContextMenuPolicy(Qt.CustomContextMenu)
+        def result_menu(pos):
+            item = results.itemAt(pos)
+            if not item or item.text() == self.tr('no_matches'):
+                return
+            menu = QMenu(results)
+            open_action = menu.addAction(self.tr('search_open_folder'))
+            copy_action = menu.addAction(self.tr('search_copy_path'))
+            chosen = menu.exec(results.mapToGlobal(pos))
+            if chosen == open_action:
+                open_result(item)
+            elif chosen == copy_action:
+                QApplication.clipboard().setText(item.text())
+        results.customContextMenuRequested.connect(result_menu)
+
+        d.setStyleSheet(self.search_stylesheet())
+        term.setFocus()
+        d.exec()
+
+    def search_stylesheet(self):
+        return """
+        QDialog#searchDialog { background:#0b192b; color:#eaf2ff; }
+        QDialog#searchDialog QLabel { color:#eaf2ff; }
+        QDialog#searchDialog QLabel#searchIntro { color:#b8c8e4; font-size:13px; padding:2px 2px 7px; }
+        QDialog#searchDialog QLabel#searchResultTitle { font-size:14px; font-weight:700; }
+        QDialog#searchDialog QLabel#searchCount { color:#c9a7ff; font-weight:700; }
+        QDialog#searchDialog QLineEdit, QDialog#searchDialog QSpinBox, QDialog#searchDialog QComboBox {
+            background:#102b45; color:#f4f7ff; border:1px solid #37658e; border-radius:7px;
+            padding:8px 10px; selection-background-color:#7535d4; min-height:20px;
+        }
+        QDialog#searchDialog QLineEdit:focus, QDialog#searchDialog QSpinBox:focus {
+            border:1px solid #bd75ff;
+        }
+        QDialog#searchDialog QTabWidget::pane { border:1px solid #315b88; border-radius:9px; background:#10243b; }
+        QDialog#searchDialog QTabBar::tab {
+            background:#142e4a; color:#dce8fb; border:1px solid #315b88; padding:10px 16px;
+            margin-right:3px; border-top-left-radius:7px; border-top-right-radius:7px;
+        }
+        QDialog#searchDialog QTabBar::tab:selected { background:#5820a4; color:white; border-color:#b46cff; }
+        QDialog#searchDialog QCheckBox { spacing:10px; padding:7px 4px; color:#edf3ff; }
+        QDialog#searchDialog QCheckBox::indicator { width:18px; height:18px; }
+        QDialog#searchDialog QCheckBox::indicator:unchecked { background:#102b45; border:1px solid #7190b2; border-radius:5px; }
+        QDialog#searchDialog QCheckBox::indicator:checked { background:#a43cff; border:1px solid #d4a2ff; border-radius:5px; }
+        QDialog#searchDialog QListWidget { background:#081727; color:#eaf2ff; border:1px solid #315b88; border-radius:8px; padding:5px; }
+        QDialog#searchDialog QListWidget::item { padding:7px; border-radius:4px; }
+        QDialog#searchDialog QListWidget::item:selected { background:#174e83; }
+        QDialog#searchDialog QPushButton { background:#173c5d; color:white; border:1px solid #4a80b2; border-radius:8px; padding:9px 16px; min-width:90px; }
+        QDialog#searchDialog QPushButton:hover { background:#245b87; border-color:#8dbfff; }
+        QDialog#searchDialog QPushButton#searchPrimary { background:#7227c4; border:1px solid #d49aff; font-weight:700; min-width:125px; }
+        QDialog#searchDialog QPushButton#searchPrimary:hover { background:#8d35e4; }
+        QDialog#searchDialog QTabBar { background:transparent; }
+        """
     def load_config(self):
         try:self.config=json.loads(self.config_path.read_text())
         except Exception:self.config={}

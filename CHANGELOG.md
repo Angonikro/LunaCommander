@@ -1,5 +1,17 @@
 # LunaCommander Changelog
 
+## 0.6.63
+- Dateisuche läuft in einem Hintergrund-Worker; die Oberfläche bleibt währenddessen bedienbar.
+- Suchtreffer werden während der Suche in Paketen angezeigt; Fortschrittsanzeige und Abbrechen-Funktion ergänzt.
+- Suchfilter für Dateiname, Dateityp, versteckte Dateien sowie Mindest-/Höchstgröße bleiben verfügbar.
+- Suchdialog vollständig überarbeitet: modernes dunkles Design mit violetten Akzenten, klarer Gruppierung und komfortabler Ergebnisliste.
+- Suche mit frei wählbarem Suchpfad, Durchsuchen-Dialog, Groß-/Kleinschreibung, ganzen Wörtern und optionaler Unterordnersuche.
+- Filter für Dateimuster sowie minimale und maximale Dateigröße; Schnellvorgaben für Dokumente, Bilder und Archive.
+- Versteckte Dateien und Ordner können optional einbezogen werden; bis zu 1.000 Treffer werden angezeigt.
+- Doppelklick öffnet den Treffer; Kontextmenü ermöglicht das Öffnen des übergeordneten Ordners oder das Kopieren des vollständigen Pfads.
+- Archiv-Schaltfläche aus der oberen Symbolleiste entfernt; verbleibende Schaltflächen nutzen die gesamte Breite ohne reservierte Lücke. Archivfunktionen bleiben über Menü und Kontextmenüs erreichbar.
+
+
 ## 0.6.62
 - Neue Einstellung für Dateigrößen
 - Unter Einstellungen soll man auswählen können, in welcher Einheit die Dateigröße angezeigt wird:
@@ -9,7 +21,7 @@
 - System-Zwischenablage für MATE/Caja korrigiert: lokale Dateien und Ordner können aus LunaCommander nach Caja und auf den MATE-Desktop kopiert und dort eingefügt werden.
 - Ausschneiden über die System-Zwischenablage ergänzt, damit Dateien und Ordner aus LunaCommander in Caja oder auf dem MATE-Desktop verschoben werden können.
 - MATE-kompatible Clipboard-Daten für Kopieren und Ausschneiden bereinigt, sodass Caja beim Einfügen nicht mehr abstürzt.
-- README und Installationshinweise auf Version 0.6.62 aktualisiert.
+- README und Installationshinweise auf Version 0.6.63 aktualisiert.
 - Paketierung aktualisiert, damit die mitgelieferten Dateityp-Symbole auch im Debian-Paket vollständig enthalten sind.
 
 ## 0.6.60
