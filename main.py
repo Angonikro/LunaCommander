@@ -4,7 +4,7 @@ import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfi
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
-from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QTabWidget,QListWidget,QListWidgetItem,QSpinBox)
+from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QTabWidget,QListWidget,QListWidgetItem,QSpinBox,QGroupBox,QGridLayout,QFormLayout)
 
 
 
@@ -186,7 +186,7 @@ for _lang, _entries in {
 
 
 # Extended translations for every visible dialog, prompt and archive action.
-for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.63 – Qt6', 'about_help': 'Help'}}.items():
+for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.64 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.64 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.64 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.64 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.64 – Qt6', 'about_help': 'Help'}}.items():
     TRANSLATIONS[_lang].update(_entries)
 
 
@@ -199,6 +199,12 @@ SEARCH_TRANSLATIONS = {
 }
 for _lang, _entries in SEARCH_TRANSLATIONS.items():
     TRANSLATIONS[_lang].update(_entries)
+for _lang, _entries in {'de': {'file_properties_title': 'Dateieigenschaften', 'properties_general_tab': 'Allgemein', 'properties_permissions_tab': 'Berechtigungen', 'properties_type': 'Typ:', 'properties_size': 'Dateigröße:', 'properties_modified': 'Geändert:', 'properties_created': 'Metadaten geändert:', 'properties_owner': 'Besitzer:', 'properties_group': 'Gruppe:', 'properties_current_owner': 'Aktueller Besitzer:', 'properties_current_group': 'Aktuelle Gruppe:', 'properties_change_owner': 'Besitzer ändern zu:', 'properties_change_group': 'Gruppe ändern zu:', 'properties_owner_hint': 'Leer lassen = unverändert', 'properties_group_hint': 'Leer lassen = unverändert', 'properties_read': 'Lesen', 'properties_write': 'Schreiben', 'properties_execute': 'Ausführen', 'properties_owner_permissions': 'Besitzer', 'properties_group_permissions': 'Gruppe', 'properties_other_permissions': 'Andere', 'properties_octal': 'Oktalberechtigung:', 'properties_apply_recursive': 'Auf alle Dateien und Unterordner anwenden', 'properties_permissions_note': 'Hinweis: Besitzer- und Gruppenwechsel benötigen entsprechende Systemrechte. Nicht zugängliche Einträge werden als Fehler gezählt.', 'properties_apply': 'Übernehmen', 'properties_apply_running': 'Berechtigungen werden angewendet …', 'properties_apply_done': 'Geändert: {changed} · Fehler: {errors}', 'properties_apply_error': 'Fehler beim Ändern der Berechtigungen', 'properties_permission_tooltip': '{group}: {permission}', 'properties_disk_size': 'Belegter Speicherplatz:'}, 'en': {'file_properties_title': 'File properties', 'properties_general_tab': 'General', 'properties_permissions_tab': 'Permissions', 'properties_type': 'Type:', 'properties_size': 'File size:', 'properties_modified': 'Modified:', 'properties_created': 'Metadata changed:', 'properties_owner': 'Owner:', 'properties_group': 'Group:', 'properties_current_owner': 'Current owner:', 'properties_current_group': 'Current group:', 'properties_change_owner': 'Change owner to:', 'properties_change_group': 'Change group to:', 'properties_owner_hint': 'Leave blank to keep unchanged', 'properties_group_hint': 'Leave blank to keep unchanged', 'properties_read': 'Read', 'properties_write': 'Write', 'properties_execute': 'Execute', 'properties_owner_permissions': 'Owner', 'properties_group_permissions': 'Group', 'properties_other_permissions': 'Others', 'properties_octal': 'Octal permissions:', 'properties_apply_recursive': 'Apply to all files and subfolders', 'properties_permissions_note': 'Note: changing owner or group requires appropriate system privileges. Inaccessible entries are counted as errors.', 'properties_apply': 'Apply', 'properties_apply_running': 'Applying permissions …', 'properties_apply_done': 'Changed: {changed} · Errors: {errors}', 'properties_apply_error': 'Could not change permissions', 'properties_permission_tooltip': '{group}: {permission}', 'properties_disk_size': 'Space used on disk:'}, 'fr': {'file_properties_title': 'Propriétés du fichier', 'properties_general_tab': 'Général', 'properties_permissions_tab': 'Autorisations', 'properties_type': 'Type :', 'properties_size': 'Taille du fichier :', 'properties_modified': 'Modifié :', 'properties_created': 'Métadonnées modifiées :', 'properties_owner': 'Propriétaire :', 'properties_group': 'Groupe :', 'properties_current_owner': 'Propriétaire actuel :', 'properties_current_group': 'Groupe actuel :', 'properties_change_owner': 'Changer le propriétaire :', 'properties_change_group': 'Changer le groupe :', 'properties_owner_hint': 'Laisser vide pour conserver', 'properties_group_hint': 'Laisser vide pour conserver', 'properties_read': 'Lecture', 'properties_write': 'Écriture', 'properties_execute': 'Exécution', 'properties_owner_permissions': 'Propriétaire', 'properties_group_permissions': 'Groupe', 'properties_other_permissions': 'Autres', 'properties_octal': 'Permissions octales :', 'properties_apply_recursive': 'Appliquer à tous les fichiers et sous-dossiers', 'properties_permissions_note': 'La modification du propriétaire ou du groupe nécessite les droits système appropriés. Les éléments inaccessibles sont comptés comme erreurs.', 'properties_apply': 'Appliquer', 'properties_apply_running': 'Application des autorisations …', 'properties_apply_done': 'Modifiés : {changed} · Erreurs : {errors}', 'properties_apply_error': 'Impossible de modifier les autorisations', 'properties_permission_tooltip': '{group} : {permission}', 'properties_disk_size': 'Espace disque utilisé :'}, 'it': {'file_properties_title': 'Proprietà file', 'properties_general_tab': 'Generale', 'properties_permissions_tab': 'Permessi', 'properties_type': 'Tipo:', 'properties_size': 'Dimensione file:', 'properties_modified': 'Modificato:', 'properties_created': 'Metadati modificati:', 'properties_owner': 'Proprietario:', 'properties_group': 'Gruppo:', 'properties_current_owner': 'Proprietario attuale:', 'properties_current_group': 'Gruppo attuale:', 'properties_change_owner': 'Cambia proprietario in:', 'properties_change_group': 'Cambia gruppo in:', 'properties_owner_hint': 'Lascia vuoto per non modificare', 'properties_group_hint': 'Lascia vuoto per non modificare', 'properties_read': 'Lettura', 'properties_write': 'Scrittura', 'properties_execute': 'Esecuzione', 'properties_owner_permissions': 'Proprietario', 'properties_group_permissions': 'Gruppo', 'properties_other_permissions': 'Altri', 'properties_octal': 'Permessi ottali:', 'properties_apply_recursive': 'Applica a tutti i file e le sottocartelle', 'properties_permissions_note': 'La modifica del proprietario o del gruppo richiede i privilegi di sistema appropriati. Gli elementi non accessibili vengono conteggiati come errori.', 'properties_apply': 'Applica', 'properties_apply_running': 'Applicazione dei permessi …', 'properties_apply_done': 'Modificati: {changed} · Errori: {errors}', 'properties_apply_error': 'Impossibile modificare i permessi', 'properties_permission_tooltip': '{group}: {permission}', 'properties_disk_size': 'Spazio occupato su disco:'}, 'nl': {'file_properties_title': 'Bestandseigenschappen', 'properties_general_tab': 'Algemeen', 'properties_permissions_tab': 'Machtigingen', 'properties_type': 'Type:', 'properties_size': 'Bestandsgrootte:', 'properties_modified': 'Gewijzigd:', 'properties_created': 'Metadata gewijzigd:', 'properties_owner': 'Eigenaar:', 'properties_group': 'Groep:', 'properties_current_owner': 'Huidige eigenaar:', 'properties_current_group': 'Huidige groep:', 'properties_change_owner': 'Eigenaar wijzigen in:', 'properties_change_group': 'Groep wijzigen in:', 'properties_owner_hint': 'Leeg laten om niet te wijzigen', 'properties_group_hint': 'Leeg laten om niet te wijzigen', 'properties_read': 'Lezen', 'properties_write': 'Schrijven', 'properties_execute': 'Uitvoeren', 'properties_owner_permissions': 'Eigenaar', 'properties_group_permissions': 'Groep', 'properties_other_permissions': 'Anderen', 'properties_octal': 'Octale machtigingen:', 'properties_apply_recursive': 'Toepassen op alle bestanden en submappen', 'properties_permissions_note': 'Voor het wijzigen van eigenaar of groep zijn de juiste systeemrechten nodig. Niet-toegankelijke items tellen als fouten.', 'properties_apply': 'Toepassen', 'properties_apply_running': 'Machtigingen toepassen …', 'properties_apply_done': 'Gewijzigd: {changed} · Fouten: {errors}', 'properties_apply_error': 'Machtigingen konden niet worden gewijzigd', 'properties_permission_tooltip': '{group}: {permission}', 'properties_disk_size': 'Gebruikte schijfruimte:'}}.items():
+    TRANSLATIONS[_lang].update(_entries)
+for _lang, _entries in {'de': {'folder_properties_title': 'Ordnereigenschaften', 'folder_properties_scanning': 'Ordnerinhalt wird analysiert …', 'folder_properties_contents': 'Inhalt dieses Ordners', 'folder_properties_summary': 'Direkt enthalten: {direct_dirs} Ordner und {direct_files} Dateien\nGesamt einschließlich Unterordner: {total_dirs} Unterordner und {total_files} Dateien\nGesamtgröße: {total_size}', 'folder_properties_error': 'Ordner konnte nicht vollständig gelesen werden: {error}', 'folder_properties_failed': 'Analyse fehlgeschlagen', 'folder_properties_done': 'Analyse abgeschlossen · Lesefehler: {errors}', 'folder_properties_empty': 'Dieser Ordner ist leer.', 'close': 'Schließen'}, 'en': {'folder_properties_title': 'Folder properties', 'folder_properties_scanning': 'Analyzing folder contents …', 'folder_properties_contents': 'Contents of this folder', 'folder_properties_summary': 'Directly contains: {direct_dirs} folders and {direct_files} files\nIncluding subfolders: {total_dirs} folders and {total_files} files\nTotal size: {total_size}', 'folder_properties_error': 'Could not read folder completely: {error}', 'folder_properties_failed': 'Analysis failed', 'folder_properties_done': 'Analysis complete · Read errors: {errors}', 'folder_properties_empty': 'This folder is empty.', 'close': 'Close'}, 'fr': {'folder_properties_title': 'Propriétés du dossier', 'folder_properties_scanning': 'Analyse du contenu du dossier …', 'folder_properties_contents': 'Contenu de ce dossier', 'folder_properties_summary': 'Contenu direct : {direct_dirs} dossiers et {direct_files} fichiers\nAvec les sous-dossiers : {total_dirs} dossiers et {total_files} fichiers\nTaille totale : {total_size}', 'folder_properties_error': 'Lecture incomplète du dossier : {error}', 'folder_properties_failed': 'Échec de l’analyse', 'folder_properties_done': 'Analyse terminée · Erreurs de lecture : {errors}', 'folder_properties_empty': 'Ce dossier est vide.', 'close': 'Fermer'}, 'it': {'folder_properties_title': 'Proprietà cartella', 'folder_properties_scanning': 'Analisi del contenuto della cartella …', 'folder_properties_contents': 'Contenuto di questa cartella', 'folder_properties_summary': 'Contenuto diretto: {direct_dirs} cartelle e {direct_files} file\nIncluse le sottocartelle: {total_dirs} cartelle e {total_files} file\nDimensione totale: {total_size}', 'folder_properties_error': 'Impossibile leggere completamente la cartella: {error}', 'folder_properties_failed': 'Analisi non riuscita', 'folder_properties_done': 'Analisi completata · Errori di lettura: {errors}', 'folder_properties_empty': 'Questa cartella è vuota.', 'close': 'Chiudi'}, 'nl': {'folder_properties_title': 'Mapeigenschappen', 'folder_properties_scanning': 'Mapinhoud analyseren …', 'folder_properties_contents': 'Inhoud van deze map', 'folder_properties_summary': 'Direct aanwezig: {direct_dirs} mappen en {direct_files} bestanden\nInclusief submappen: {total_dirs} mappen en {total_files} bestanden\nTotale grootte: {total_size}', 'folder_properties_error': 'Map kon niet volledig worden gelezen: {error}', 'folder_properties_failed': 'Analyse mislukt', 'folder_properties_done': 'Analyse voltooid · Leesfouten: {errors}', 'folder_properties_empty': 'Deze map is leeg.', 'close': 'Sluiten'}}.items():
+    TRANSLATIONS[_lang].update(_entries)
+    TRANSLATIONS[_lang]['folder_properties_summary'] += '\n' + {'de': 'Belegter Speicherplatz: {allocated_size}', 'en': 'Space used on disk: {allocated_size}', 'fr': 'Espace disque utilisé : {allocated_size}', 'it': 'Spazio occupato su disco: {allocated_size}', 'nl': 'Gebruikte schijfruimte: {allocated_size}'}[_lang]
+
 for _lang, _entries in {'de': {'search_running': 'Suche läuft …', 'search_stopping': 'Suche wird abgebrochen …', 'search_cancelled': 'Suche abgebrochen', 'search_complete': 'Suche abgeschlossen', 'search_stop': 'Abbrechen'}, 'en': {'search_running': 'Searching …', 'search_stopping': 'Stopping search …', 'search_cancelled': 'Search cancelled', 'search_complete': 'Search complete', 'search_stop': 'Stop'}, 'fr': {'search_running': 'Recherche en cours …', 'search_stopping': 'Arrêt de la recherche …', 'search_cancelled': 'Recherche annulée', 'search_complete': 'Recherche terminée', 'search_stop': 'Arrêter'}, 'it': {'search_running': 'Ricerca in corso …', 'search_stopping': 'Interruzione della ricerca …', 'search_cancelled': 'Ricerca annullata', 'search_complete': 'Ricerca completata', 'search_stop': 'Interrompi'}, 'nl': {'search_running': 'Zoeken …', 'search_stopping': 'Zoeken stoppen …', 'search_cancelled': 'Zoeken geannuleerd', 'search_complete': 'Zoeken voltooid', 'search_stop': 'Stoppen'}}.items():
     TRANSLATIONS[_lang].update(_entries)
 
@@ -1366,6 +1372,134 @@ class TransferWorker(QRunnable):
         elif remote.proto=='SFTP': remote.client.remove(rpath)
         else: remote.client.delete(rpath)
 
+class DirectoryStatsSignals(QObject):
+    finished = Signal(object, str)
+
+
+class DirectoryStatsWorker(QRunnable):
+    """Collect directory contents and recursive size without blocking the GUI."""
+    def __init__(self, folder):
+        super().__init__()
+        self.folder = str(folder)
+        self.signals = DirectoryStatsSignals()
+
+    def run(self):
+        try:
+            root = Path(self.folder)
+            entries = []
+            total_files = 0
+            total_dirs = 0
+            total_bytes = 0
+            allocated_bytes = 0
+            errors = 0
+
+            try:
+                children = sorted(root.iterdir(), key=lambda x: (not x.is_dir(), x.name.casefold()))
+            except OSError as exc:
+                self.signals.finished.emit({}, str(exc))
+                return
+
+            for child in children:
+                try:
+                    st = child.lstat()
+                    is_dir = child.is_dir() and not child.is_symlink()
+                    entries.append({
+                        'name': child.name,
+                        'is_dir': is_dir,
+                        'size': st.st_size if not is_dir else 0,
+                    })
+                except OSError:
+                    errors += 1
+
+            for current, dirs, files in os.walk(root, followlinks=False):
+                dirs[:] = [name for name in dirs if not (Path(current) / name).is_symlink()]
+                total_dirs += len(dirs)
+                total_files += len(files)
+                for name in files:
+                    try:
+                        file_stat = (Path(current) / name).stat()
+                        total_bytes += file_stat.st_size
+                        allocated_bytes += getattr(file_stat, 'st_blocks', 0) * 512 or file_stat.st_size
+                    except OSError:
+                        errors += 1
+
+            result = {
+                'entries': entries,
+                'direct_dirs': sum(1 for item in entries if item['is_dir']),
+                'direct_files': sum(1 for item in entries if not item['is_dir']),
+                'total_dirs': total_dirs,
+                'total_files': total_files,
+                'total_bytes': total_bytes,
+                'allocated_bytes': allocated_bytes,
+                'errors': errors,
+            }
+            self.signals.finished.emit(result, '')
+        except Exception as exc:
+            self.signals.finished.emit({}, str(exc))
+
+
+class PermissionSignals(QObject):
+    finished = Signal(int, int, str)
+
+
+class PermissionWorker(QRunnable):
+    """Apply POSIX permissions in the background, optionally recursively."""
+    def __init__(self, target, mode, recursive=False, owner='', group=''):
+        super().__init__()
+        self.target = str(target)
+        self.mode = int(mode)
+        self.recursive = bool(recursive)
+        self.owner = owner.strip()
+        self.group = group.strip()
+        self.signals = PermissionSignals()
+
+    def run(self):
+        import pwd, grp
+        changed = 0
+        errors = 0
+        try:
+            uid = -1
+            gid = -1
+            if self.owner:
+                try:
+                    uid = int(self.owner) if self.owner.isdigit() else pwd.getpwnam(self.owner).pw_uid
+                except (KeyError, ValueError):
+                    self.signals.finished.emit(0, 1, f'Unknown user: {self.owner}')
+                    return
+            if self.group:
+                try:
+                    gid = int(self.group) if self.group.isdigit() else grp.getgrnam(self.group).gr_gid
+                except (KeyError, ValueError):
+                    self.signals.finished.emit(0, 1, f'Unknown group: {self.group}')
+                    return
+
+            target = Path(self.target)
+            paths = [target]
+            if self.recursive and target.is_dir() and not target.is_symlink():
+                for current, dirs, files in os.walk(target, followlinks=False):
+                    dirs[:] = [name for name in dirs if not (Path(current) / name).is_symlink()]
+                    paths.extend(Path(current) / name for name in dirs)
+                    paths.extend(Path(current) / name for name in files
+                                 if not (Path(current) / name).is_symlink())
+
+            for item in paths:
+                try:
+                    if uid != -1 or gid != -1:
+                        current = item.lstat()
+                        desired_uid = current.st_uid if uid == -1 else uid
+                        desired_gid = current.st_gid if gid == -1 else gid
+                        if desired_uid != current.st_uid or desired_gid != current.st_gid:
+                            os.chown(item, desired_uid, desired_gid, follow_symlinks=False)
+                    if not item.is_symlink():
+                        os.chmod(item, self.mode, follow_symlinks=False)
+                    changed += 1
+                except (OSError, NotImplementedError):
+                    errors += 1
+            self.signals.finished.emit(changed, errors, '')
+        except Exception as exc:
+            self.signals.finished.emit(changed, errors + 1, str(exc))
+
+
 class Main(QMainWindow):
     def __init__(self):
         super().__init__(); self.language='de'; self.setWindowTitle(self.tr('about_version')); self.resize(1500,900); self.setMinimumSize(1050,680); self.active=None; self.clip=None; self.dark=True; self.click_mode='double'; self.config_path=Path.home()/'.config/lunacommander/settings.json'; self.config={}; self.load_config(); self.language=self.config.get('language','de')
@@ -2312,8 +2446,271 @@ class Main(QMainWindow):
         self.transfer_busy=False; QTimer.singleShot(0,self.start_next_transfer)
 
     def properties(self):
-        p=self.active;r=p.selected()
-        if r:QMessageBox.information(self,self.tr('properties'),f"{r[0]}\n{self.tr('size')}: {format_file_size(r[2],self.config.get('size_unit','auto'))}\n{self.tr('path').format(path=p.path)}")
+        pane = self.active
+        selected = pane.selected()
+        if not selected:
+            return
+        name, is_dir, size = selected[0], selected[1], selected[2]
+
+        # Remote/archive entries cannot use local POSIX permission APIs.
+        if pane.remote or pane.archive_file:
+            QMessageBox.information(
+                self, self.tr('properties'),
+                f"{name}\n{self.tr('size')}: {format_file_size(size, self.config.get('size_unit','auto'))}\n"
+                f"{self.tr('path').format(path=pane.path)}")
+            return
+
+        target = (Path(pane.path) / name).expanduser()
+        try:
+            st = target.lstat()
+        except OSError as exc:
+            QMessageBox.warning(self, self.tr('properties'), str(exc))
+            return
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self.tr('folder_properties_title') if is_dir else self.tr('file_properties_title'))
+        dialog.setMinimumSize(650, 540)
+        dialog.resize(760, 620)
+        dialog.setObjectName('folderPropertiesDialog')
+        outer = QVBoxLayout(dialog)
+        outer.setContentsMargins(18, 16, 18, 16)
+        outer.setSpacing(12)
+
+        heading = QLabel(('📁  ' if is_dir else '📄  ') + name)
+        heading.setObjectName('folderPropertiesHeading')
+        outer.addWidget(heading)
+        location = QLabel(self.tr('path').format(path=str(target)))
+        location.setWordWrap(True)
+        location.setObjectName('folderPropertiesPath')
+        outer.addWidget(location)
+
+        tabs = QTabWidget()
+        tabs.setObjectName('propertiesTabs')
+        outer.addWidget(tabs, 1)
+
+        # General tab
+        general = QWidget()
+        general_layout = QVBoxLayout(general)
+        general_layout.setContentsMargins(12, 12, 12, 12)
+        general_layout.setSpacing(10)
+        summary = QLabel(self.tr('folder_properties_scanning') if is_dir else '')
+        summary.setObjectName('folderPropertiesSummary')
+        summary.setWordWrap(True)
+        general_layout.addWidget(summary)
+
+        if is_dir:
+            contents_title = QLabel(self.tr('folder_properties_contents'))
+            contents_title.setObjectName('folderPropertiesContentsTitle')
+            general_layout.addWidget(contents_title)
+            contents = QListWidget()
+            contents.setAlternatingRowColors(True)
+            contents.setObjectName('folderPropertiesList')
+            general_layout.addWidget(contents, 1)
+            stats_status = QLabel(self.tr('folder_properties_scanning'))
+            stats_status.setObjectName('folderPropertiesStatus')
+            general_layout.addWidget(stats_status)
+        else:
+            contents = None
+            info = QFormLayout()
+            info.addRow(self.tr('properties_type'), QLabel(self.tr('file')))
+            info.addRow(self.tr('properties_size'), QLabel(format_file_size(st.st_size, self.config.get('size_unit','auto'))))
+            info.addRow(self.tr('properties_disk_size'), QLabel(format_file_size((getattr(st, 'st_blocks', 0) * 512) or st.st_size, self.config.get('size_unit','auto'))))
+            info.addRow(self.tr('properties_modified'), QLabel(
+                __import__('datetime').datetime.fromtimestamp(st.st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
+            info.addRow(self.tr('properties_created'), QLabel(
+                __import__('datetime').datetime.fromtimestamp(st.st_ctime).strftime('%Y-%m-%d %H:%M:%S')))
+            general_layout.addLayout(info)
+            general_layout.addStretch(1)
+        tabs.addTab(general, self.tr('properties_general_tab'))
+
+        # Permissions tab
+        permissions = QWidget()
+        perm_layout = QVBoxLayout(permissions)
+        perm_layout.setContentsMargins(12, 12, 12, 12)
+        perm_layout.setSpacing(12)
+        owner_group = QFormLayout()
+        try:
+            import pwd, grp
+            owner_name = pwd.getpwuid(st.st_uid).pw_name
+        except (ImportError, KeyError):
+            owner_name = str(st.st_uid)
+        try:
+            import grp
+            group_name = grp.getgrgid(st.st_gid).gr_name
+        except (ImportError, KeyError):
+            group_name = str(st.st_gid)
+        owner_current = QLabel(owner_name)
+        group_current = QLabel(group_name)
+        owner_edit = QLineEdit()
+        group_edit = QLineEdit()
+        owner_edit.setPlaceholderText(self.tr('properties_owner_hint'))
+        group_edit.setPlaceholderText(self.tr('properties_group_hint'))
+        owner_group.addRow(self.tr('properties_current_owner'), owner_current)
+        owner_group.addRow(self.tr('properties_change_owner'), owner_edit)
+        owner_group.addRow(self.tr('properties_current_group'), group_current)
+        owner_group.addRow(self.tr('properties_change_group'), group_edit)
+        perm_layout.addLayout(owner_group)
+
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(18)
+        grid.setVerticalSpacing(9)
+        grid.addWidget(QLabel(''), 0, 0)
+        for col, key in enumerate(('properties_read','properties_write','properties_execute'), 1):
+            label = QLabel(self.tr(key))
+            label.setAlignment(Qt.AlignCenter)
+            grid.addWidget(label, 0, col)
+        mode = stat.S_IMODE(st.st_mode)
+        permission_checks = {}
+        for row, (label_key, shift) in enumerate((
+            ('properties_owner_permissions', 6),
+            ('properties_group_permissions', 3),
+            ('properties_other_permissions', 0)), 1):
+            label = QLabel(self.tr(label_key))
+            grid.addWidget(label, row, 0)
+            for col, (bit, suffix) in enumerate(((4,'r'),(2,'w'),(1,'x')), 1):
+                check = QCheckBox()
+                check.setChecked(bool(mode & (bit << shift)))
+                check.setToolTip(self.tr('properties_permission_tooltip').format(
+                    group=self.tr(label_key), permission=self.tr(('properties_read','properties_write','properties_execute')[col-1])))
+                grid.addWidget(check, row, col, alignment=Qt.AlignCenter)
+                permission_checks[(shift, bit)] = check
+        perm_layout.addLayout(grid)
+
+        octal_row = QHBoxLayout()
+        octal_label = QLabel(self.tr('properties_octal'))
+        octal_value = QLabel(f'{mode:04o}')
+        octal_value.setObjectName('propertiesOctal')
+        octal_row.addWidget(octal_label)
+        octal_row.addStretch(1)
+        octal_row.addWidget(octal_value)
+        perm_layout.addLayout(octal_row)
+
+        recursive_check = QCheckBox(self.tr('properties_apply_recursive'))
+        recursive_check.setChecked(False)
+        recursive_check.setEnabled(is_dir)
+        perm_layout.addWidget(recursive_check)
+        note = QLabel(self.tr('properties_permissions_note'))
+        note.setWordWrap(True)
+        note.setObjectName('folderPropertiesPath')
+        perm_layout.addWidget(note)
+        perm_layout.addStretch(1)
+        tabs.addTab(permissions, self.tr('properties_permissions_tab'))
+
+        def current_mode():
+            value = 0
+            for (shift, bit), check in permission_checks.items():
+                if check.isChecked():
+                    value |= bit << shift
+            return value
+
+        def update_octal(*_):
+            octal_value.setText(f'{current_mode():04o}')
+
+        for check in permission_checks.values():
+            check.toggled.connect(update_octal)
+
+        footer = QHBoxLayout()
+        apply_status = QLabel('')
+        apply_status.setObjectName('folderPropertiesStatus')
+        footer.addWidget(apply_status, 1)
+        apply_button = QPushButton(self.tr('properties_apply'))
+        close_button = QPushButton(self.tr('close'))
+        close_button.clicked.connect(dialog.accept)
+        footer.addWidget(apply_button)
+        footer.addWidget(close_button)
+        outer.addLayout(footer)
+
+        dialog.setStyleSheet("""
+        QDialog#folderPropertiesDialog { background:#0b192b; color:#eaf2ff; }
+        QDialog#folderPropertiesDialog QLabel { color:#eaf2ff; }
+        QDialog#folderPropertiesDialog QLabel#folderPropertiesHeading { font-size:18px; font-weight:700; color:#ffffff; padding:4px; }
+        QDialog#folderPropertiesDialog QLabel#folderPropertiesPath { color:#b8c8e4; padding:2px 4px 8px; }
+        QDialog#folderPropertiesDialog QLabel#folderPropertiesSummary { background:#102b45; border:1px solid #37658e; border-radius:8px; padding:12px; font-size:13px; }
+        QDialog#folderPropertiesDialog QLabel#folderPropertiesContentsTitle { font-size:14px; font-weight:700; padding-top:6px; }
+        QDialog#folderPropertiesDialog QLabel#folderPropertiesStatus { color:#b8c8e4; }
+        QDialog#folderPropertiesDialog QLabel#propertiesOctal { color:#d7aaff; font-weight:700; font-size:15px; }
+        QDialog#folderPropertiesDialog QListWidget { background:#081727; color:#eaf2ff; border:1px solid #315b88; border-radius:8px; padding:5px; }
+        QDialog#folderPropertiesDialog QListWidget::item { padding:7px; }
+        QDialog#folderPropertiesDialog QListWidget::item:selected { background:#174e83; }
+        QDialog#folderPropertiesDialog QLineEdit { background:#102b45; color:#f4f7ff; border:1px solid #37658e; border-radius:7px; padding:8px 10px; }
+        QDialog#folderPropertiesDialog QLineEdit:focus { border:1px solid #bd75ff; }
+        QDialog#folderPropertiesDialog QTabWidget::pane { border:1px solid #315b88; border-radius:8px; background:#10243b; }
+        QDialog#folderPropertiesDialog QTabBar::tab { background:#142e4a; color:#dce8fb; border:1px solid #315b88; padding:10px 16px; margin-right:3px; border-top-left-radius:7px; border-top-right-radius:7px; }
+        QDialog#folderPropertiesDialog QTabBar::tab:selected { background:#5820a4; color:white; border-color:#b46cff; }
+        QDialog#folderPropertiesDialog QCheckBox { spacing:8px; padding:4px; color:#edf3ff; }
+        QDialog#folderPropertiesDialog QCheckBox::indicator { width:18px; height:18px; }
+        QDialog#folderPropertiesDialog QCheckBox::indicator:unchecked { background:#102b45; border:1px solid #7190b2; border-radius:5px; }
+        QDialog#folderPropertiesDialog QCheckBox::indicator:checked { background:#a43cff; border:1px solid #d4a2ff; border-radius:5px; }
+        QDialog#folderPropertiesDialog QPushButton { background:#173c5d; color:white; border:1px solid #4a80b2; border-radius:8px; padding:8px 18px; min-width:90px; }
+        QDialog#folderPropertiesDialog QPushButton:hover { background:#245b87; }
+        QDialog#folderPropertiesDialog QPushButton:disabled { color:#8294aa; background:#17283a; }
+        QDialog#folderPropertiesDialog QPushButton#propertiesApply { background:#7227c4; border:1px solid #d49aff; font-weight:700; }
+        """)
+
+        active_permission_worker = {'worker': None}
+        def permission_finished(changed, errors, error):
+            apply_button.setEnabled(True)
+            apply_status.setText(self.tr('properties_apply_done').format(changed=changed, errors=errors))
+            if error:
+                QMessageBox.warning(dialog, self.tr('properties_apply_error'), error)
+            try:
+                refreshed = target.lstat()
+                for (shift, bit), check in permission_checks.items():
+                    check.blockSignals(True)
+                    check.setChecked(bool(stat.S_IMODE(refreshed.st_mode) & (bit << shift)))
+                    check.blockSignals(False)
+                octal_value.setText(f'{stat.S_IMODE(refreshed.st_mode):04o}')
+                import pwd, grp
+                owner_current.setText(pwd.getpwuid(refreshed.st_uid).pw_name)
+                group_current.setText(grp.getgrgid(refreshed.st_gid).gr_name)
+            except (OSError, KeyError):
+                pass
+            active_permission_worker['worker'] = None
+
+        def apply_permissions():
+            if active_permission_worker['worker'] is not None:
+                return
+            worker = PermissionWorker(
+                target, current_mode(), recursive_check.isChecked(),
+                owner_edit.text(), group_edit.text())
+            active_permission_worker['worker'] = worker
+            apply_button.setEnabled(False)
+            apply_status.setText(self.tr('properties_apply_running'))
+            worker.signals.finished.connect(permission_finished)
+            QThreadPool.globalInstance().start(worker)
+
+        apply_button.setObjectName('propertiesApply')
+        apply_button.clicked.connect(apply_permissions)
+        tabs.setCurrentIndex(0)
+
+        if is_dir:
+            worker = DirectoryStatsWorker(target)
+            def stats_ready(data, error):
+                if error:
+                    summary.setText(self.tr('folder_properties_error').format(error=error))
+                    stats_status.setText(self.tr('folder_properties_failed'))
+                    return
+                total_size = format_file_size(data['total_bytes'], self.config.get('size_unit','auto'))
+                summary.setText(
+                    self.tr('folder_properties_summary').format(
+                        direct_dirs=data['direct_dirs'],
+                        direct_files=data['direct_files'],
+                        total_dirs=data['total_dirs'],
+                        total_files=data['total_files'],
+                        total_size=total_size,
+                    allocated_size=format_file_size(data.get('allocated_bytes', data['total_bytes']), self.config.get('size_unit','auto'))))
+                for entry in data['entries']:
+                    kind = self.tr('folder') if entry['is_dir'] else self.tr('file')
+                    size_text = '—' if entry['is_dir'] else format_file_size(entry['size'], self.config.get('size_unit','auto'))
+                    icon = '📁' if entry['is_dir'] else '📄'
+                    contents.addItem(f"{icon}  {entry['name']}    ·    {kind}    ·    {size_text}")
+                if not data['entries']:
+                    contents.addItem(self.tr('folder_properties_empty'))
+                stats_status.setText(self.tr('folder_properties_done').format(errors=data['errors']))
+            worker.signals.finished.connect(stats_ready)
+            QThreadPool.globalInstance().start(worker)
+        dialog.exec()
+
     def _set_system_file_clipboard(self, path, cut=False):
         """Publish the same file-copy targets used by Caja/MATE."""
         path = Path(path).resolve()

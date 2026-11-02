@@ -1,4 +1,4 @@
-# LunaCommander 0.6.63
+# LunaCommander 0.6.64
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
@@ -7,6 +7,10 @@ LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. 
 [Github Seite](https://github.com/Angonikro/LunaCommander/)
 
 ## Funktionen
+
+- Eigenschaften-Dialog für Dateien und Ordner mit Inhaltsübersicht, rekursiver Gesamtgröße und belegtem Speicherplatz; Analyse läuft im Hintergrund.
+- POSIX-Berechtigungen für Besitzer, Gruppe und Andere (Lesen/Schreiben/Ausführen) mit Oktalanzeige; Änderungen optional rekursiv auf Unterordner und Dateien anwenden.
+- Besitzer und Gruppe können bei vorhandenen Systemrechten ebenfalls geändert werden.
 
 - Komfortable Dateisuche im eigenen Dialog; die Suche läuft im Hintergrund, Treffer erscheinen laufend, mit Fortschrittsanzeige und Abbruchfunktion.
 
@@ -85,7 +89,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.6.63_CAJA_CUT_CLEAN_ICONS.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.6.64_CAJA_CUT_CLEAN_ICONS.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -96,7 +100,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.6.63_all_CAJA_CUT_CLEAN_ICONS.deb
+sudo apt install ./lunacommander_0.6.64_all_CAJA_CUT_CLEAN_ICONS.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -110,7 +114,7 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.6.63
+- Version: 0.6.64
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.
