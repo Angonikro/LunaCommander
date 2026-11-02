@@ -1829,8 +1829,8 @@ class Main(QMainWindow):
 
         d = QDialog(self)
         d.setWindowTitle(self.tr('search_title'))
-        d.setMinimumSize(690, 520)
-        d.resize(760, 570)
+        d.setMinimumSize(690, 650)
+        d.resize(760, 700)
         d.setObjectName('searchDialog')
         outer = QVBoxLayout(d)
         outer.setContentsMargins(18, 16, 18, 16)
@@ -1862,8 +1862,11 @@ class Main(QMainWindow):
         outer.addLayout(term_row)
 
         tabs = QTabWidget()
+        tabs.setMinimumHeight(190)
         general = QWidget()
         general_layout = QVBoxLayout(general)
+        general_layout.setContentsMargins(12, 10, 12, 10)
+        general_layout.setSpacing(2)
         case_sensitive = QCheckBox(self.tr('search_case'))
         whole_word = QCheckBox(self.tr('search_whole'))
         recursive = QCheckBox(self.tr('search_recursive'))
@@ -1873,6 +1876,8 @@ class Main(QMainWindow):
         general_layout.addWidget(whole_word)
         general_layout.addWidget(recursive)
         general_layout.addWidget(hidden)
+        for option in (case_sensitive, whole_word, recursive, hidden):
+            option.setMinimumHeight(30)
         general_layout.addStretch(1)
         tabs.addTab(general, self.tr('search_tab_general'))
 
@@ -1955,7 +1960,6 @@ class Main(QMainWindow):
         browse.clicked.connect(browse_folder)
         presets.currentIndexChanged.connect(apply_preset)
         active_worker = {'worker': None}
-        cancel_button.clicked.connect(stop_or_close)
 
         found_paths = []
         def add_results(batch):
@@ -1987,6 +1991,7 @@ class Main(QMainWindow):
             query = term.text().strip()
             base = Path(path.text()).expanduser()
             if not query:
+                search_status.setText(self.tr('search_enter_term'))
                 term.setFocus()
                 return
             if not base.is_dir():
@@ -2030,6 +2035,8 @@ class Main(QMainWindow):
                 cancel_button.setEnabled(False)
             else:
                 d.reject()
+
+        cancel_button.clicked.connect(stop_or_close)
 
         def open_result(item=None):
             item = item or results.currentItem()

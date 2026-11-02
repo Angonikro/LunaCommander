@@ -1,6 +1,7 @@
 # LunaCommander Changelog
 
 ## 0.6.63
+- Suchdialog vergrößert und Optionsbereich gegen abgeschnittene Checkboxen abgesichert; leere Suchanfragen zeigen jetzt einen verständlichen Hinweis.
 - Dateisuche läuft in einem Hintergrund-Worker; die Oberfläche bleibt währenddessen bedienbar.
 - Suchtreffer werden während der Suche in Paketen angezeigt; Fortschrittsanzeige und Abbrechen-Funktion ergänzt.
 - Suchfilter für Dateiname, Dateityp, versteckte Dateien sowie Mindest-/Höchstgröße bleiben verfügbar.
