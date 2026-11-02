@@ -1,10 +1,15 @@
 # LunaCommander Changelog
 
+## 0.6.62
+- Neue Einstellung für Dateigrößen
+- Unter Einstellungen soll man auswählen können, in welcher Einheit die Dateigröße angezeigt wird:
+- Automatisch - Byte (B) - KB - MB - GB - TB
+
 ## 0.6.61
 - System-Zwischenablage für MATE/Caja korrigiert: lokale Dateien und Ordner können aus LunaCommander nach Caja und auf den MATE-Desktop kopiert und dort eingefügt werden.
 - Ausschneiden über die System-Zwischenablage ergänzt, damit Dateien und Ordner aus LunaCommander in Caja oder auf dem MATE-Desktop verschoben werden können.
 - MATE-kompatible Clipboard-Daten für Kopieren und Ausschneiden bereinigt, sodass Caja beim Einfügen nicht mehr abstürzt.
-- README und Installationshinweise auf Version 0.6.61 aktualisiert.
+- README und Installationshinweise auf Version 0.6.62 aktualisiert.
 - Paketierung aktualisiert, damit die mitgelieferten Dateityp-Symbole auch im Debian-Paket vollständig enthalten sind.
 
 ## 0.6.60
