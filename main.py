@@ -2624,8 +2624,10 @@ class Main(QMainWindow):
 
         dialog = QDialog(self)
         dialog.setWindowTitle(self.tr('folder_properties_title') if is_dir else self.tr('file_properties_title'))
-        dialog.setMinimumSize(650, 540)
-        dialog.resize(760, 620)
+        # Keep the properties dialog large enough for Qt's font metrics and
+        # the permission controls on HiDPI / larger system-font desktops.
+        dialog.setMinimumSize(720, 620)
+        dialog.resize(800, 680)
         dialog.setObjectName('folderPropertiesDialog')
         outer = QVBoxLayout(dialog)
         outer.setContentsMargins(18, 16, 18, 16)
@@ -2684,6 +2686,9 @@ class Main(QMainWindow):
         perm_layout.setContentsMargins(12, 12, 12, 12)
         perm_layout.setSpacing(12)
         owner_group = QFormLayout()
+        owner_group.setFieldGrowthPolicy(QFormLayout.ExpandingFieldsGrow)
+        owner_group.setHorizontalSpacing(14)
+        owner_group.setVerticalSpacing(10)
         try:
             import pwd, grp
             owner_name = pwd.getpwuid(st.st_uid).pw_name
@@ -2698,6 +2703,9 @@ class Main(QMainWindow):
         group_current = QLabel(group_name)
         owner_edit = QLineEdit()
         group_edit = QLineEdit()
+        for field in (owner_edit, group_edit):
+            field.setMinimumHeight(36)
+            field.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         owner_edit.setPlaceholderText(self.tr('properties_owner_hint'))
         group_edit.setPlaceholderText(self.tr('properties_group_hint'))
         owner_group.addRow(self.tr('properties_current_owner'), owner_current)
@@ -2707,8 +2715,11 @@ class Main(QMainWindow):
         perm_layout.addLayout(owner_group)
 
         grid = QGridLayout()
-        grid.setHorizontalSpacing(18)
-        grid.setVerticalSpacing(9)
+        grid.setHorizontalSpacing(22)
+        grid.setVerticalSpacing(12)
+        grid.setColumnStretch(0, 1)
+        for _column in (1, 2, 3):
+            grid.setColumnMinimumWidth(_column, 88)
         grid.addWidget(QLabel(''), 0, 0)
         for col, key in enumerate(('properties_read','properties_write','properties_execute'), 1):
             label = QLabel(self.tr(key))
@@ -2724,6 +2735,7 @@ class Main(QMainWindow):
             grid.addWidget(label, row, 0)
             for col, (bit, suffix) in enumerate(((4,'r'),(2,'w'),(1,'x')), 1):
                 check = QCheckBox()
+                check.setMinimumSize(28, 28)
                 check.setChecked(bool(mode & (bit << shift)))
                 check.setToolTip(self.tr('properties_permission_tooltip').format(
                     group=self.tr(label_key), permission=self.tr(('properties_read','properties_write','properties_execute')[col-1])))
@@ -2787,12 +2799,12 @@ class Main(QMainWindow):
         QDialog#folderPropertiesDialog QListWidget { background:#081727; color:#eaf2ff; border:1px solid #315b88; border-radius:8px; padding:5px; }
         QDialog#folderPropertiesDialog QListWidget::item { padding:7px; }
         QDialog#folderPropertiesDialog QListWidget::item:selected { background:#174e83; }
-        QDialog#folderPropertiesDialog QLineEdit { background:#102b45; color:#f4f7ff; border:1px solid #37658e; border-radius:7px; padding:8px 10px; }
+        QDialog#folderPropertiesDialog QLineEdit { background:#102b45; color:#f4f7ff; border:1px solid #37658e; border-radius:7px; padding:4px 10px; min-height:26px; }
         QDialog#folderPropertiesDialog QLineEdit:focus { border:1px solid #bd75ff; }
         QDialog#folderPropertiesDialog QTabWidget::pane { border:1px solid #315b88; border-radius:8px; background:#10243b; }
         QDialog#folderPropertiesDialog QTabBar::tab { background:#142e4a; color:#dce8fb; border:1px solid #315b88; padding:10px 16px; margin-right:3px; border-top-left-radius:7px; border-top-right-radius:7px; }
         QDialog#folderPropertiesDialog QTabBar::tab:selected { background:#5820a4; color:white; border-color:#b46cff; }
-        QDialog#folderPropertiesDialog QCheckBox { spacing:8px; padding:4px; color:#edf3ff; }
+        QDialog#folderPropertiesDialog QCheckBox { spacing:8px; padding:2px 4px; color:#edf3ff; min-height:26px; }
         QDialog#folderPropertiesDialog QCheckBox::indicator { width:18px; height:18px; }
         QDialog#folderPropertiesDialog QCheckBox::indicator:unchecked { background:#102b45; border:1px solid #7190b2; border-radius:5px; }
         QDialog#folderPropertiesDialog QCheckBox::indicator:checked { background:#a43cff; border:1px solid #d4a2ff; border-radius:5px; }

@@ -1,4 +1,7 @@
 ## 0.6.71
+- Korrigiert das Layout des Datei-/Ordnereigenschaften-Dialogs: Besitzer- und Gruppenfelder haben ausreichend Höhe und werden nicht mehr abgeschnitten.
+- Vergrößert den Dialog und verbessert Abstände sowie Ausrichtung der Berechtigungssteuerung, auch bei größeren Systemschriftarten und HiDPI-Anzeige.
+- Keine Änderung an Dateioperationen oder Berechtigungslogik; Versionsnummer bleibt 0.6.71.
 - Behebt Scrollsprünge, wenn die automatische Ordnerüberwachung die Dateiliste neu aufbaut.
 - Stellt Mehrfachauswahl, aktuelle Auswahl sowie vertikale und horizontale Scrollposition nach einer Aktualisierung wieder her.
 - Pausiert die automatische Ordnerüberwachung während eines geöffneten Rechtsklick-Kontextmenüs und erfasst den Ordnerzustand anschließend neu.
