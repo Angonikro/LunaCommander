@@ -1,5 +1,12 @@
 # LunaCommander Changelog
 
+## 0.6.65
+- Fehler bei den beiden Home-Schaltflächen korrigiert:
+- Linkes Fenster: Öffnet den separat eingestellten linken Startordner.
+- Rechtes Fenster: Öffnet den separat eingestellten rechten Startordner.
+- Beide Fenster verwenden ihre eigenen gespeicherten Pfade.
+- FTP/SFTP behält sein bisheriges Verhalten und wechselt ins Server-Stammverzeichnis.
+
 ## 0.6.64
 - Eigenschaften-Dialog für Dateien und Ordner mit Inhaltsübersicht, rekursiver Gesamtgröße und belegtem Speicherplatz; Analyse läuft im Hintergrund.
 - POSIX-Berechtigungen für Besitzer, Gruppe und Andere (Lesen/Schreiben/Ausführen) mit Oktalanzeige; Änderungen optional rekursiv auf Unterordner und Dateien anwenden.
@@ -27,7 +34,7 @@
 - System-Zwischenablage für MATE/Caja korrigiert: lokale Dateien und Ordner können aus LunaCommander nach Caja und auf den MATE-Desktop kopiert und dort eingefügt werden.
 - Ausschneiden über die System-Zwischenablage ergänzt, damit Dateien und Ordner aus LunaCommander in Caja oder auf dem MATE-Desktop verschoben werden können.
 - MATE-kompatible Clipboard-Daten für Kopieren und Ausschneiden bereinigt, sodass Caja beim Einfügen nicht mehr abstürzt.
-- README und Installationshinweise auf Version 0.6.64 aktualisiert.
+- README und Installationshinweise auf Version 0.6.65 aktualisiert.
 - Paketierung aktualisiert, damit die mitgelieferten Dateityp-Symbole auch im Debian-Paket vollständig enthalten sind.
 
 ## 0.6.60
