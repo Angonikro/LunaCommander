@@ -1,3 +1,38 @@
+## 0.6.71
+- Behebt Scrollsprünge, wenn die automatische Ordnerüberwachung die Dateiliste neu aufbaut.
+- Stellt Mehrfachauswahl, aktuelle Auswahl sowie vertikale und horizontale Scrollposition nach einer Aktualisierung wieder her.
+- Pausiert die automatische Ordnerüberwachung während eines geöffneten Rechtsklick-Kontextmenüs und erfasst den Ordnerzustand anschließend neu.
+- F3/F4 und das normale Öffnen per Doppelklick bleiben unverändert.
+
+## 0.6.70
+- **F3** öffnet immer den integrierten schreibgeschützten Textbetrachter von LunaCommander für die ausgewählte Datei. 
+- **F4** öffnet immer den integrierten Texteditor von LunaCommander für die ausgewählte Datei, mit Speichern und Speichern unter. 
+– Der Viewer/Editor unterstützt auch Dateien im lokalen Bereich, FTP/FTPS/SFTP-Bereiche und lesbare Archivmitglieder. Archivmitglieder werden über „Speichern unter“ gespeichert, anstatt das Archiv zu überschreiben. 
+- UTF-8 wird bevorzugt; Latin-1 wird als verlustfreier Fallback verwendet, sodass beliebige Bytewerte darstellbar bleiben. 
+- Das normale Doppelklick-/Öffnungsverhalten, die Ordnernavigation und alle anderen Vorgänge im Dateibereich bleiben unverändert.
+
+## 0.6.69
+- F3 now always opens the built-in read-only text viewer.
+- F4 now always opens the built-in text editor with Save and Save As.
+- Supports local files, FTP/FTPS/SFTP files and readable archive entries.
+- Normal double-click/open behavior and the file panes' existing navigation and operations are unchanged.
+
+## 0.6.68
+- Oberer Toolbar-Button „Neu“ heißt jetzt „Neuer Ordner“.
+- Der Button ruft die Ordnererstellung (`new_folder`) auf statt eine leere Datei anzulegen.
+- Der aktive Dateibereich bestimmt weiterhin den Zielordner; die Funktion ist lokal und über FTP/SFTP verfügbar.
+- F7 „Neuer Ordner“ bleibt unverändert verfügbar.
+
+## 0.6.67
+- Entfernt den überflüssigen „Öffnen“-Button vollständig aus beiden Pfadleisten.
+- Stellt sicher, dass der Startordner-Button (Haussymbol) auch nach einem Sprachwechsel erhalten bleibt.
+- Navigationsleiste besteht in beiden Fenstern aus Pfadfeld, Zurück, Nach oben und Startordner.
+- Pfadnavigation per Eingabetaste bleibt erhalten.
+
+## 0.6.66
+- Entfernt die funktionslosen/überflüssigen „Öffnen“-Schaltflächen neben den Pfadfeldern beider Dateifenster.
+- Die Pfadfelder nutzen den frei gewordenen Platz; Navigation weiterhin per Eingabetaste sowie Zurück, Nach oben und Startordner.
+
 # LunaCommander Changelog
 
 ## 0.6.65
@@ -34,7 +69,7 @@
 - System-Zwischenablage für MATE/Caja korrigiert: lokale Dateien und Ordner können aus LunaCommander nach Caja und auf den MATE-Desktop kopiert und dort eingefügt werden.
 - Ausschneiden über die System-Zwischenablage ergänzt, damit Dateien und Ordner aus LunaCommander in Caja oder auf dem MATE-Desktop verschoben werden können.
 - MATE-kompatible Clipboard-Daten für Kopieren und Ausschneiden bereinigt, sodass Caja beim Einfügen nicht mehr abstürzt.
-- README und Installationshinweise auf Version 0.6.65 aktualisiert.
+- README und Installationshinweise auf Version 0.6.69 aktualisiert.
 - Paketierung aktualisiert, damit die mitgelieferten Dateityp-Symbole auch im Debian-Paket vollständig enthalten sind.
 
 ## 0.6.60
@@ -129,12 +164,24 @@
 - Mehrfach-Löschen repariert: alle markierten Einträge werden gesammelt und mit einer einzigen Bestätigungsabfrage gelöscht.
 - Fenster- und Info-Version auf 0.6.42 aktualisiert.
 
-## 0.6.41\n- Löschen verarbeitet jetzt alle mit STRG/SHIFT markierten Dateien und Ordner statt nur des aktuellen Eintrags.\n- Vor dem Löschen mehrerer Einträge erscheint eine gemeinsame Bestätigungsabfrage mit Anzahl.\n- Mehrfach markierte Untereinträge werden beim Löschen eines ebenfalls markierten übergeordneten Ordners nicht doppelt eingeplant.\n\n## 0.6.40
+## 0.6.41
+- Löschen verarbeitet jetzt alle mit STRG/SHIFT markierten Dateien und Ordner statt nur des aktuellen Eintrags.
+- Vor dem Löschen mehrerer Einträge erscheint eine gemeinsame Bestätigungsabfrage mit Anzahl.
+- Mehrfach markierte Untereinträge werden beim Löschen eines ebenfalls markierten übergeordneten Ordners nicht doppelt eingeplant.
+
+## 0.6.40
 - README neu strukturiert: klarer, direkt kopierbarer `sudo apt install`-Befehl für die ZIP-Installation.
 - ZIP-Installation mit konkreten Entpack-, Verzeichniswechsel- und Startbefehlen dokumentiert.
 - DEB-Installation und Start separat und eindeutig beschrieben.
 
-## 0.6.39\n- README vollständig überarbeitet: Voraussetzungen sowie Installation und Start direkt aus dem ZIP-Quellcode ohne DEB ergänzt.\n- Veraltete und widersprüchliche Installationshinweise entfernt.\n\n## 0.6.38\n- Infofenster ergänzt: Unter „LunaCommander 0.6.38 – Qt6“ wird zentriert „Goldisoft 2026“ angezeigt.\n\n## 0.6.37
+## 0.6.39
+- README vollständig überarbeitet: Voraussetzungen sowie Installation und Start direkt aus dem ZIP-Quellcode ohne DEB ergänzt.
+- Veraltete und widersprüchliche Installationshinweise entfernt.
+
+## 0.6.38
+- Infofenster ergänzt: Unter „LunaCommander 0.6.38 – Qt6“ wird zentriert „Goldisoft 2026“ angezeigt.
+
+## 0.6.37
 - Vollständiges, scrollbar aufgebautes Hilfefenster statt der bisherigen Platzhalteranzeige.
 - Hilfe vollständig auf Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
 - Erläutert Dateifenster, STRG-/SHIFT-Auswahl, Dateiaktionen, Archive, FTP/FTPS/SFTP, Einstellungen und Funktionstasten.
