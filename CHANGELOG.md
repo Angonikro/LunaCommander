@@ -1,3 +1,13 @@
+# Changelog
+
+## 0.6.75
+- F2 öffnet jetzt „Eigenschaften“ für die ausgewählte Datei bzw. den ausgewählten Ordner.
+- F9 bleibt „Umbenennen“; Einstellungen sind weiterhin über Menü und Werkzeugleiste erreichbar.
+
+## 0.6.74
+- F9-Funktion geändert: Statt „Einstellungen“ öffnet F9 jetzt „Umbenennen“ für die ausgewählte Datei bzw. den ausgewählten Ordner.
+- Einstellungen bleiben weiterhin über das Menü und die obere Werkzeugleiste erreichbar.
+
 ## 0.6.73
 - Korrigiert die automatische Ordnerüberwachung: Sie vergleicht nur noch sichtbare Einträge und deren Typ, nicht mehr Änderungszeit und Dateigröße.
 - Änderungen am Inhalt oder an Metadaten vorhandener Dateien lösen dadurch keinen vollständigen Neuaufbau der Dateiliste mehr aus.
