@@ -1,3 +1,17 @@
+## 0.6.73
+- Korrigiert die automatische Ordnerüberwachung: Sie vergleicht nur noch sichtbare Einträge und deren Typ, nicht mehr Änderungszeit und Dateigröße.
+- Änderungen am Inhalt oder an Metadaten vorhandener Dateien lösen dadurch keinen vollständigen Neuaufbau der Dateiliste mehr aus.
+- Neue, gelöschte und umbenannte Dateien/Ordner werden weiterhin erkannt.
+- Verhindert damit, dass STRG-/SHIFT-Mehrfachauswahl in Ordnern wie `/home/pi` nach dem 1,5-Sekunden-Überwachungsintervall blinkt oder unterbrochen wird.
+- Bisherige Korrekturen aus 0.6.71 und 0.6.72 bleiben erhalten.
+
+## 0.6.72
+- Behebt das Flackern bei STRG-Mehrfachauswahl in Ordnern wie `/home/pi`.
+- Die automatische Ordnerüberwachung ignoriert Änderungen innerhalb von Unterordnern (z. B. `~/.cache`), da diese die sichtbare Dateiliste des übergeordneten Ordners nicht verändern.
+- Versteckte Einträge werden bei deaktivierter Anzeige versteckter Dateien auch bei der Überwachung ausgeschlossen.
+- Änderungen an sichtbaren Dateien sowie neu hinzugefügte, entfernte oder umbenannte Einträge werden weiterhin erkannt.
+- Die bestehende Auswahl-, Scroll-, Rechtsklick- und Mausradkorrektur aus 0.6.71 bleibt erhalten.
+
 ## 0.6.71
 - Korrigiert das Layout des Datei-/Ordnereigenschaften-Dialogs: Besitzer- und Gruppenfelder haben ausreichend Höhe und werden nicht mehr abgeschnitten.
 - Vergrößert den Dialog und verbessert Abstände sowie Ausrichtung der Berechtigungssteuerung, auch bei größeren Systemschriftarten und HiDPI-Anzeige.
