@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.77
+- Mehrfachauswahl wird als ein sequenzieller Sammelauftrag verarbeitet; ein Fehler bei einem Eintrag verhindert nicht mehr die folgenden Kopiervorgänge.
+- Quell- und Zielfenster werden erst nach Abschluss des gesamten Auftrags aktualisiert.
+- Versionsanzeige in Fenstertitel und Info-Dialog wird direkt aus VERSION gelesen.
+
 ## 0.6.76
 - F5/F6- und Kontextmenüübertragungen wurden korrigiert, um alle ausgewählten Dateien und Ordner zu verarbeiten, nicht nur die aktuelle Zeile. 
 - Übertragungen mehrerer Artikel werden einzeln in die Warteschlange gestellt. Ausgewählte übergeordnete Ordner verhindern doppelte untergeordnete Übertragungen.
