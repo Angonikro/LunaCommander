@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.76
+- F5/F6- und Kontextmenüübertragungen wurden korrigiert, um alle ausgewählten Dateien und Ordner zu verarbeiten, nicht nur die aktuelle Zeile. 
+- Übertragungen mehrerer Artikel werden einzeln in die Warteschlange gestellt. Ausgewählte übergeordnete Ordner verhindern doppelte untergeordnete Übertragungen.
+
 ## 0.6.75
 - F2 öffnet jetzt „Eigenschaften“ für die ausgewählte Datei bzw. den ausgewählten Ordner.
 - F9 bleibt „Umbenennen“; Einstellungen sind weiterhin über Menü und Werkzeugleiste erreichbar.

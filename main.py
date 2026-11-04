@@ -186,7 +186,7 @@ for _lang, _entries in {
 
 
 # Extended translations for every visible dialog, prompt and archive action.
-for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.75 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.75 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.75 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.75 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.75 – Qt6', 'about_help': 'Help'}}.items():
+for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': 'LunaCommander 0.6.76 – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': 'LunaCommander 0.6.76 – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': 'LunaCommander 0.6.76 – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': 'LunaCommander 0.6.76 – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': 'LunaCommander 0.6.76 – Qt6', 'about_help': 'Help'}}.items():
     TRANSLATIONS[_lang].update(_entries)
 
 
@@ -2895,19 +2895,21 @@ class Main(QMainWindow):
             QThreadPool.globalInstance().start(worker)
         dialog.exec()
 
-    def _set_system_file_clipboard(self, path, cut=False):
-        """Publish the same file-copy targets used by Caja/MATE."""
-        path = Path(path).resolve()
-        uri = QUrl.fromLocalFile(str(path)).toString()
+    def _set_system_file_clipboard(self, paths, cut=False):
+        """Publish one or more local file targets for Caja/MATE and URI-list clients."""
+        resolved = [Path(path).resolve() for path in paths]
+        if not resolved:
+            return
+        uris = [QUrl.fromLocalFile(str(path)).toString() for path in resolved]
         action = 'cut' if cut else 'copy'
         mime = QMimeData()
-        # Caja/MATE native file-manager target.  Do not add GNOME or browser-only targets.
         mime.setData('x-special/mate-copied-files',
-                     (action + "\n" + uri).encode('utf-8'))
-        # Caja also exposes the URI list and plain local path for applications/terminals.
-        mime.setData('text/uri-list', (uri + "\r\n").encode('utf-8'))
-        mime.setData('text/plain;charset=utf-8', str(path).encode('utf-8'))
-        mime.setData('text/plain', str(path).encode('utf-8'))
+                     (action + "\n" + "\n".join(uris)).encode('utf-8'))
+        mime.setData('text/uri-list', ("\r\n".join(uris) + "\r\n").encode('utf-8'))
+        # Plain text remains useful to terminal paste; for multiple files use one path per line.
+        plain = "\n".join(str(path) for path in resolved)
+        mime.setData('text/plain;charset=utf-8', plain.encode('utf-8'))
+        mime.setData('text/plain', plain.encode('utf-8'))
         QApplication.clipboard().setMimeData(mime)
 
     def _system_clipboard_files(self):
@@ -2934,53 +2936,73 @@ class Main(QMainWindow):
         paths = [u.toLocalFile() for u in md.urls() if u.isLocalFile()]
         return paths, cut
 
+    def _selected_transfer_rows(self, pane):
+        rows=[]
+        for item in pane.tree.selectedItems():
+            row=item.data(0,Qt.UserRole)
+            if row and row[0] != '..':
+                rows.append((row[0], bool(row[1])))
+        if not rows:
+            row=pane.selected()
+            if row and row[0] != '..': rows=[(row[0],bool(row[1]))]
+        filtered=[]
+        for name,is_dir in rows:
+            if any(parent_dir and name.startswith(parent.rstrip('/')+'/')
+                   for parent,parent_dir in rows if parent != name):
+                continue
+            if (name,is_dir) not in filtered: filtered.append((name,is_dir))
+        return filtered
+
     def copy(self):
-        r=self.active.selected()
-        if r and r[0]!='..':
-            self.clip=(self.active,r[0],False)
+        rows=self._selected_transfer_rows(self.active)
+        if rows:
+            self.clip=(self.active,rows,False)
             if not self.active.remote and not self.active.archive_file:
-                self._set_system_file_clipboard(Path(self.active.path)/r[0], False)
+                self._set_system_file_clipboard([Path(self.active.path)/name for name,_ in rows],False)
 
     def cut(self):
-        r=self.active.selected()
-        if r and r[0]!='..':
-            self.clip=(self.active,r[0],True)
+        rows=self._selected_transfer_rows(self.active)
+        if rows:
+            self.clip=(self.active,rows,True)
             if not self.active.remote and not self.active.archive_file:
-                self._set_system_file_clipboard(Path(self.active.path)/r[0], True)
+                self._set_system_file_clipboard([Path(self.active.path)/name for name,_ in rows],True)
 
     def paste(self):
-        # External desktop clipboard always wins when it contains file URLs.
-        # Preserve Caja/MATE's copy/cut operation instead of treating every
-        # external file clipboard as a copy.
         external_paths, external_cut = self._system_clipboard_files()
         if external_paths:
             self.active.import_urls(external_paths, move=external_cut)
             return
-        if not self.clip:
-            return
-        src,n,cut=self.clip;dst=self.active
-        a=src.target(n);b='/'.join(x for x in (dst.archive_inner,n) if x) if dst.archive_file else dst.target(n)
-        if src is dst and os.path.abspath(a)==os.path.abspath(b):
-            QMessageBox.information(self,self.tr('insert'),self.tr('same_source')); return
-        if src.remote and dst.remote:
-            QMessageBox.information(self,self.tr('help'),self.tr('server_copy_unavailable')); return
-        row=src.selected(); is_dir=row[1] if row and row[0]==n else (Path(a).is_dir() if not src.remote else False)
-        conflict='merge'
-        if dst.archive_file:
-            probe=TransferWorker(src,dst,a,b,is_dir,cut,conflict)
-            exists=probe.archive_destination_exists()
-        else: exists=self.target_exists_for_pane(dst,b)
-        if exists:
+        if not self.clip: return
+        src,rows,cut=self.clip
+        # Backward compatibility with an older in-memory single-item clipboard.
+        if rows and isinstance(rows[0],str): rows=[(rows[0],False)]
+        dst=self.active
+        queued=0
+        for name,is_dir in rows:
+            a=src.target(name)
+            b='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
+            if not src.remote and not dst.remote and os.path.abspath(a)==os.path.abspath(b): continue
+            if src.remote and dst.remote:
+                QMessageBox.information(self,self.tr('help'),self.tr('server_copy_unavailable')); return
+            conflict='merge'
             if dst.archive_file:
-                QMessageBox.information(self,self.tr('archive_label'),self.tr('archive_duplicate')); return
-            conflict=self.ask_conflict(n)
-            if conflict is None:return
-        worker=TransferWorker(src,dst,a,b,is_dir,cut,conflict)
-        label=QLabel((self.tr('moved') if cut else self.tr('copied'))+n); progress=self.add_queue_label(label)
-        worker.signals.progress.connect(progress.setValue)
-        worker.signals.finished.connect(lambda name,ok,error,w=worker,l=label,s=src,d=dst:self.transfer_finished(name,ok,error,w,l,s,d))
-        self.transfer_queue.append(worker); self.start_next_transfer()
-        if cut:self.clip=None
+                probe=TransferWorker(src,dst,a,b,is_dir,cut,conflict)
+                exists=probe.archive_destination_exists()
+            else: exists=self.target_exists_for_pane(dst,b)
+            if exists:
+                if dst.archive_file:
+                    QMessageBox.information(self,self.tr('archive_label'),self.tr('archive_duplicate')); continue
+                conflict=self.ask_conflict(name)
+                if conflict is None: break
+                if conflict=='skip': continue
+            worker=TransferWorker(src,dst,a,b,is_dir,cut,conflict)
+            label=QLabel((self.tr('moved') if cut else self.tr('copied'))+name)
+            progress=self.add_queue_label(label)
+            if progress is not None: worker.signals.progress.connect(progress.setValue)
+            worker.signals.finished.connect(lambda n,ok,error,w=worker,l=label,s=src,d=dst:self.transfer_finished(n,ok,error,w,l,s,d))
+            self.transfer_queue.append(worker); queued+=1
+        if cut: self.clip=None
+        if queued: self.start_next_transfer()
     def target_exists_for_pane(self,pane,target):
         if pane.remote:
             try:
@@ -3023,31 +3045,76 @@ class Main(QMainWindow):
         progress.setValue(0); progress.setVisible(True)
         return progress
     def copy_transfer(self,move):
-        src=self.active or self.left; dst=self.other(src); r=src.selected()
-        if not r or r[0]=='..':
+        """Transfer every selected entry from the active pane to the other pane.
+
+        QTreeWidget supports extended selection, so function keys and the
+        context-menu transfer actions must use selectedItems(), not only the
+        current row. Keep the visual selection order and avoid transferring a
+        child twice when its parent directory is selected as well.
+        """
+        src=self.active or self.left
+        dst=self.other(src)
+        rows=[]
+        for item in src.tree.selectedItems():
+            row=item.data(0,Qt.UserRole)
+            if row and row[0] != '..':
+                rows.append((row[0], bool(row[1])))
+        if not rows:
+            row=src.selected()
+            if row and row[0] != '..':
+                rows=[(row[0], bool(row[1]))]
+        if not rows:
             self.statusBar().showMessage(self.tr('select_entry'))
             return
-        name,is_dir,_=r
-        target='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
-        conflict='merge'
-        exists=False
-        if dst.archive_file:
-            if src.remote:
-                QMessageBox.information(self,self.tr('archive_label'),self.tr('remote_to_archive')); return
-            probe=TransferWorker(src,dst,src.target(name),target,is_dir,move,conflict)
-            try: exists=probe.archive_destination_exists()
-            except Exception as e: QMessageBox.warning(self,self.tr('archive_label'),str(e)); return
-        else: exists=self.target_exists_for_pane(dst,target)
-        if exists:
+
+        # A selected directory already includes its descendants.
+        filtered=[]
+        for name,is_dir in rows:
+            if any(parent_is_dir and name.startswith(parent.rstrip('/')+'/')
+                   for parent,parent_is_dir in rows if parent != name):
+                continue
+            if (name,is_dir) not in filtered:
+                filtered.append((name,is_dir))
+
+        queued=0
+        for name,is_dir in filtered:
+            source=src.target(name)
+            target='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
+            if not src.remote and not dst.remote and os.path.abspath(source)==os.path.abspath(target):
+                continue
+            conflict='merge'
             if dst.archive_file:
-                QMessageBox.information(self,self.tr('archive_label'),self.tr('archive_duplicate')); return
-            conflict=self.ask_conflict(name)
-            if conflict is None:return
-        worker=TransferWorker(src,dst,src.target(name),target,is_dir,move,conflict)
-        label=QLabel((self.tr('moved') if move else self.tr('copied'))+name); progress=self.add_queue_label(label)
-        worker.signals.progress.connect(progress.setValue)
-        worker.signals.finished.connect(lambda n,ok,error,w=worker,l=label,s=src,d=dst:self.transfer_finished(n,ok,error,w,l,s,d))
-        self.transfer_queue.append(worker); self.statusBar().showMessage((self.tr('moved') if move else self.tr('copied'))+name); self.start_next_transfer()
+                if src.remote:
+                    QMessageBox.information(self,self.tr('archive_label'),self.tr('remote_to_archive'))
+                    continue
+                probe=TransferWorker(src,dst,source,target,is_dir,move,conflict)
+                try: exists=probe.archive_destination_exists()
+                except Exception as e:
+                    QMessageBox.warning(self,self.tr('archive_label'),str(e)); continue
+            else:
+                exists=self.target_exists_for_pane(dst,target)
+            if exists:
+                if dst.archive_file:
+                    QMessageBox.information(self,self.tr('archive_label'),self.tr('archive_duplicate'))
+                    continue
+                conflict=self.ask_conflict(name)
+                if conflict is None:
+                    # Cancel stops the remaining batch; Skip affects this item only.
+                    break
+                if conflict=='skip':
+                    continue
+            worker=TransferWorker(src,dst,source,target,is_dir,move,conflict)
+            label=QLabel((self.tr('moved') if move else self.tr('copied'))+name)
+            progress=self.add_queue_label(label)
+            if progress is not None:
+                worker.signals.progress.connect(progress.setValue)
+            worker.signals.finished.connect(lambda n,ok,error,w=worker,l=label,s=src,d=dst:self.transfer_finished(n,ok,error,w,l,s,d))
+            self.transfer_queue.append(worker)
+            queued+=1
+        if queued:
+            verb=self.tr('moved') if move else self.tr('copied')
+            self.statusBar().showMessage(f'{queued} Einträge werden übertragen.' if self.language=='de' else f'{queued} items queued for transfer.')
+            self.start_next_transfer()
     def start_next_transfer(self):
         if self.transfer_busy or not self.transfer_queue:return
         self.transfer_busy=True; self.current_transfer=self.transfer_queue.pop(0); self.thread_pool.start(self.current_transfer)
