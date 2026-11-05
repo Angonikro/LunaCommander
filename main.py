@@ -4,7 +4,7 @@ import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfi
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
-from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QPlainTextEdit,QTabWidget,QListWidget,QListWidgetItem,QSpinBox,QGroupBox,QGridLayout,QFormLayout)
+from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QPlainTextEdit,QTabWidget,QListWidget,QListWidgetItem,QSpinBox,QGroupBox,QGridLayout,QFormLayout,QScrollArea)
 
 
 
@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.6.77'
+    APP_VERSION = '0.6.78'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -191,6 +191,17 @@ for _lang, _entries in {
 
 # Extended translations for every visible dialog, prompt and archive action.
 for _lang, _entries in {'de': {'extract_here': 'Hier entpacken', 'extract_to': 'In Ordner entpacken …', 'installed': 'Verwendete Programme und Dateiverwaltung', 'text_files': 'Textdateien', 'rar_support': 'RAR-Unterstützung', 'delete_title': 'Löschen', 'delete_confirm': '{name} wirklich löschen?', 'no': 'Nein', 'yes': 'Ja', 'deleting': 'Lösche: ', 'done': 'Fertig: ', 'error': 'Fehler: ', 'deleted': 'Gelöscht: ', 'delete_error': 'Löschfehler: ', 'size_bytes': 'Größe: {size:,} Bytes', 'path': 'Pfad: {path}', 'same_source': "'Quelle und Ziel sind identisch.'", 'server_copy_unavailable': "'Server-zu-Server-Kopieren ist nicht verfügbar.'", 'archive_local_only': 'Archivverwaltung ist derzeit nur für lokale Dateien verfügbar.', 'archive_exists': "'Archiv existiert'", 'archive_replace': "'Das Archiv existiert bereits. Ersetzen?'", 'pack_error': "'Packfehler'", 'extract_error': "'Entpackfehler'", 'open_archive_error': "'Datei im Archiv öffnen'", 'search_prompt': "'Dateiname enthält:'", 'remote_search_unavailable': "'Die Suche auf entfernten Servern ist noch nicht verfügbar.'", 'search_results': "'Suchergebnisse'", 'no_matches': "'Keine Treffer.'", 'search_error': "'Suchfehler'", 'connection_error': "'Verbindungsfehler'", 'generic_error': "'Fehler'", 'folder_name': "'Ordnername:'", 'file_name': "'Dateiname:'", 'new_name': "'Neuer Name:'", 'target_folder': "'Zielordner auswählen'", 'unsafe_archive': 'Unsicherer Archivpfad wurde blockiert.', 'unsupported_archive': 'Dieses Archivformat wird nicht unterstützt.', 'archive_missing_tool': 'Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archiv erstellt: ', 'extracted': 'Entpackt: ', 'delete_archive_self': 'Das Archiv selbst kann hier nicht gelöscht werden.', 'delete_confirm_title': 'Löschen', 'source_target_same': "'Quelle und Ziel sind identisch.'", 'target_exists': "'Ziel existiert bereits'", 'target_exists_question': '„{name}“ ist im Ziel bereits vorhanden. Was soll passieren?', 'merge': "'Zusammenführen'", 'replace': "'Ersetzen'", 'skip': "'Überspringen'", 'cancel': 'Abbrechen', 'already_in_archive': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'remote_to_archive': 'Kopieren von FTP/SFTP direkt in ein Archiv wird derzeit nicht unterstützt.', 'archive_duplicate': 'Dieser Eintrag ist bereits im Archiv vorhanden. Bitte entferne ihn zuerst oder wähle einen anderen Namen.', 'select_entry': 'Bitte zuerst eine Datei oder einen Ordner im aktiven Fenster markieren.', 'moved': 'Verschoben: ', 'copied': 'Kopiert: ', 'transfer_error': "'Übertragungsfehler: '", 'about_version': f'LunaCommander {APP_VERSION} – Qt6', 'about_help': 'Hilfe'}, 'en': {'extract_here': 'Extract here', 'extract_to': 'Extract to folder…', 'installed': 'Installed programs and file handling', 'text_files': 'Text files', 'rar_support': 'RAR support', 'delete_title': 'Delete', 'delete_confirm': 'Really delete {name}?', 'no': 'No', 'yes': 'Yes', 'deleting': 'Deleting: ', 'done': 'Done: ', 'error': 'Error: ', 'deleted': 'Deleted: ', 'delete_error': 'Delete error: ', 'size_bytes': 'Size: {size:,} bytes', 'path': 'Path: {path}', 'same_source': 'Source and destination are identical.', 'server_copy_unavailable': 'Server-to-server copying is not available.', 'archive_local_only': 'Archive management is currently available for local files only.', 'archive_exists': 'Archive exists', 'archive_replace': 'The archive already exists. Replace it?', 'pack_error': 'Archive creation error', 'extract_error': 'Extraction error', 'open_archive_error': 'Open file in archive', 'search_prompt': 'Filename contains:', 'remote_search_unavailable': 'Searching remote servers is not available yet.', 'search_results': 'Search results', 'no_matches': 'No matches.', 'search_error': 'Search error', 'connection_error': 'Connection error', 'generic_error': 'Error', 'folder_name': 'Folder name:', 'file_name': 'File name:', 'new_name': 'New name:', 'target_folder': 'Select destination folder', 'unsafe_archive': 'Unsafe archive path was blocked.', 'unsupported_archive': 'This archive format is not supported.', 'archive_missing_tool': 'Archive utility missing. On Debian install: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive created: ', 'extracted': 'Extracted: ', 'delete_archive_self': 'The archive itself cannot be deleted here.', 'delete_confirm_title': 'Delete', 'source_target_same': 'Source and destination are identical.', 'target_exists': 'Destination already exists', 'target_exists_question': '“{name}” already exists at the destination. What should happen?', 'merge': 'Merge', 'replace': 'Replace', 'skip': 'Skip', 'cancel': 'Cancel', 'already_in_archive': 'This entry already exists in the archive. Remove it first or choose another name.', 'remote_to_archive': 'Copying directly from FTP/SFTP into an archive is not supported yet.', 'archive_duplicate': 'This entry already exists in the archive. Choose another name or remove the existing entry first.', 'select_entry': 'Please select a file or folder in the active pane first.', 'moved': 'Moved: ', 'copied': 'Copied: ', 'transfer_error': 'Transfer error: ', 'about_version': f'LunaCommander {APP_VERSION} – Qt6', 'about_help': 'Help'}, 'fr': {'extract_here': 'Extraire ici', 'extract_to': 'Extraire dans un dossier…', 'installed': 'Programmes installés et gestion des fichiers', 'text_files': 'Fichiers texte', 'rar_support': 'Prise en charge RAR', 'delete_title': 'Supprimer', 'delete_confirm': 'Voulez-vous vraiment supprimer {name}\xa0?', 'no': 'Non', 'yes': 'Oui', 'deleting': 'Suppression\xa0: ', 'done': 'Terminé\xa0: ', 'error': 'Erreur\xa0: ', 'deleted': 'Supprimé\xa0: ', 'delete_error': 'Erreur de suppression\xa0: ', 'size_bytes': 'Taille\xa0: {size:,} octets', 'path': 'Chemin\xa0: {path}', 'same_source': 'La source et la destination sont identiques.', 'server_copy_unavailable': 'La copie de serveur à serveur n’est pas disponible.', 'archive_local_only': 'La gestion des archives est uniquement disponible pour les fichiers locaux.', 'archive_exists': 'L’archive existe', 'archive_replace': 'Cette archive existe déjà. La remplacer\xa0?', 'pack_error': 'Erreur de création d’archive', 'extract_error': 'Erreur d’extraction', 'open_archive_error': 'Ouvrir un fichier dans l’archive', 'search_prompt': 'Le nom contient\xa0:', 'remote_search_unavailable': 'La recherche sur les serveurs distants n’est pas encore disponible.', 'search_results': 'Résultats de recherche', 'no_matches': 'Aucun résultat.', 'search_error': 'Erreur de recherche', 'connection_error': 'Erreur de connexion', 'generic_error': 'Erreur', 'folder_name': 'Nom du dossier\xa0:', 'file_name': 'Nom du fichier\xa0:', 'new_name': 'Nouveau nom\xa0:', 'target_folder': 'Choisir le dossier de destination', 'unsafe_archive': 'Chemin d’archive non sûr bloqué.', 'unsupported_archive': 'Ce format d’archive n’est pas pris en charge.', 'archive_missing_tool': 'Utilitaire d’archive manquant. Sous Debian\xa0: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archive créée\xa0: ', 'extracted': 'Extrait\xa0: ', 'delete_archive_self': 'Impossible de supprimer l’archive elle-même ici.', 'delete_confirm_title': 'Supprimer', 'source_target_same': 'La source et la destination sont identiques.', 'target_exists': 'La destination existe déjà', 'target_exists_question': '«\xa0{name}\xa0» existe déjà à destination. Que faire\xa0?', 'merge': 'Fusionner', 'replace': 'Remplacer', 'skip': 'Ignorer', 'cancel': 'Annuler', 'already_in_archive': 'Cette entrée existe déjà dans l’archive. Supprimez-la ou choisissez un autre nom.', 'remote_to_archive': 'La copie directe de FTP/SFTP vers une archive n’est pas prise en charge.', 'archive_duplicate': 'Cette entrée existe déjà dans l’archive. Choisissez un autre nom ou supprimez l’entrée existante.', 'select_entry': 'Veuillez d’abord sélectionner un fichier ou un dossier dans le panneau actif.', 'moved': 'Déplacé\xa0: ', 'copied': 'Copié\xa0: ', 'transfer_error': 'Erreur de transfert\xa0: ', 'about_version': f'LunaCommander {APP_VERSION} – Qt6', 'about_help': 'Aide'}, 'it': {'extract_here': 'Estrai qui', 'extract_to': 'Estrai in una cartella…', 'installed': 'Programmi installati e gestione file', 'text_files': 'File di testo', 'rar_support': 'Supporto RAR', 'delete_title': 'Elimina', 'delete_confirm': 'Eliminare davvero {name}?', 'no': 'No', 'yes': 'Sì', 'deleting': 'Eliminazione: ', 'done': 'Completato: ', 'error': 'Errore: ', 'deleted': 'Eliminato: ', 'delete_error': 'Errore di eliminazione: ', 'size_bytes': 'Dimensione: {size:,} byte', 'path': 'Percorso: {path}', 'same_source': 'Origine e destinazione sono identiche.', 'server_copy_unavailable': 'La copia da server a server non è disponibile.', 'archive_local_only': 'La gestione degli archivi è disponibile solo per i file locali.', 'archive_exists': 'Archivio esistente', 'archive_replace': 'L’archivio esiste già. Sostituirlo?', 'pack_error': 'Errore di creazione archivio', 'extract_error': 'Errore di estrazione', 'open_archive_error': 'Apri file nell’archivio', 'search_prompt': 'Il nome contiene:', 'remote_search_unavailable': 'La ricerca sui server remoti non è ancora disponibile.', 'search_results': 'Risultati della ricerca', 'no_matches': 'Nessun risultato.', 'search_error': 'Errore di ricerca', 'connection_error': 'Errore di connessione', 'generic_error': 'Errore', 'folder_name': 'Nome cartella:', 'file_name': 'Nome file:', 'new_name': 'Nuovo nome:', 'target_folder': 'Seleziona cartella di destinazione', 'unsafe_archive': 'Percorso archivio non sicuro bloccato.', 'unsupported_archive': 'Questo formato di archivio non è supportato.', 'archive_missing_tool': 'Programma per archivi mancante. Su Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archivio creato: ', 'extracted': 'Estratto: ', 'delete_archive_self': 'Non è possibile eliminare qui l’archivio stesso.', 'delete_confirm_title': 'Elimina', 'source_target_same': 'Origine e destinazione sono identiche.', 'target_exists': 'La destinazione esiste già', 'target_exists_question': '“{name}” esiste già nella destinazione. Cosa fare?', 'merge': 'Unisci', 'replace': 'Sostituisci', 'skip': 'Ignora', 'cancel': 'Annulla', 'already_in_archive': 'Questa voce è già presente nell’archivio. Rimuovila o scegli un altro nome.', 'remote_to_archive': 'La copia diretta da FTP/SFTP in un archivio non è supportata.', 'archive_duplicate': 'Questa voce è già presente nell’archivio. Scegli un altro nome o rimuovi quella esistente.', 'select_entry': 'Seleziona prima un file o una cartella nel pannello attivo.', 'moved': 'Spostato: ', 'copied': 'Copiato: ', 'transfer_error': 'Errore di trasferimento: ', 'about_version': f'LunaCommander {APP_VERSION} – Qt6', 'about_help': 'Aiuto'}, 'nl': {'extract_here': 'Hier uitpakken', 'extract_to': 'Uitpakken naar map…', 'installed': 'Geïnstalleerde programma’s en bestandsbeheer', 'text_files': 'Tekstbestanden', 'rar_support': 'RAR-ondersteuning', 'delete_title': 'Verwijderen', 'delete_confirm': '{name} echt verwijderen?', 'no': 'Nee', 'yes': 'Ja', 'deleting': 'Verwijderen: ', 'done': 'Voltooid: ', 'error': 'Fout: ', 'deleted': 'Verwijderd: ', 'delete_error': 'Verwijderfout: ', 'size_bytes': 'Grootte: {size:,} bytes', 'path': 'Pad: {path}', 'same_source': 'Bron en bestemming zijn hetzelfde.', 'server_copy_unavailable': 'Kopiëren van server naar server is niet beschikbaar.', 'archive_local_only': 'Archiefbeheer is alleen beschikbaar voor lokale bestanden.', 'archive_exists': 'Archief bestaat', 'archive_replace': 'Het archief bestaat al. Vervangen?', 'pack_error': 'Fout bij archief maken', 'extract_error': 'Uitpakfout', 'open_archive_error': 'Bestand in archief openen', 'search_prompt': 'Bestandsnaam bevat:', 'remote_search_unavailable': 'Zoeken op externe servers is nog niet beschikbaar.', 'search_results': 'Zoekresultaten', 'no_matches': 'Geen resultaten.', 'search_error': 'Zoekfout', 'connection_error': 'Verbindingsfout', 'generic_error': 'Fout', 'folder_name': 'Mapnaam:', 'file_name': 'Bestandsnaam:', 'new_name': 'Nieuwe naam:', 'target_folder': 'Doelmap selecteren', 'unsafe_archive': 'Onveilig archiefpad is geblokkeerd.', 'unsupported_archive': 'Dit archiefformaat wordt niet ondersteund.', 'archive_missing_tool': 'Archiefprogramma ontbreekt. Installeer op Debian: sudo apt install 7zip unar unrar-free.', 'archive_created': 'Archief gemaakt: ', 'extracted': 'Uitgepakt: ', 'delete_archive_self': 'Het archief zelf kan hier niet worden verwijderd.', 'delete_confirm_title': 'Verwijderen', 'source_target_same': 'Bron en bestemming zijn hetzelfde.', 'target_exists': 'Bestemming bestaat al', 'target_exists_question': '“{name}” bestaat al op de bestemming. Wat moet er gebeuren?', 'merge': 'Samenvoegen', 'replace': 'Vervangen', 'skip': 'Overslaan', 'cancel': 'Annuleren', 'already_in_archive': 'Dit item staat al in het archief. Verwijder het eerst of kies een andere naam.', 'remote_to_archive': 'Rechtstreeks kopiëren van FTP/SFTP naar een archief wordt niet ondersteund.', 'archive_duplicate': 'Dit item staat al in het archief. Kies een andere naam of verwijder het bestaande item.', 'select_entry': 'Selecteer eerst een bestand of map in het actieve deelvenster.', 'moved': 'Verplaatst: ', 'copied': 'Gekopieerd: ', 'transfer_error': 'Overdrachtsfout: ', 'about_version': f'LunaCommander {APP_VERSION} – Qt6', 'about_help': 'Help'}}.items():
+    TRANSLATIONS[_lang].update(_entries)
+
+
+# Duplicate-handling and rename-conflict prompts.
+for _lang, _entries in {
+    'de': {'remember_conflict':'Für alle weiteren Konflikte diese Aktion übernehmen','rename_exists':'„{name}“ ist in diesem Ordner bereits vorhanden. Bitte einen anderen Namen wählen.'},
+    'en': {'remember_conflict':'Apply this action to all further conflicts','rename_exists':'“{name}” already exists in this folder. Please choose a different name.'},
+    'fr': {'remember_conflict':'Appliquer cette action à tous les conflits suivants','rename_exists':'« {name} » existe déjà dans ce dossier. Choisissez un autre nom.'},
+    'it': {'remember_conflict':'Applica questa azione a tutti i conflitti successivi','rename_exists':'“{name}” esiste già in questa cartella. Scegli un altro nome.'},
+    'nl': {'remember_conflict':'Deze actie toepassen op alle volgende conflicten','rename_exists':'“{name}” bestaat al in deze map. Kies een andere naam.'},
+}.items():
     TRANSLATIONS[_lang].update(_entries)
 
 
@@ -357,6 +368,20 @@ class FileTreeWidget(QTreeWidget):
         else:
             event.ignore()
 
+    def viewportEvent(self, event):
+        # QTreeWidget receives pointer events through its viewport. Set the
+        # cursor there (and on the view) so Qt styles cannot leave an I-beam
+        # or arrow over a file row.
+        if event.type() in (QEvent.MouseMove, QEvent.HoverMove):
+            pos = event.position().toPoint() if hasattr(event, 'position') else event.pos()
+            cursor = Qt.PointingHandCursor if self.itemAt(pos) is not None else Qt.ArrowCursor
+            self.viewport().setCursor(cursor)
+            self.setCursor(cursor)
+        elif event.type() in (QEvent.Leave, QEvent.HoverLeave):
+            self.viewport().setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.ArrowCursor)
+        return super().viewportEvent(event)
+
     def mimeData(self, items):
         mime = QMimeData()
         pane = self.pane
@@ -395,7 +420,7 @@ class Pane(QWidget):
         for key,icon_name,fn in nav_defs:
             b=QPushButton(); b.setIcon(QApplication.style().standardIcon(getattr(QStyle,icon_name))); b.setIconSize(QSize(18,18)); b.setFixedSize(34,32); b.setToolTip(app.tr(key)); b.setAccessibleName(app.tr(key)); b.clicked.connect(fn); nav.addWidget(b); self.nav_buttons.append(b)
         v.addLayout(nav)
-        self.tree=FileTreeWidget(self); self.tree.setDragEnabled(True); self.tree.setAcceptDrops(True); self.tree.viewport().setAcceptDrops(True); self.tree.setDragDropMode(QAbstractItemView.DragDrop); self.tree.setDefaultDropAction(Qt.CopyAction); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); initial_icon_size=int(self.app.config.get('file_icon_size', 32)); self.tree.setIconSize(QSize(initial_icon_size, initial_icon_size)); self.tree.setUniformRowHeights(False); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(self.on_current_item_changed); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
+        self.tree=FileTreeWidget(self); self.tree.setDragEnabled(True); self.tree.setAcceptDrops(True); self.tree.setMouseTracking(True); self.tree.viewport().setMouseTracking(True); self.tree.viewport().setAcceptDrops(True); self.tree.setDragDropMode(QAbstractItemView.DragDrop); self.tree.setDefaultDropAction(Qt.CopyAction); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); initial_icon_size=int(self.app.config.get('file_icon_size', 32)); self.tree.setIconSize(QSize(initial_icon_size, initial_icon_size)); self.tree.setUniformRowHeights(False); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(self.on_current_item_changed); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
         self._watch_snapshot=None; self._context_menu_open=False
         self._watch_timer=QTimer(self); self._watch_timer.setInterval(1500); self._watch_timer.timeout.connect(self.check_folder_changes); self._watch_timer.start()
         self.path_edit.returnPressed.connect(self.go); self.load(self.path)
@@ -444,6 +469,12 @@ class Pane(QWidget):
                 break
 
     def eventFilter(self,obj,event):
+        # Show a pointing hand only while the pointer is over an actual file/folder row.
+        if obj is self.tree.viewport():
+            if event.type() == QEvent.MouseMove:
+                self.tree.viewport().setCursor(Qt.PointingHandCursor if self.tree.itemAt(event.position().toPoint()) else Qt.ArrowCursor)
+            elif event.type() == QEvent.Leave:
+                self.tree.viewport().setCursor(Qt.ArrowCursor)
         # Keep the active pane in sync even when focus changes without a row click.
         if event.type() in (QEvent.FocusIn,QEvent.MouseButtonPress):
             self.app.active=self
@@ -714,28 +745,51 @@ class Pane(QWidget):
                 try:self.load_archive(target)
                 except Exception as e:QMessageBox.warning(self,self.app.tr('archive_label'),str(e))
                 return
-            from PySide6.QtGui import QDesktopServices
-            from PySide6.QtCore import QUrl
-            QDesktopServices.openUrl(QUrl.fromLocalFile(str(target)))
+            self.app.open_with_external_program(target)
     def import_urls(self, paths, move=False):
-        """Import files from the desktop clipboard, preserving copy vs. cut."""
+        """Import desktop clipboard files and ask before overwriting existing entries."""
         if self.remote or self.archive_file or not paths:
             return
         dst=Path(self.path)
         valid=[Path(x) for x in paths if x and Path(x).exists()]
         if not valid:
             return
+        jobs=[]
+        remembered_conflict=None
+        for src in valid:
+            target=dst/src.name
+            try:
+                if src.resolve() == target.resolve():
+                    continue
+            except OSError:
+                pass
+            conflict='merge'
+            if target.exists():
+                if remembered_conflict is None:
+                    conflict, remember=self.app.ask_conflict(src.name)
+                    if remember and conflict in ('merge','replace','skip'):
+                        remembered_conflict=conflict
+                else:
+                    conflict=remembered_conflict
+                if conflict is None:
+                    break
+                if conflict=='skip':
+                    continue
+            jobs.append((src,target,conflict))
+        if not jobs:
+            return
         def work():
             errors=[]
-            for src in valid:
+            for src,target,conflict in jobs:
                 try:
-                    target=dst/src.name
-                    if src.resolve() == target.resolve():
-                        continue
+                    if conflict=='replace' and target.exists():
+                        shutil.rmtree(target) if target.is_dir() and not target.is_symlink() else target.unlink()
                     if move:
-                        # A Caja/MATE cut is a real move: only remove the source
-                        # after the destination operation succeeds.
-                        shutil.move(str(src), str(target))
+                        if src.is_dir() and target.exists() and conflict=='merge':
+                            shutil.copytree(src,target,dirs_exist_ok=True)
+                            shutil.rmtree(src)
+                        else:
+                            shutil.move(str(src), str(target))
                     elif src.is_dir():
                         shutil.copytree(src,target,dirs_exist_ok=True)
                     else:
@@ -1871,7 +1925,11 @@ class Main(QMainWindow):
     def edit_selected(self):
         self._text_dialog(True)
     def settings_dialog(self):
-        d=QDialog(self); d.setWindowTitle(self.tr('settings')); f=QFormLayout(d)
+        d=QDialog(self); d.setWindowTitle(self.tr('settings')); d.setMinimumSize(960, 480); d.resize(1100, 700)
+        outer=QVBoxLayout(d); outer.setContentsMargins(8,8,8,8); outer.setSpacing(6)
+        scroll=QScrollArea(d); scroll.setWidgetResizable(True); scroll.setFrameShape(QScrollArea.NoFrame)
+        content=QWidget(); f=QFormLayout(content); f.setContentsMargins(6,6,10,6); f.setVerticalSpacing(5); f.setHorizontalSpacing(10)
+        scroll.setWidget(content); outer.addWidget(scroll,1)
         lang=QComboBox(); lang.addItem('Deutsch','de'); lang.addItem('English','en'); lang.addItem('Français','fr'); lang.addItem('Italiano','it'); lang.addItem('Nederlands','nl'); lang.setCurrentIndex(max(0,lang.findData(self.language))); f.addRow(self.tr('language'),lang)
         theme=QComboBox(); theme.addItems([self.tr('dark'),self.tr('light')]); theme.setCurrentIndex(0 if self.dark else 1)
         f.addRow(self.tr('scheme'),theme)
@@ -1904,11 +1962,11 @@ class Main(QMainWindow):
         photo_preview.setChecked(bool(self.config.get('photo_preview', False)))
         f.addRow(photo_preview)
         left_row=QWidget(); left_layout=QHBoxLayout(left_row); left_layout.setContentsMargins(0,0,0,0)
-        left_path=QLineEdit(str(self.config.get('default_left', str(Path.home())))); left_browse=QPushButton(self.tr('browse'))
+        left_path=LocalizedLineEdit(self, str(self.config.get('default_left', str(Path.home())))); left_browse=QPushButton(self.tr('browse'))
         left_browse.clicked.connect(lambda: (lambda chosen: left_path.setText(chosen) if chosen else None)(QFileDialog.getExistingDirectory(d,self.tr('default_left'),left_path.text() or str(Path.home()))))
         left_layout.addWidget(left_path,1); left_layout.addWidget(left_browse); f.addRow(self.tr('default_left'),left_row)
         right_row=QWidget(); right_layout=QHBoxLayout(right_row); right_layout.setContentsMargins(0,0,0,0)
-        right_path=QLineEdit(str(self.config.get('default_right', str(Path.home())))); right_browse=QPushButton(self.tr('browse'))
+        right_path=LocalizedLineEdit(self, str(self.config.get('default_right', str(Path.home())))); right_browse=QPushButton(self.tr('browse'))
         right_browse.clicked.connect(lambda: (lambda chosen: right_path.setText(chosen) if chosen else None)(QFileDialog.getExistingDirectory(d,self.tr('default_right'),right_path.text() or str(Path.home()))))
         right_layout.addWidget(right_path,1); right_layout.addWidget(right_browse); f.addRow(self.tr('default_right'),right_row)
         f.addRow(QLabel('<b>Archivprogramme – externe Programme</b>'))
@@ -1924,13 +1982,60 @@ class Main(QMainWindow):
             configured=(self.config.get('archive_binaries',{}).get(fmt,'') or '').strip()
             detected=configured or shutil.which(command) or (shutil.which('7z') if fmt=='7z' else '')
             row=QWidget(); row_layout=QHBoxLayout(row); row_layout.setContentsMargins(0,0,0,0)
-            field=QLineEdit(detected or '')
+            field=LocalizedLineEdit(self, detected or '')
             browse=QPushButton(self.tr('browse'))
-            browse.clicked.connect(lambda checked=False, w=field: (lambda chosen: w.setText(chosen) if chosen else None)(QFileDialog.getOpenFileName(d,'Programm auswählen',w.text() or '/usr/bin')[0]))
+            browse.clicked.connect(lambda checked=False, w=field: (lambda chosen: w.setText(chosen) if chosen else None)(choose_program_file(w)))
             status=QLabel('Installiert' if detected and Path(detected).is_file() and os.access(detected,os.X_OK) else 'Nicht gefunden')
             field.textChanged.connect(lambda value, label=status: label.setText('Installiert' if value and Path(value).is_file() and os.access(value,os.X_OK) else 'Nicht gefunden'))
             row_layout.addWidget(field,1); row_layout.addWidget(browse); row_layout.addWidget(status)
             f.addRow(archive_labels[fmt],row); archive_fields[fmt]=field
+        # Use a Qt-owned file picker here so its controls follow LunaCommander's language,
+        # rather than the desktop's native dialog language.
+        def choose_program_file(field):
+            dialog = QFileDialog(d, self.tr('choose_program'), field.text() or '/usr/bin')
+            dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True)
+            dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+            dialog.setNameFilter({'de':'Alle Dateien (*)','en':'All Files (*)','fr':'Tous les fichiers (*)','it':'Tutti i file (*)','nl':'Alle bestanden (*)'}.get(self.language, 'All Files (*)'))
+            labels = {
+                'de': ('Öffnen', 'Abbrechen', 'Suchen in:', 'Dateiname:', 'Dateityp:'),
+                'en': ('Open', 'Cancel', 'Look in:', 'File name:', 'File type:'),
+                'fr': ('Ouvrir', 'Annuler', 'Regarder dans :', 'Nom du fichier :', 'Type de fichier :'),
+                'it': ('Apri', 'Annulla', 'Cerca in:', 'Nome file:', 'Tipo file:'),
+                'nl': ('Openen', 'Annuleren', 'Zoeken in:', 'Bestandsnaam:', 'Bestandstype:'),
+            }.get(self.language, ('Open', 'Cancel', 'Look in:', 'File name:', 'File type:'))
+            for role, value in zip((QFileDialog.DialogLabel.Accept, QFileDialog.DialogLabel.Reject,
+                                    QFileDialog.DialogLabel.LookIn, QFileDialog.DialogLabel.FileName,
+                                    QFileDialog.DialogLabel.FileType), labels):
+                dialog.setLabelText(role, value)
+            if dialog.exec() == QDialog.DialogCode.Accepted:
+                selected = dialog.selectedFiles()
+                return selected[0] if selected else ''
+            return ''
+
+        # Central external application assignments. Empty path means use the OS default handler.
+        f.addRow(QLabel('<b>Externe Programme – Dateizuordnungen</b>'))
+        external_fields={}
+        external_categories=[
+            ('archive','Archive','engrampa'),('image','Bilder','ristretto'),
+            ('pdf','PDF','evince'),('office','Dokumente / Tabellen / Präsentationen','libreoffice'),
+            ('audio','Audio','vlc'),('video','Video','mpv'),('web','Webseiten / HTML',''),
+            ('text','Text / Quellcode',''),('ebook','E-Books','foliate'),
+            ('torrent','Torrent-Dateien','transmission-gtk'),('disk','ISO / Datenträger','')]
+        for key,label,default_cmd in external_categories:
+            current=str(self.config.get('external_programs',{}).get(key,'') or '')
+            # Only show an explicitly saved application. Do not refill a cleared
+            # System-default selection with an automatically detected program.
+            detected=current
+            row=QWidget(); row_layout=QHBoxLayout(row); row_layout.setContentsMargins(0,0,0,0)
+            field=LocalizedLineEdit(self, detected); field.setPlaceholderText('System-Standardprogramm verwenden')
+            browse=QPushButton(self.tr('browse'))
+            browse.clicked.connect(lambda checked=False,w=field: (lambda chosen: w.setText(chosen) if chosen else None)(choose_program_file(w)))
+            reset=QPushButton('System')
+            reset.clicked.connect(lambda checked=False,w=field: w.clear())
+            status=QLabel('System-Standard' if not detected else ('Installiert' if Path(detected).is_file() and os.access(detected,os.X_OK) else 'Nicht gefunden'))
+            field.textChanged.connect(lambda value,l=status: l.setText('System-Standard' if not value.strip() else ('Installiert' if Path(value).is_file() and os.access(value,os.X_OK) else 'Nicht gefunden')))
+            row_layout.addWidget(field,1); row_layout.addWidget(browse); row_layout.addWidget(reset); row_layout.addWidget(status)
+            f.addRow(label,row); external_fields[key]=field
         f.addRow(QLabel('<b>'+self.tr('installed')+'</b>'))
         editor_info=self.default_app_for('text/plain')
         f.addRow(self.tr('text_files'),QLabel(editor_info))
@@ -1944,7 +2049,7 @@ class Main(QMainWindow):
         ok_text, cancel_text = button_texts.get(self.language, button_texts['en'])
         buttons.button(QDialogButtonBox.Ok).setText(ok_text)
         buttons.button(QDialogButtonBox.Cancel).setText(cancel_text)
-        f.addRow(buttons)
+        outer.addWidget(buttons)
         buttons.accepted.connect(d.accept); buttons.rejected.connect(d.reject)
         if d.exec()==QDialog.Accepted:
             self.dark=(theme.currentIndex()==0); self.click_mode=click.currentData(); self.language=lang.currentData()
@@ -1958,6 +2063,7 @@ class Main(QMainWindow):
             self.config['file_icon_size']=int(file_icon_size.currentData())
             self.config['font_size']=int(font_size.currentData())
             self.config['archive_binaries']={fmt: field.text().strip() for fmt,field in archive_fields.items()}
+            self.config['external_programs']={key: field.text().strip() for key,field in external_fields.items()}
             self.config['rar_binary']=self.config['archive_binaries'].get('rar','')
             for key, field in (('default_left', left_path), ('default_right', right_path)):
                 candidate=Path(field.text()).expanduser()
@@ -1979,6 +2085,95 @@ class Main(QMainWindow):
                 self.right.load(self.config['default_right'], remember=False)
             self.apply_language()
             self.setStyleSheet(self.stylesheet() if self.dark else 'QWidget{background:#edf3f8;color:#172b3d} QTreeWidget{background:white;color:#172b3d} QLineEdit{background:white;color:#172b3d}')
+    def open_with_external_program(self, target):
+        """Open a file with a configured category program, otherwise the OS default."""
+        name=target.name.lower()
+        ext=next((x for x in ('.tar.gz','.tar.xz','.tar.bz2') if name.endswith(x)),target.suffix.lower())
+        groups={
+            'image':('.jpg','.jpeg','.png','.gif','.bmp','.webp','.tif','.tiff','.avif','.svg'),
+            'pdf':('.pdf',),
+            'audio':('.mp3','.wav','.flac','.ogg','.opus','.m4a','.aac','.wma','.aiff','.ape','.alac','.mid','.midi','.amr','.ac3','.dts'),
+            'video':('.mp4','.mkv','.avi','.mov','.wmv','.webm','.mpeg','.mpg','.m4v','.ts','.mts','.m2ts','.flv','.vob','.ogv','.3gp'),
+            'web':('.html','.htm','.xhtml','.mhtml','.mht'),
+            'text':('.txt','.md','.log','.csv','.json','.xml','.yaml','.yml','.ini','.conf','.py','.sh','.css','.js','.desktop'),
+            'office':('.doc','.docx','.odt','.rtf','.xls','.xlsx','.ods','.ppt','.pptx','.odp'),
+            'ebook':('.epub','.mobi'), 'torrent':('.torrent',),
+            'archive':('.zip','.rar','.7z','.tar','.gz','.tgz','.xz','.bz2','.tar.gz','.tar.xz','.tar.bz2')}
+        category=next((k for k,values in groups.items() if ext in values),None)
+        program=(self.config.get('external_programs',{}).get(category,'') or '').strip() if category else ''
+        if program:
+            # A configured handler must be used exactly; never fall back to a
+            # different application. Accept executable paths (including paths
+            # containing spaces), command names, arguments and .desktop files.
+            import shlex
+            try:
+                configured=program.strip()
+                if Path(configured).is_file() and configured.lower().endswith('.desktop'):
+                    desktop_path=str(Path(configured).expanduser().resolve())
+                    gio=shutil.which('gio')
+                    if not gio:
+                        raise RuntimeError('gio is not installed; cannot launch .desktop handler')
+                    ok=subprocess.Popen([gio,'launch',desktop_path,QUrl.fromLocalFile(str(target)).toString()],
+                                        stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,
+                                        start_new_session=True)
+                    return
+                # Treat the complete input as one executable first. This is
+                # important for paths such as /opt/Luna Surfer/lunasurfer.
+                if Path(configured).expanduser().is_file():
+                    executable=str(Path(configured).expanduser().resolve())
+                    args=[]
+                else:
+                    command=shlex.split(configured)
+                    if not command:
+                        raise RuntimeError('Empty application command')
+                    executable=shutil.which(command[0])
+                    args=command[1:]
+                    if not executable and Path(command[0]).expanduser().is_file():
+                        executable=str(Path(command[0]).expanduser().resolve())
+                    if not executable:
+                        raise RuntimeError('Application not found: '+command[0])
+                if not os.access(executable,os.X_OK):
+                    raise RuntimeError('Application is not executable: '+executable)
+                # Browsers are more reliable when given an explicit file:// URL.
+                # Other application handlers continue to receive the normal path.
+                launch_target=(QUrl.fromLocalFile(str(target.resolve())).toString()
+                               if category=='web' else str(target))
+                subprocess.Popen([executable]+args+[launch_target],
+                                 stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,
+                                 start_new_session=True)
+                return
+            except Exception as exc:
+                QMessageBox.warning(self,self.tr('open_with'),
+                                    self.tr('app_launch_error')+'\n'+program+'\n'+str(exc))
+                return
+        # For HTML, prefer the desktop's configured *web browser* rather than
+        # the MIME handler for text/html (which may be a different app such as Falkon).
+        if category=='web':
+            try:
+                browser=subprocess.run(['xdg-settings','get','default-web-browser'],
+                                       capture_output=True,text=True,timeout=3).stdout.strip()
+                if browser:
+                    candidates=[Path.home()/'.local/share/applications'/browser,
+                                Path('/usr/local/share/applications')/browser,
+                                Path('/usr/share/applications')/browser]
+                    desktop=next((x for x in candidates if x.is_file()),None)
+                    gio=shutil.which('gio')
+                    if desktop and gio:
+                        subprocess.Popen([gio,'launch',str(desktop),
+                                          QUrl.fromLocalFile(str(target.resolve())).toString()],
+                                         stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,
+                                         start_new_session=True)
+                        return
+            except Exception:
+                pass
+        # Last-resort desktop MIME handler for non-web files or missing browser metadata.
+        try:
+            subprocess.Popen(['xdg-open',str(target)],
+                             stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,
+                             start_new_session=True)
+        except OSError:
+            QMessageBox.warning(self,self.tr('open_with'),self.tr('app_launch_error')+'\nxdg-open')
+
     def default_app_for(self,mime):
         try:
             result=subprocess.run(['xdg-mime','query','default',mime],capture_output=True,text=True,timeout=3)
@@ -2048,10 +2243,18 @@ class Main(QMainWindow):
         name_field.setText(default_name)
         name_field.selectAll()
         layout.addWidget(name_field)
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, dialog)
-        buttons.accepted.connect(dialog.accept)
-        buttons.rejected.connect(dialog.reject)
-        layout.addWidget(buttons)
+        # Use ordinary buttons instead of platform-standard captions: some
+        # desktop locales reset QDialogButtonBox labels to English after the
+        # dialog is shown.
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        cancel_button = QPushButton(self.tr('cancel'), dialog)
+        ok_button = QPushButton(self.tr('ok'), dialog)
+        cancel_button.clicked.connect(dialog.reject)
+        ok_button.clicked.connect(dialog.accept)
+        buttons.addWidget(cancel_button)
+        buttons.addWidget(ok_button)
+        layout.addLayout(buttons)
         name_field.setFocus()
         if dialog.exec() != QDialog.Accepted:
             return
@@ -2555,8 +2758,14 @@ class Main(QMainWindow):
         n=self.ask_name(self.tr('rename'),self.tr('new_name'),r[0])
         if n:
             try:
-                if p.remote:p.remote.client.rename(p.target(r[0]),p.target(n))
-                else:Path(p.target(r[0])).rename(p.target(n))
+                if n == r[0]:
+                    return
+                new_target=p.target(n)
+                if self.target_exists_for_pane(p,new_target):
+                    QMessageBox.warning(self,self.tr('target_exists'),self.tr('rename_exists').format(name=n))
+                    return
+                if p.remote:p.remote.client.rename(p.target(r[0]),new_target)
+                else:Path(p.target(r[0])).rename(new_target)
                 p.load(p.path)
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
     def delete_archive_member(self, archive, member, is_dir):
@@ -3023,6 +3232,7 @@ class Main(QMainWindow):
         if rows and isinstance(rows[0],str): rows=[(rows[0],False)]
         dst=self.active
         queued=0
+        remembered_conflict=None
         for name,is_dir in rows:
             a=src.target(name)
             b='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
@@ -3037,7 +3247,12 @@ class Main(QMainWindow):
             if exists:
                 if dst.archive_file:
                     QMessageBox.information(self,self.tr('archive_label'),self.tr('archive_duplicate')); continue
-                conflict=self.ask_conflict(name)
+                if remembered_conflict is None:
+                    conflict, remember=self.ask_conflict(name)
+                    if remember and conflict in ('merge','replace','skip'):
+                        remembered_conflict=conflict
+                else:
+                    conflict=remembered_conflict
                 if conflict is None: break
                 if conflict=='skip': continue
             worker=TransferWorker(src,dst,a,b,is_dir,cut,conflict)
@@ -3066,15 +3281,33 @@ class Main(QMainWindow):
     def copy_other(self):self.copy_transfer(False)
     def move_other(self):self.copy_transfer(True)
     def ask_conflict(self,name):
-        box=QMessageBox(self); box.setWindowTitle(self.tr('target_exists')); box.setText(self.tr('target_exists_question').format(name=name))
+        box=QMessageBox(self)
+        box.setWindowTitle(self.tr('target_exists'))
+        box.setText(self.tr('target_exists_question').format(name=name))
+        remember=QCheckBox(self.tr('remember_conflict'),box)
+        # Keep the native compact checkbox and dialog layout; only improve
+        # the indicator contrast for the dark application theme.
+        remember.setStyleSheet('''
+            QCheckBox::indicator { width: 15px; height: 15px; }
+            QCheckBox::indicator:unchecked {
+                background-color: #dce8f5;
+                border: 1px solid #6f9bc4;
+                border-radius: 2px;
+            }
+            QCheckBox::indicator:checked {
+                background-color: #2388d8;
+                border: 1px solid #a9d7ff;
+                border-radius: 2px;
+            }
+        ''')
+        box.setCheckBox(remember)
         merge_btn=box.addButton(self.tr('merge'),QMessageBox.AcceptRole)
         replace_btn=box.addButton(self.tr('replace'),QMessageBox.DestructiveRole)
         skip_btn=box.addButton(self.tr('skip'),QMessageBox.ActionRole)
-        box.addButton(self.tr('cancel'),QMessageBox.RejectRole); box.exec(); clicked=box.clickedButton()
-        if clicked is merge_btn:return 'merge'
-        if clicked is replace_btn:return 'replace'
-        if clicked is skip_btn:return 'skip'
-        return None
+        box.addButton(self.tr('cancel'),QMessageBox.RejectRole)
+        box.exec(); clicked=box.clickedButton()
+        choice='merge' if clicked is merge_btn else 'replace' if clicked is replace_btn else 'skip' if clicked is skip_btn else None
+        return choice, bool(remember.isChecked())
     def add_queue_label(self,label):
         # The three queue rows are permanent; a new task reuses them in rotation.
         if not self.queue_labels:
@@ -3116,6 +3349,7 @@ class Main(QMainWindow):
                 filtered.append((name,is_dir))
 
         entries=[]
+        remembered_conflict=None
         for name,is_dir in filtered:
             source=src.target(name)
             target='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
@@ -3138,7 +3372,12 @@ class Main(QMainWindow):
                 if dst.archive_file:
                     QMessageBox.information(self,self.tr('archive_label'),self.tr('archive_duplicate'))
                     continue
-                conflict=self.ask_conflict(name)
+                if remembered_conflict is None:
+                    conflict, remember=self.ask_conflict(name)
+                    if remember and conflict in ('merge','replace','skip'):
+                        remembered_conflict=conflict
+                else:
+                    conflict=remembered_conflict
                 if conflict is None:
                     break
                 if conflict=='skip':

@@ -1,5 +1,13 @@
 # Changelog
 
+# LunaCommander 0.6.78
+
+- MHTML-Webarchive-Dateien (`.mhtml` und `.mht`) werden wie HTML-Dateien an den konfigurierten Webbrowser weitergeleitet.
+- Die bestehende HTML-/Standardbrowser-Weiterleitung bleibt erhalten.
+- Handcursor beim Bewegen der Maus über Dateien und Ordner. 
+- Lokalisierte OK/Abbrechen-Schaltflächen im Archivnamen-Dialog. 
+- Konfliktdialog für vorhandene Ziele beim Einfügen von Dateien aus der Desktop-Zwischenablage; unterstützt Zusammenführen, Ersetzen, Überspringen und Abbrechen.
+
 ## 0.6.77
 - Mehrfachauswahl wird als ein sequenzieller Sammelauftrag verarbeitet; ein Fehler bei einem Eintrag verhindert nicht mehr die folgenden Kopiervorgänge.
 - Quell- und Zielfenster werden erst nach Abschluss des gesamten Auftrags aktualisiert.
@@ -430,3 +438,15 @@
 
 ## 0.6.59
 - Added automatic monitoring of the open local folders. New, deleted, renamed and changed files now appear automatically; the option can be disabled in Settings.
+
+## 0.6.78
+- Duplicate-file dialog: added a checkbox to reuse the selected action (merge, replace or skip) for all subsequent conflicts in the current copy, move or paste batch.
+- The remembered conflict choice is limited to the current operation; the next operation asks again.
+- Renaming now checks whether the requested name already exists in the same folder and shows a localized warning instead of overwriting or failing silently.
+- Duplicate and rename prompts are translated in German, English, French, Italian and Dutch.
+
+## 0.6.78 – HTML-Browser-Weiterleitung korrigiert
+
+- HTML-Dateien werden bei konfiguriertem Browser als lokale `file://`-URL geöffnet.
+- Ohne eigene HTML-Anwendung wird der über `xdg-settings` festgelegte Standard-Webbrowser bevorzugt, statt direkt die HTML-MIME-Zuordnung zu verwenden.
+- Andere Dateizuordnungen und LunaPlayer bleiben unverändert.
