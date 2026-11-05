@@ -4,7 +4,7 @@ import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfi
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
-from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QPlainTextEdit,QTabWidget,QListWidget,QListWidgetItem,QSpinBox,QGroupBox,QGridLayout,QFormLayout,QScrollArea)
+from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QPlainTextEdit,QTabWidget,QListWidget,QListWidgetItem,QSpinBox,QGroupBox,QGridLayout,QFormLayout,QScrollArea,QHeaderView)
 
 
 
@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.6.78'
+    APP_VERSION = '0.6.79'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -410,8 +410,8 @@ class FileTreeWidget(QTreeWidget):
 
 
 class Pane(QWidget):
-    def __init__(self,app):
-        super().__init__(); self.app=app; self.remote=None; self.path=str(Path.home()); self.rows=[]; self.history=[]; self.forward_history=[]; self.archive_file=None; self.archive_inner=''; self._thumbnail_generation=0; self.sort_field='name'; self.sort_descending=False 
+    def __init__(self,app,side='left'):
+        super().__init__(); self.app=app; self.side=side; self.remote=None; self.path=str(Path.home()); self.rows=[]; self.history=[]; self.forward_history=[]; self.archive_file=None; self.archive_inner=''; self._thumbnail_generation=0; self.sort_field='name'; self.sort_descending=False 
         v=QVBoxLayout(self); v.setContentsMargins(3,3,3,3)
         nav=QHBoxLayout(); nav.setContentsMargins(0,0,0,0); nav.setSpacing(4)
         self.path_edit=LocalizedLineEdit(app, self.path); nav.addWidget(self.path_edit,1)
@@ -420,7 +420,7 @@ class Pane(QWidget):
         for key,icon_name,fn in nav_defs:
             b=QPushButton(); b.setIcon(QApplication.style().standardIcon(getattr(QStyle,icon_name))); b.setIconSize(QSize(18,18)); b.setFixedSize(34,32); b.setToolTip(app.tr(key)); b.setAccessibleName(app.tr(key)); b.clicked.connect(fn); nav.addWidget(b); self.nav_buttons.append(b)
         v.addLayout(nav)
-        self.tree=FileTreeWidget(self); self.tree.setDragEnabled(True); self.tree.setAcceptDrops(True); self.tree.setMouseTracking(True); self.tree.viewport().setMouseTracking(True); self.tree.viewport().setAcceptDrops(True); self.tree.setDragDropMode(QAbstractItemView.DragDrop); self.tree.setDefaultDropAction(Qt.CopyAction); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); initial_icon_size=int(self.app.config.get('file_icon_size', 32)); self.tree.setIconSize(QSize(initial_icon_size, initial_icon_size)); self.tree.setUniformRowHeights(False); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(self.on_current_item_changed); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
+        self.tree=FileTreeWidget(self); self.tree.setDragEnabled(True); self.tree.setAcceptDrops(True); self.tree.setMouseTracking(True); self.tree.viewport().setMouseTracking(True); self.tree.viewport().setAcceptDrops(True); self.tree.setDragDropMode(QAbstractItemView.DragDrop); self.tree.setDefaultDropAction(Qt.CopyAction); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); header=self.tree.header(); header.setStretchLastSection(False); header.setSectionResizeMode(0,QHeaderView.Interactive); header.setSectionResizeMode(1,QHeaderView.Fixed); header.setSectionResizeMode(2,QHeaderView.Fixed); self.tree.setColumnWidth(0,530); self.tree.setColumnWidth(1,105); self.tree.setColumnWidth(2,105); initial_icon_size=int(self.app.config.get('file_icon_size', 32)); self.tree.setIconSize(QSize(initial_icon_size, initial_icon_size)); self.tree.setUniformRowHeights(False); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(self.on_current_item_changed); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
         self._watch_snapshot=None; self._context_menu_open=False
         self._watch_timer=QTimer(self); self._watch_timer.setInterval(1500); self._watch_timer.timeout.connect(self.check_folder_changes); self._watch_timer.start()
         self.path_edit.returnPressed.connect(self.go); self.load(self.path)
@@ -595,7 +595,6 @@ class Pane(QWidget):
                 it.setIcon(0,self.item_icon(n,d,full_path)); self.tree.addTopLevelItem(it)
                 if full_path and not d:
                     self.queue_thumbnail(n,full_path)
-            self.tree.resizeColumnToContents(0)
             # Keep this pane's selected sort mode when refreshing or reopening a folder.
             self._apply_sort()
             self._watch_snapshot=self._folder_snapshot()
@@ -726,7 +725,6 @@ class Pane(QWidget):
         for n,d,size in self.rows:
             it=QTreeWidgetItem([n,'Ordner' if d else 'Datei','' if d else format_file_size(size,self.app.config.get('size_unit','auto'))])
             it.setData(0,Qt.UserRole,(n,d,size)); it.setIcon(0,self.item_icon(n,d,None)); self.tree.addTopLevelItem(it)
-        self.tree.resizeColumnToContents(0)
         self.app.statusBar().showMessage(f"{self.app.tr('archive_label')}: {archive.name}  |  {len(entries)} {self.app.tr('archive_entries')}")
     def activate(self,it,col=0):
         if not it:return
@@ -1663,11 +1661,16 @@ class PermissionWorker(QRunnable):
 class Main(QMainWindow):
     def __init__(self):
         super().__init__(); self.language='de'; self.setWindowTitle(self.tr('about_version')); self.resize(1500,900); self.setMinimumSize(1050,680); self.active=None; self.clip=None; self.dark=True; self.click_mode='double'; self.config_path=Path.home()/'.config/lunacommander/settings.json'; self.config={}; self.load_config(); self.language=self.config.get('language','de')
-        self.left=Pane(self); self.right=Pane(self); self.active=self.left
+        self._restoring_column_widths=True; self.left=Pane(self,'left'); self.right=Pane(self,'right'); self.active=self.left
         # Restore each pane's sort mode before loading the startup folders.
         for pane, side in ((self.left, 'left'), (self.right, 'right')):
             pane.sort_field = self.config.get(f'sort_{side}_field', 'name')
             pane.sort_descending = bool(self.config.get(f'sort_{side}_descending', False))
+        self.restore_column_widths()
+        for pane in (self.left, self.right):
+            pane.tree.header().sectionResized.connect(
+                lambda logical, old, new, p=pane: self.on_column_resized(p, logical, new))
+        self._restoring_column_widths=False
         self.restore_start_folders(); self.thread_pool=QThreadPool.globalInstance(); self.transfer_busy=False; self.transfer_queue=[]; self.queue_labels=[]
         split=QSplitter(); split.addWidget(self.left); split.addWidget(self.right); split.setSizes([620,620])
         central=QWidget(); lay=QVBoxLayout(central); lay.setContentsMargins(8,8,8,8)
@@ -1718,6 +1721,31 @@ class Main(QMainWindow):
         self.right.apply_file_icon_size(reload_items=False)
         self.make_menu(); self.setStyleSheet(self.stylesheet())
         self.click_mode=self.config.get('click_mode','double'); self.apply_language()
+    def restore_column_widths(self):
+        widths=self.config.get('column_widths', {})
+        for pane, side in ((self.left, 'left'), (self.right, 'right')):
+            saved=widths.get(side, {})
+            try:
+                name_width=int(saved.get('name', 530))
+                type_width=int(saved.get('type', 105))
+                size_width=int(saved.get('size', 105))
+            except (TypeError, ValueError):
+                name_width, type_width, size_width = 530, 105, 105
+            pane.tree.setColumnWidth(0, max(180, min(name_width, 2000)))
+            pane.tree.setColumnWidth(1, max(55, min(type_width, 600)))
+            pane.tree.setColumnWidth(2, max(55, min(size_width, 600)))
+
+    def on_column_resized(self, pane, logical_index, new_width):
+        if getattr(self, '_restoring_column_widths', True):
+            return
+        side=pane.side
+        widths=self.config.setdefault('column_widths', {})
+        current=widths.setdefault(side, {})
+        key={0:'name', 1:'type', 2:'size'}.get(logical_index)
+        if key:
+            current[key]=int(new_width)
+            self.save_config()
+
     def configured_folder(self, key):
         raw = self.config.get(key) or str(Path.home())
         path = Path(raw).expanduser()

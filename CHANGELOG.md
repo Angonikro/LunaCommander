@@ -1,6 +1,11 @@
 # Changelog
+## 0.6.79
+- Dateiname-Spalte: Standardmäßig etwa 10 cm breiter.
+- Spaltenbreiten verstellbar: Du kannst die Trennlinien zwischen Name, Typ und Größe mit der Maus verschieben.
+- Linkes und rechtes Fenster: Beide können unabhängig eingestellt werden.
+- Einstellungen speichern: Deine gewählten Spaltenbreiten bleiben nach einem Neustart erhalten.
 
-# LunaCommander 0.6.78
+## 0.6.78
 
 - MHTML-Webarchive-Dateien (`.mhtml` und `.mht`) werden wie HTML-Dateien an den konfigurierten Webbrowser weitergeleitet.
 - Die bestehende HTML-/Standardbrowser-Weiterleitung bleibt erhalten.
@@ -450,3 +455,6 @@
 - HTML-Dateien werden bei konfiguriertem Browser als lokale `file://`-URL geöffnet.
 - Ohne eigene HTML-Anwendung wird der über `xdg-settings` festgelegte Standard-Webbrowser bevorzugt, statt direkt die HTML-MIME-Zuordnung zu verwenden.
 - Andere Dateizuordnungen und LunaPlayer bleiben unverändert.
+
+## 0.6.79
+- Fixed file-list columns: Name now uses remaining pane width; Type and Size have fixed widths. Long filenames no longer shift the other columns.
