@@ -1,5 +1,7 @@
 # Changelog
 ## 0.6.79
+- Name-Spalte passt sich automatisch an die verfügbare Breite jedes Dateifensters an (auch beim Maximieren/Vollbild und beim Ändern der Fenstergröße).
+- Typ- und Größe-Spalten behalten ihre festen Breiten.
 - Dateiname-Spalte: Standardmäßig etwa 10 cm breiter.
 - Spaltenbreiten verstellbar: Du kannst die Trennlinien zwischen Name, Typ und Größe mit der Maus verschieben.
 - Linkes und rechtes Fenster: Beide können unabhängig eingestellt werden.
