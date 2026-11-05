@@ -1,4 +1,10 @@
 # Changelog
+
+## 0.6.80 – Caja-inspiriertes Eigenschaftenfenster
+- Eigenschaften bei Mehrfachauswahl als großes Dialogfenster mit Kopfbereich, Allgemein-Tab, Zusammenfassung und scrollbarer Eintragsliste.
+- Statt einer kleinen Meldungsbox werden Auswahlumfang, Ordner-/Dateianzahl und Gesamtgröße übersichtlich dargestellt.
+- Bug Fixing
+
 ## 0.6.79
 - Name-Spalte passt sich automatisch an die verfügbare Breite jedes Dateifensters an (auch beim Maximieren/Vollbild und beim Ändern der Fenstergröße).
 - Typ- und Größe-Spalten behalten ihre festen Breiten.

@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.6.79'
+    APP_VERSION = '0.6.80'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -1490,6 +1490,7 @@ class TransferWorker(QRunnable):
         else: remote.client.delete(rpath)
 
 class BatchTransferSignals(QObject):
+    item_started = Signal(int)
     item_finished = Signal(int, str, bool, str)
     finished = Signal(str, bool, str)
 
@@ -1510,11 +1511,12 @@ class BatchTransferWorker(QRunnable):
         all_ok = True
         failures = []
         for index, (worker, label) in enumerate(self.entries):
+            self.signals.item_started.emit(index)
             result = []
             def relay(name, ok, error, i=index, result=result):
                 result.append((name, ok, error))
                 self.signals.item_finished.emit(i, name, ok, error)
-            worker.signals.finished.connect(relay)
+            worker.signals.finished.connect(relay, Qt.DirectConnection)
             try:
                 worker.run()
             except Exception as exc:
@@ -1659,8 +1661,16 @@ class PermissionWorker(QRunnable):
 
 
 class Main(QMainWindow):
+    # Bridge worker-thread notifications to GUI-thread slots before touching widgets.
+    queue_item_started_bridge = Signal(int, object, bool)
+    queue_item_finished_bridge = Signal(int, str, bool, str, object)
+    queue_batch_finished_bridge = Signal(str, bool, str, object, object, object)
     def __init__(self):
-        super().__init__(); self.language='de'; self.setWindowTitle(self.tr('about_version')); self.resize(1500,900); self.setMinimumSize(1050,680); self.active=None; self.clip=None; self.dark=True; self.click_mode='double'; self.config_path=Path.home()/'.config/lunacommander/settings.json'; self.config={}; self.load_config(); self.language=self.config.get('language','de')
+        super().__init__()
+        self.queue_item_started_bridge.connect(self.transfer_batch_item_started)
+        self.queue_item_finished_bridge.connect(self.transfer_batch_item_finished)
+        self.queue_batch_finished_bridge.connect(self.transfer_batch_finished)
+        self.language='de'; self.setWindowTitle(self.tr('about_version')); self.resize(1500,900); self.setMinimumSize(1050,680); self.active=None; self.clip=None; self.dark=True; self.click_mode='double'; self.config_path=Path.home()/'.config/lunacommander/settings.json'; self.config={}; self.load_config(); self.language=self.config.get('language','de')
         self._restoring_column_widths=True; self.left=Pane(self,'left'); self.right=Pane(self,'right'); self.active=self.left
         # Restore each pane's sort mode before loading the startup folders.
         for pane, side in ((self.left, 'left'), (self.right, 'right')):
@@ -2901,10 +2911,154 @@ class Main(QMainWindow):
 
     def properties(self):
         pane = self.active
-        selected = pane.selected()
-        if not selected:
+        selected_rows = []
+        for item in pane.tree.selectedItems():
+            row = item.data(0, Qt.UserRole)
+            if row and row[0] != '..':
+                selected_rows.append((row[0], bool(row[1]), int(row[2] or 0)))
+        if not selected_rows:
+            selected = pane.selected()
+            if not selected:
+                return
+            selected_rows = [(selected[0], bool(selected[1]), int(selected[2] or 0))]
+
+        # Caja-style properties dialog for a multi-selection.
+        if len(selected_rows) > 1:
+            if pane.remote or pane.archive_file:
+                total = sum(size for _, is_dir, size in selected_rows if not is_dir)
+                files = sum(1 for _, is_dir, _ in selected_rows if not is_dir)
+                folders = sum(1 for _, is_dir, _ in selected_rows if is_dir)
+            else:
+                total = 0
+                files = 0
+                folders = 0
+                for name, is_dir, listed_size in selected_rows:
+                    target = Path(pane.path) / name
+                    try:
+                        if is_dir:
+                            folders += 1
+                            for root_path, dirs, filenames in os.walk(target, followlinks=False):
+                                # Count nested directories as well as the selected top-level folder.
+                                folders += len(dirs)
+                                for filename in filenames:
+                                    try:
+                                        total += (Path(root_path) / filename).lstat().st_size
+                                        files += 1
+                                    except OSError:
+                                        pass
+                        else:
+                            files += 1
+                            total += target.lstat().st_size
+                    except OSError:
+                        pass
+
+            dialog = QDialog(self)
+            dialog.setWindowTitle(self.tr('properties'))
+            dialog.setMinimumSize(680, 520)
+            dialog.resize(760, 620)
+            dialog.setObjectName('folderPropertiesDialog')
+            outer = QVBoxLayout(dialog)
+            outer.setContentsMargins(18, 16, 18, 16)
+            outer.setSpacing(12)
+
+            header = QHBoxLayout()
+            icon_label = QLabel()
+            icon_label.setPixmap(self.style().standardIcon(QStyle.SP_FileDialogInfoView).pixmap(48, 48))
+            header.addWidget(icon_label, 0, Qt.AlignTop)
+            header_text = QVBoxLayout()
+            selection_title = QLabel(
+                (f'{len(selected_rows)} markierte Einträge' if self.language == 'de'
+                 else f'{len(selected_rows)} selected items'))
+            selection_title.setObjectName('folderPropertiesHeading')
+            header_text.addWidget(selection_title)
+            location = QLabel(self.tr('path').format(path=str(pane.path)))
+            location.setWordWrap(True)
+            location.setObjectName('folderPropertiesPath')
+            header_text.addWidget(location)
+            header.addLayout(header_text, 1)
+            outer.addLayout(header)
+
+            tabs = QTabWidget()
+            tabs.setObjectName('propertiesTabs')
+            outer.addWidget(tabs, 1)
+
+            general = QWidget()
+            general_layout = QVBoxLayout(general)
+            general_layout.setContentsMargins(14, 14, 14, 14)
+            general_layout.setSpacing(12)
+
+            summary = QFormLayout()
+            summary.setHorizontalSpacing(18)
+            summary.setVerticalSpacing(12)
+            mixed_label = {
+                'de': 'Mehrere Einträge', 'en': 'Multiple items',
+                'fr': 'Éléments multiples', 'it': 'Elementi multipli',
+                'nl': 'Meerdere items'
+            }.get(self.language, 'Multiple items')
+            folders_label = {
+                'de': 'Gesamtzahl der Ordner:', 'en': 'Total folders:',
+                'fr': 'Nombre total de dossiers :', 'it': 'Numero totale di cartelle:',
+                'nl': 'Totaal aantal mappen:'
+            }.get(self.language, 'Total folders:')
+            files_label = {
+                'de': 'Gesamtzahl der Dateien:', 'en': 'Total files:',
+                'fr': 'Nombre total de fichiers :', 'it': 'Numero totale di file:',
+                'nl': 'Totaal aantal bestanden:'
+            }.get(self.language, 'Total files:')
+            summary.addRow(self.tr('properties_type'), QLabel(mixed_label))
+            summary.addRow(self.tr('properties_size'),
+                           QLabel(format_file_size(total, self.config.get('size_unit', 'auto'))))
+            summary.addRow(folders_label, QLabel(str(folders)))
+            summary.addRow(files_label, QLabel(str(files)))
+            general_layout.addLayout(summary)
+
+            contents_title = QLabel({
+                'de': 'Markierte Einträge', 'en': 'Selected items',
+                'fr': 'Éléments sélectionnés', 'it': 'Elementi selezionati',
+                'nl': 'Geselecteerde items'
+            }.get(self.language, 'Selected items'))
+            contents_title.setObjectName('folderPropertiesContentsTitle')
+            general_layout.addWidget(contents_title)
+            contents = QListWidget()
+            contents.setObjectName('folderPropertiesList')
+            contents.setAlternatingRowColors(True)
+            contents.setUniformItemSizes(True)
+            for name, is_dir, _ in selected_rows:
+                contents.addItem(('📁  ' if is_dir else '📄  ') + name)
+            general_layout.addWidget(contents, 1)
+            tabs.addTab(general, self.tr('properties_general_tab'))
+
+            footer = QHBoxLayout()
+            footer.addStretch(1)
+            close_button = QPushButton(self.tr('close'))
+            close_button.clicked.connect(dialog.accept)
+            footer.addWidget(close_button)
+            outer.addLayout(footer)
+            dialog.setStyleSheet("""
+                QDialog#folderPropertiesDialog { background:#0b192b; color:#eaf2ff; }
+                QDialog#folderPropertiesDialog QLabel { color:#eaf2ff; }
+                QDialog#folderPropertiesDialog QLabel#folderPropertiesHeading {
+                    font-size:18px; font-weight:700; color:#ffffff; padding:4px;
+                }
+                QDialog#folderPropertiesDialog QLabel#folderPropertiesPath { color:#b9cbe0; }
+                QDialog#folderPropertiesDialog QLabel#folderPropertiesContentsTitle {
+                    font-weight:600; padding-top:6px;
+                }
+                QDialog#folderPropertiesDialog QListWidget {
+                    background:#10243a; color:#eaf2ff; border:1px solid #294967;
+                    border-radius:6px; padding:6px;
+                }
+                QDialog#folderPropertiesDialog QTabWidget::pane {
+                    border:1px solid #294967; border-radius:5px;
+                }
+                QDialog#folderPropertiesDialog QPushButton {
+                    min-width:90px; min-height:34px; padding:4px 12px;
+                }
+            """)
+            dialog.exec()
             return
-        name, is_dir, size = selected[0], selected[1], selected[2]
+
+        name, is_dir, size = selected_rows[0]
 
         # Remote/archive entries cannot use local POSIX permission APIs.
         if pane.remote or pane.archive_file:
@@ -3411,21 +3565,26 @@ class Main(QMainWindow):
                 if conflict=='skip':
                     continue
             worker=TransferWorker(src,dst,source,target,is_dir,move,conflict)
-            label=QLabel((self.tr('moved') if move else self.tr('copied'))+name)
-            progress=self.add_queue_label(label)
-            if progress is not None:
-                worker.signals.progress.connect(progress.setValue)
+            # Do not allocate a visible queue row until this worker actually starts.
+            label=QLabel(name)
             entries.append((worker,label))
 
         if entries:
+            for row, title, progress in self.queue_labels:
+                title.setText(self.tr('ready'))
+                progress.setValue(0)
+            self.queue_next_index=0
             batch=BatchTransferWorker(entries)
+            batch.signals.item_started.connect(
+                lambda index,w=batch,m=move: self.queue_item_started_bridge.emit(index,w,m)
+            )
             batch.signals.item_finished.connect(
                 lambda index,name,ok,error,w=batch:
-                    self.transfer_batch_item_finished(index,name,ok,error,w)
+                    self.queue_item_finished_bridge.emit(index,name,ok,error,w)
             )
             batch.signals.finished.connect(
                 lambda name,ok,error,w=batch,s=src,d=dst:
-                    self.transfer_batch_finished(name,ok,error,w,s,d)
+                    self.queue_batch_finished_bridge.emit(name,ok,error,w,s,d)
             )
             self.transfer_queue.append(batch)
             count=len(entries)
@@ -3435,10 +3594,30 @@ class Main(QMainWindow):
             )
             self.start_next_transfer()
 
+    def transfer_batch_item_started(self,index,batch,move):
+        if index >= len(batch.entries):
+            return
+        worker,label=batch.entries[index]
+        name=Path(worker.source_path.rstrip('/')).name or worker.source_path
+        label.setText(('Verschiebe: ' if move else 'Kopiere: ') + name if self.language=='de'
+                      else ('Moving: ' if move else 'Copying: ') + name)
+        progress=self.add_queue_label(label)
+        if not hasattr(batch, '_queue_progress_by_index'):
+            batch._queue_progress_by_index = {}
+        if progress is not None:
+            batch._queue_progress_by_index[index] = progress
+            worker.signals.progress.connect(progress.setValue)
+        self.statusBar().showMessage(label.text())
+
     def transfer_batch_item_finished(self,index,name,ok,error,batch):
         if index >= len(batch.entries):
             return
         worker,label=batch.entries[index]
+        # Finalize the exact row assigned when this item started. Some transfer
+        # backends can finish successfully without emitting intermediate updates.
+        progress = getattr(batch, '_queue_progress_by_index', {}).get(index)
+        if ok and progress is not None:
+            progress.setValue(100)
         label.setText((self.tr('done') if ok else self.tr('error'))+name+((' – '+error) if error else ''))
         if not ok:
             batch._had_error=True
