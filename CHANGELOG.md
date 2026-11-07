@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0 – Release
+- Neue Hauptversion auf 0.7.0 angehoben.
+- Archivdialog: Enter bestätigt die Eingabe und startet die Archiv-Erstellung; OK bleibt weiterhin verfügbar.
+
+
+## 0.6.80 – Archivdialog: Enter-Taste
+- Die Eingabetaste im Feld für den Archivnamen bestätigt jetzt den Dialog und startet die Archiv-Erstellung wie die Schaltfläche OK.
+
+
 ## 0.6.80 – Caja-inspiriertes Eigenschaftenfenster
 - Eigenschaften bei Mehrfachauswahl als großes Dialogfenster mit Kopfbereich, Allgemein-Tab, Zusammenfassung und scrollbarer Eintragsliste.
 - Statt einer kleinen Meldungsbox werden Auswahlumfang, Ordner-/Dateianzahl und Gesamtgröße übersichtlich dargestellt.

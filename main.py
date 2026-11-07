@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.6.80'
+    APP_VERSION = '0.7.0'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -2290,6 +2290,10 @@ class Main(QMainWindow):
         ok_button = QPushButton(self.tr('ok'), dialog)
         cancel_button.clicked.connect(dialog.reject)
         ok_button.clicked.connect(dialog.accept)
+        # Enter in the archive-name field must confirm the dialog just like
+        # clicking OK. Make OK the default action as well for keyboard users.
+        ok_button.setDefault(True)
+        name_field.returnPressed.connect(dialog.accept)
         buttons.addWidget(cancel_button)
         buttons.addWidget(ok_button)
         layout.addLayout(buttons)
