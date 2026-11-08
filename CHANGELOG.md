@@ -1,13 +1,10 @@
 # Changelog
 
-## 0.7.0 – Release
-- Neue Hauptversion auf 0.7.0 angehoben.
-- Archivdialog: Enter bestätigt die Eingabe und startet die Archiv-Erstellung; OK bleibt weiterhin verfügbar.
+## 0.7.1 – Release
+- Versionsnummer auf 0.7.1 angehoben; System-Standard-Dateimanager- und MIME-Integration aus 0.7.0 beibehalten.
 
-
-## 0.6.80 – Archivdialog: Enter-Taste
+## 0.7.0 – Archivdialog: Enter-Taste
 - Die Eingabetaste im Feld für den Archivnamen bestätigt jetzt den Dialog und startet die Archiv-Erstellung wie die Schaltfläche OK.
-
 
 ## 0.6.80 – Caja-inspiriertes Eigenschaftenfenster
 - Eigenschaften bei Mehrfachauswahl als großes Dialogfenster mit Kopfbereich, Allgemein-Tab, Zusammenfassung und scrollbarer Eintragsliste.

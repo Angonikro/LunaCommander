@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.0'
+    APP_VERSION = '0.7.1'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -3683,5 +3683,26 @@ class Main(QMainWindow):
             if p.remote:p.remote.close()
         e.accept()
 
+def command_line_directory(argv):
+    """Return a local directory supplied by the desktop environment, if any."""
+    for value in argv[1:]:
+        if not value or value.startswith('-'):
+            continue
+        url = QUrl(value)
+        candidate = Path(url.toLocalFile() if url.isLocalFile() else value).expanduser()
+        if candidate.is_file():
+            candidate = candidate.parent
+        if candidate.is_dir():
+            return str(candidate.resolve())
+    return None
+
+
 if __name__=='__main__':
-    app=QApplication(sys.argv);app.setApplicationName('LunaCommander');w=Main();w.show();sys.exit(app.exec())
+    app=QApplication(sys.argv)
+    app.setApplicationName('LunaCommander')
+    w=Main()
+    startup_directory=command_line_directory(sys.argv)
+    if startup_directory:
+        w.left.load(startup_directory, remember=False)
+    w.show()
+    sys.exit(app.exec())
