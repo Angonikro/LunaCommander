@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.2 – Drag-and-drop-Warteschlange
+- Interne Drag-&-Drop-Kopien zwischen linkem und rechtem Dateifenster werden jetzt als Batch über die zentrale Übertragungswarteschlange ausgeführt.
+- Jede Datei und jeder Ordner erscheint beim Start des jeweiligen Eintrags mit Status und Fortschritt in der Warteschlange.
+- Externe Drag-&-Drop-Übertragungen vom Desktop/Caja behalten den bisherigen Importpfad; die bestehende Desktop-Integration wird nicht umgeleitet.
+
 ## 0.7.1 – Release
 - Versionsnummer auf 0.7.1 angehoben; System-Standard-Dateimanager- und MIME-Integration aus 0.7.0 beibehalten.
 

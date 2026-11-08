@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.1'
+    APP_VERSION = '0.7.2'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -363,7 +363,26 @@ class FileTreeWidget(QTreeWidget):
 
     def dropEvent(self, event):
         if self.pane is not None and event.mimeData().hasUrls():
-            self.pane.import_urls([u.toLocalFile() for u in event.mimeData().urls() if u.isLocalFile()])
+            paths = [u.toLocalFile() for u in event.mimeData().urls() if u.isLocalFile()]
+            mime = event.mimeData()
+            internal = None
+            if mime.hasFormat('application/x-lunacommander-internal'):
+                try:
+                    internal = json.loads(bytes(mime.data('application/x-lunacommander-internal')).decode('utf-8'))
+                except (ValueError, UnicodeDecodeError, TypeError):
+                    internal = None
+            if internal and internal.get('side') in ('left', 'right'):
+                source_pane = getattr(self.pane.app, internal['side'], None)
+                if source_pane is not None and source_pane is not self.pane:
+                    self.pane.app.copy_transfer(
+                        False, source_pane=source_pane,
+                        destination_pane=self.pane, source_paths=paths)
+                else:
+                    self.pane.import_urls(paths)
+            else:
+                # Desktop/Caja and other external file managers keep their
+                # established import path; only pane-to-pane drops use our queue.
+                self.pane.import_urls(paths)
             event.acceptProposedAction()
         else:
             event.ignore()
@@ -406,6 +425,11 @@ class FileTreeWidget(QTreeWidget):
                 seen.add(key)
                 urls.append(QUrl.fromLocalFile(key))
         mime.setUrls(urls)
+        if urls and pane is not None:
+            # Mark LunaCommander-originated drags so the receiving pane can
+            # route them through the same visible batch queue as F5.
+            mime.setData('application/x-lunacommander-internal',
+                         json.dumps({'side': pane.side}).encode('utf-8'))
         return mime
 
 
@@ -3508,15 +3532,26 @@ class Main(QMainWindow):
         self.queue_labels[index]=(row,label,progress)
         progress.setValue(0); progress.setVisible(True)
         return progress
-    def copy_transfer(self,move):
-        """Transfer the complete captured selection as one sequential batch."""
-        src=self.active or self.left
-        dst=self.other(src)
+    def copy_transfer(self,move,source_pane=None,destination_pane=None,source_paths=None):
+        """Transfer a captured selection as one sequential, visible batch."""
+        src=source_pane or self.active or self.left
+        dst=destination_pane or self.other(src)
         rows=[]
-        for item in src.tree.selectedItems():
-            row=item.data(0,Qt.UserRole)
-            if row and row[0] != '..':
-                rows.append((row[0], bool(row[1])))
+        if source_paths is not None:
+            # Drag-and-drop supplies the exact exported URLs. Resolve them
+            # against the originating pane and preserve multi-selection order.
+            for path in source_paths:
+                try:
+                    candidate=Path(path).resolve(strict=True)
+                    if candidate.parent == Path(src.path).resolve() and candidate.name != '..':
+                        rows.append((candidate.name, candidate.is_dir()))
+                except (OSError, RuntimeError, TypeError):
+                    continue
+        else:
+            for item in src.tree.selectedItems():
+                row=item.data(0,Qt.UserRole)
+                if row and row[0] != '..':
+                    rows.append((row[0], bool(row[1])))
         if not rows:
             row=src.selected()
             if row and row[0] != '..':
