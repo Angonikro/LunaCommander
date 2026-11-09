@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.8 – Kopieren-Schaltfläche der oberen Leiste korrigiert
+- Die Kopieren-Schaltfläche in der oberen Symbolleiste verwendet jetzt dieselbe direkte Übertragungsfunktion wie F5.
+- Ausgewählte Dateien und Ordner werden in das jeweils andere Dateifenster kopiert, statt nur in die Zwischenablage übernommen zu werden.
+
 ## 0.7.7 – FTP-Statusanzeige und Upload korrigiert - Rekursives Löschen auf FTP/FTPS/SFTP
 - Erfolgreiche FTP-, FTPS- und SFTP-Übertragungen werden in der Aktionsanzeige der Statusleiste gezählt; Dateien und Ordner zählen jeweils als ein Objekt (z. B. „5 Objekte kopiert“).
 - Korrektur: Erfolgreich kopierte oder verschobene Ordner werden in Batch-Übertragungen jetzt ebenfalls an den gemeinsamen Objektzähler der Statusleiste übergeben.

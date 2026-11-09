@@ -2156,7 +2156,7 @@ class Main(QMainWindow):
         top_bar=QWidget(); top_bar.setObjectName('topActionBar')
         top_layout=QHBoxLayout(top_bar); top_layout.setContentsMargins(0,0,0,0); top_layout.setSpacing(2)
         toolbar_actions=[
-            ('new_folder','SP_FileDialogNewFolder',self.new_folder),('copy','SP_FileIcon',self.copy),('move','SP_ArrowForward',self.move_other),('delete','SP_TrashIcon',self.delete),('rename','SP_FileDialogDetailedView',self.rename),('properties','SP_MessageBoxInformation',self.properties),('refresh','SP_BrowserReload',self.refresh),('ftp','SP_DriveNetIcon',lambda:self.connect_remote('FTP')),('sftp','SP_DriveNetIcon',lambda:self.connect_remote('SFTP')),('ftps','SP_DriveNetIcon',lambda:self.connect_remote('FTPS')),('disconnect','SP_DialogCancelButton',self.disconnect),('search','SP_FileDialogContentsView',self.search_files),('settings','SP_FileDialogInfoView',self.settings_dialog)
+            ('new_folder','SP_FileDialogNewFolder',self.new_folder),('copy','SP_FileIcon',self.copy_other),('move','SP_ArrowForward',self.move_other),('delete','SP_TrashIcon',self.delete),('rename','SP_FileDialogDetailedView',self.rename),('properties','SP_MessageBoxInformation',self.properties),('refresh','SP_BrowserReload',self.refresh),('ftp','SP_DriveNetIcon',lambda:self.connect_remote('FTP')),('sftp','SP_DriveNetIcon',lambda:self.connect_remote('SFTP')),('ftps','SP_DriveNetIcon',lambda:self.connect_remote('FTPS')),('disconnect','SP_DialogCancelButton',self.disconnect),('search','SP_FileDialogContentsView',self.search_files),('settings','SP_FileDialogInfoView',self.settings_dialog)
         ]
         self.toolbar_actions=[]; self.toolbar_buttons=[]
         for key,icon_name,fn in toolbar_actions:
