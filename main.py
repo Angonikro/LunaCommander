@@ -43,7 +43,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.2'
+    APP_VERSION = '0.7.3'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -169,11 +169,11 @@ def filetype_icon(filename):
 
 
 TRANSLATIONS = {
-'de': {'open_with':'Öffnen mit','choose_application':'Andere Anwendung auswählen…','application_filter':'Programme','app_launch_error':'Die ausgewählte Anwendung konnte nicht gestartet werden.','rar_binary': 'RAR-Programm (rar)','rar_auto': 'Automatisch gefunden','rar_browse': 'RAR-Datei auswählen…','rar_missing': 'RAR-Programm nicht gefunden. Bitte in den Einstellungen den Pfad zu rar eintragen.','create_rar': 'RAR-Archiv erstellen','open':'Öffnen','back':'Zurück','up':'Eine Ebene höher','home':'Eigener Startordner','name':'Name','type':'Typ','size':'Größe','folder':'Ordner','file':'Datei','ready':'Bereit','queue':'Übertragungswarteschlange','new':'Neu','copy':'Kopieren','move':'Verschieben','delete':'Löschen','rename':'Umbenennen','properties':'Eigenschaften','refresh':'Aktualisieren','archive':'Archiv','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Trennen','search':'Suchen','settings':'Einstellungen','help':'Hilfe','menu':'Menü','view':'Anzeigen','edit':'Bearbeiten','new_folder':'Neuer Ordner','exit':'Beenden','file_menu':'Datei','connection':'Verbindung','view_menu':'Ansicht','theme':'Design wechseln','about':'Über LunaCommander','single':'Einfachklick zum Öffnen','double':'Doppelklick zum Öffnen','open_mode':'Dateien und Ordner öffnen','language':'Sprache','scheme':'Farbschema','dark':'Dunkel','light':'Hell','ok':'OK','cancel':'Abbrechen','connect':'Verbinden','server':'Server','port':'Port','user':'Benutzer','password':'Passwort','open_other':'In anderem Fenster öffnen','move_other':'In anderes Fenster verschieben','cut':'Ausschneiden','paste':'Einfügen','new_file':'Neue Datei','pack':'Packen','create_zip':'ZIP-Archiv erstellen','create_targz':'TAR.GZ-Archiv erstellen','create_tarxz':'TAR.XZ-Archiv erstellen','create_tarbz2':'TAR.BZ2-Archiv erstellen','create_7z':'7z-Archiv erstellen','remember_dirs':'Letzte Ordner beim Start wiederherstellen','default_left':'Standardordner links','default_right':'Standardordner rechts','browse':'Durchsuchen…','start_folders':'Startordner','show_hidden':'Versteckte Dateien und Ordner anzeigen','photo_preview':'Bild-Miniaturansichten in der Dateiliste anzeigen','no_photo_preview':'Kein Foto ausgewählt','watch_folders':'Ordner automatisch auf Änderungen überwachen','file_icon_size':'Datei-/Ordner-Icongröße','font_size':'Schriftgröße','sort':'Sortieren','sort_by':'Sortieren nach','sort_name':'Name','sort_date':'Datum','sort_size':'Größe','sort_type':'Typ','ascending':'Aufsteigend','descending':'Absteigend'},
-'en': {'open_with':'Open with','choose_application':'Choose another application…','application_filter':'Applications','app_launch_error':'The selected application could not be started.','rar_binary': 'RAR executable','rar_auto': 'Automatically detected','rar_browse': 'Select RAR executable…','rar_missing': 'RAR executable not found. Set the path to rar in Settings.','create_rar': 'Create RAR archive','open':'Open','back':'Back','up':'Up one level','home':'Pane start folder','name':'Name','type':'Type','size':'Size','folder':'Folder','file':'File','ready':'Ready','queue':'Transfer queue','new':'New','copy':'Copy','move':'Move','delete':'Delete','rename':'Rename','properties':'Properties','refresh':'Refresh','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnect','search':'Search','settings':'Settings','help':'Help','menu':'Menu','view':'View','edit':'Edit','new_folder':'New folder','exit':'Exit','file_menu':'File','connection':'Connection','view_menu':'View','theme':'Toggle theme','about':'About LunaCommander','single':'Single-click to open','double':'Double-click to open','open_mode':'Open files and folders','language':'Language','scheme':'Color scheme','dark':'Dark','light':'Light','ok':'OK','cancel':'Cancel','connect':'Connect','server':'Server','port':'Port','user':'User','password':'Password','open_other':'Open in other pane','move_other':'Move to other pane','cut':'Cut','paste':'Paste','new_file':'New file','pack':'Create archive','create_zip':'Create ZIP archive','create_targz':'Create TAR.GZ archive','create_tarxz':'Create TAR.XZ archive','create_tarbz2':'Create TAR.BZ2 archive','create_7z':'Create 7z archive','remember_dirs':'Restore last folders at startup','default_left':'Default folder (left)','default_right':'Default folder (right)','browse':'Browse…','start_folders':'Startup folders','show_hidden':'Show hidden files and folders','photo_preview':'Show image thumbnails in the file list','no_photo_preview':'No photo selected','watch_folders':'Automatically monitor folders for changes','file_icon_size':'File/folder icon size','font_size':'Font size','sort':'Sort','sort_by':'Sort by','sort_name':'Name','sort_date':'Date','sort_size':'Size','sort_type':'Type','ascending':'Ascending','descending':'Descending'},
-'fr': {'open_with':'Ouvrir avec','choose_application':'Choisir une autre application…','application_filter':'Applications','app_launch_error':'Impossible de démarrer l’application sélectionnée.','rar_binary': 'Exécutable RAR','rar_auto': 'Détecté automatiquement','rar_browse': 'Choisir l’exécutable RAR…','rar_missing': 'Exécutable RAR introuvable. Indiquez son chemin dans les paramètres.','create_rar': 'Créer une archive RAR','open':'Ouvrir','back':'Retour','up':'Niveau supérieur','home':'Dossier de démarrage du panneau','name':'Nom','type':'Type','size':'Taille','folder':'Dossier','file':'Fichier','ready':'Prêt','queue':'File de transferts','new':'Nouveau','copy':'Copier','move':'Déplacer','delete':'Supprimer','rename':'Renommer','properties':'Propriétés','refresh':'Actualiser','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Déconnecter','search':'Rechercher','settings':'Paramètres','help':'Aide','menu':'Menu','view':'Afficher','edit':'Modifier','new_folder':'Nouveau dossier','exit':'Quitter','file_menu':'Fichier','connection':'Connexion','view_menu':'Affichage','theme':'Changer le thème','about':'À propos de LunaCommander','single':'Clic simple pour ouvrir','double':'Double-clic pour ouvrir','open_mode':'Ouvrir fichiers et dossiers','language':'Langue','scheme':'Thème de couleurs','dark':'Sombre','light':'Clair','ok':'OK','cancel':'Annuler','connect':'Connecter','server':'Serveur','port':'Port','user':'Utilisateur','password':'Mot de passe','open_other':'Ouvrir dans l’autre panneau','move_other':'Déplacer vers l’autre panneau','cut':'Couper','paste':'Coller','new_file':'Nouveau fichier','pack':'Compresser','create_zip':'Créer une archive ZIP','create_targz':'Créer une archive TAR.GZ','create_tarxz':'Créer une archive TAR.XZ','create_tarbz2':'Créer une archive TAR.BZ2','create_7z':'Créer une archive 7z','remember_dirs':'Restaurer les derniers dossiers au démarrage','default_left':'Dossier par défaut (gauche)','default_right':'Dossier par défaut (droite)','browse':'Parcourir…','start_folders':'Dossiers de démarrage','show_hidden':'Afficher les fichiers et dossiers cachés','photo_preview':'Afficher les miniatures dans la liste des fichiers','no_photo_preview':'Aucune photo sélectionnée','watch_folders':'Surveiller automatiquement les modifications des dossiers','file_icon_size':'Taille des icônes de fichiers/dossiers','font_size':'Taille de police','sort':'Trier','sort_by':'Trier par','sort_name':'Nom','sort_date':'Date','sort_size':'Taille','sort_type':'Type','ascending':'Croissant','descending':'Décroissant'},
-'it': {'open_with':'Apri con','choose_application':'Scegli un’altra applicazione…','application_filter':'Applicazioni','app_launch_error':'Impossibile avviare l’applicazione selezionata.','rar_binary': 'Eseguibile RAR','rar_auto': 'Rilevato automaticamente','rar_browse': 'Seleziona eseguibile RAR…','rar_missing': 'Eseguibile RAR non trovato. Imposta il percorso nelle impostazioni.','create_rar': 'Crea archivio RAR','open':'Apri','back':'Indietro','up':'Livello superiore','home':'Cartella iniziale del pannello','name':'Nome','type':'Tipo','size':'Dimensione','folder':'Cartella','file':'File','ready':'Pronto','queue':'Coda trasferimenti','new':'Nuovo','copy':'Copia','move':'Sposta','delete':'Elimina','rename':'Rinomina','properties':'Proprietà','refresh':'Aggiorna','archive':'Archivio','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnetti','search':'Cerca','settings':'Impostazioni','help':'Aiuto','menu':'Menu','view':'Visualizza','edit':'Modifica','new_folder':'Nuova cartella','exit':'Esci','file_menu':'File','connection':'Connessione','view_menu':'Visualizza','theme':'Cambia tema','about':'Informazioni su LunaCommander','single':'Clic singolo per aprire','double':'Doppio clic per aprire','open_mode':'Apri file e cartelle','language':'Lingua','scheme':'Schema colori','dark':'Scuro','light':'Chiaro','ok':'OK','cancel':'Annulla','connect':'Connetti','server':'Server','port':'Porta','user':'Utente','password':'Password','open_other':'Apri nell’altro pannello','move_other':'Sposta nell’altro pannello','cut':'Taglia','paste':'Incolla','new_file':'Nuovo file','pack':'Crea archivio','create_zip':'Crea archivio ZIP','create_targz':'Crea archivio TAR.GZ','create_tarxz':'Crea archivio TAR.XZ','create_tarbz2':'Crea archivio TAR.BZ2','create_7z':'Crea archivio 7z','remember_dirs':'Ripristina le ultime cartelle all’avvio','default_left':'Cartella predefinita (sinistra)','default_right':'Cartella predefinita (destra)','browse':'Sfoglia…','start_folders':'Cartelle iniziali','show_hidden':'Mostra file e cartelle nascosti','photo_preview':'Mostra miniature delle immagini nell’elenco file','no_photo_preview':'Nessuna foto selezionata','watch_folders':'Monitora automaticamente le modifiche alle cartelle','file_icon_size':'Dimensione icone file/cartelle','font_size':'Dimensione carattere','sort':'Ordina','sort_by':'Ordina per','sort_name':'Nome','sort_date':'Data','sort_size':'Dimensione','sort_type':'Tipo','ascending':'Crescente','descending':'Decrescente'},
-'nl': {'open_with':'Openen met','choose_application':'Andere toepassing kiezen…','application_filter':'Toepassingen','app_launch_error':'De geselecteerde toepassing kon niet worden gestart.','rar_binary': 'RAR-programma','rar_auto': 'Automatisch gevonden','rar_browse': 'RAR-programma selecteren…','rar_missing': 'RAR-programma niet gevonden. Stel het pad in bij Instellingen.','create_rar': 'RAR-archief maken','open':'Openen','back':'Terug','up':'Een niveau omhoog','home':'Startmap van dit paneel','name':'Naam','type':'Type','size':'Grootte','folder':'Map','file':'Bestand','ready':'Gereed','queue':'Overdrachtwachtrij','new':'Nieuw','copy':'Kopiëren','move':'Verplaatsen','delete':'Verwijderen','rename':'Hernoemen','properties':'Eigenschappen','refresh':'Vernieuwen','archive':'Archief','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Verbinding verbreken','search':'Zoeken','settings':'Instellingen','help':'Help','menu':'Menu','view':'Weergeven','edit':'Bewerken','new_folder':'Nieuwe map','exit':'Afsluiten','file_menu':'Bestand','connection':'Verbinding','view_menu':'Beeld','theme':'Thema wisselen','about':'Over LunaCommander','single':'Enkele klik om te openen','double':'Dubbelklik om te openen','open_mode':'Bestanden en mappen openen','language':'Taal','scheme':'Kleurenschema','dark':'Donker','light':'Licht','ok':'OK','cancel':'Annuleren','connect':'Verbinden','server':'Server','port':'Poort','user':'Gebruiker','password':'Wachtwoord','open_other':'Openen in ander venster','move_other':'Verplaatsen naar ander venster','cut':'Knippen','paste':'Plakken','new_file':'Nieuw bestand','pack':'Archiveren','create_zip':'ZIP-archief maken','create_targz':'TAR.GZ-archief maken','create_tarxz':'TAR.XZ-archief maken','create_tarbz2':'TAR.BZ2-archief maken','create_7z':'7z-archief maken','remember_dirs':'Vorige mappen herstellen bij opstarten','default_left':'Standaardmap (links)','default_right':'Standaardmap (rechts)','browse':'Bladeren…','start_folders':'Startmappen','show_hidden':'Verborgen bestanden en mappen tonen','photo_preview':'Afbeeldingsminiaturen in de bestandslijst tonen','no_photo_preview':'Geen foto geselecteerd','watch_folders':'Mappen automatisch op wijzigingen controleren','file_icon_size':'Bestands-/map-pictogramgrootte','font_size':'Lettergrootte','sort':'Sorteren','sort_by':'Sorteren op','sort_name':'Naam','sort_date':'Datum','sort_size':'Grootte','sort_type':'Type','ascending':'Oplopend','descending':'Aflopend'}
+'de': {'open_with':'Öffnen mit','choose_application':'Andere Anwendung auswählen…','application_filter':'Programme','app_launch_error':'Die ausgewählte Anwendung konnte nicht gestartet werden.','rar_binary': 'RAR-Programm (rar)','rar_auto': 'Automatisch gefunden','rar_browse': 'RAR-Datei auswählen…','rar_missing': 'RAR-Programm nicht gefunden. Bitte in den Einstellungen den Pfad zu rar eintragen.','create_rar': 'RAR-Archiv erstellen','open':'Öffnen','back':'Zurück','up':'Eine Ebene höher','home':'Eigener Startordner','name':'Name','type':'Typ','size':'Größe','folder':'Ordner','file':'Datei','ready':'Bereit','queue':'Übertragungswarteschlange','new':'Neu','copy':'Kopieren','move':'Verschieben','delete':'Löschen','rename':'Umbenennen','properties':'Eigenschaften','refresh':'Aktualisieren','archive':'Archiv','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Trennen','search':'Suchen','settings':'Einstellungen','help':'Hilfe','menu':'Menü','view':'Anzeigen','edit':'Bearbeiten','new_folder':'Neuer Ordner','exit':'Beenden','file_menu':'Datei','connection':'Verbindung','view_menu':'Ansicht','theme':'Design wechseln','about':'Über LunaCommander','single':'Einfachklick zum Öffnen','double':'Doppelklick zum Öffnen','open_mode':'Dateien und Ordner öffnen','language':'Sprache','scheme':'Farbschema','dark':'Dunkel','light':'Hell','ok':'OK','cancel':'Abbrechen','connect':'Verbinden','server':'Server','port':'Port','user':'Benutzer','password':'Passwort','open_other':'In anderem Fenster öffnen','move_other':'In anderes Fenster verschieben','cut':'Ausschneiden','paste':'Einfügen','new_file':'Neue Datei','pack':'Packen','create_zip':'ZIP-Archiv erstellen','create_targz':'TAR.GZ-Archiv erstellen','create_tarxz':'TAR.XZ-Archiv erstellen','create_tarbz2':'TAR.BZ2-Archiv erstellen','create_7z':'7z-Archiv erstellen','remember_dirs':'Letzte Ordner beim Start wiederherstellen','default_left':'Standardordner links','default_right':'Standardordner rechts','browse':'Durchsuchen…','start_folders':'Startordner','show_hidden':'Versteckte Dateien und Ordner anzeigen','photo_preview':'Bild-Miniaturansichten in der Dateiliste anzeigen','no_photo_preview':'Kein Foto ausgewählt','watch_folders':'Ordner automatisch auf Änderungen überwachen','file_icon_size':'Datei-/Ordner-Icongröße','font_size':'Schriftgröße','sort':'Sortieren','sort_by':'Sortieren nach','sort_name':'Name','sort_date':'Datum','sort_size':'Größe','sort_type':'Typ','ascending':'Aufsteigend','descending':'Absteigend','left_stats':'Links','right_stats':'Rechts','files_stats':'Dateien','folders_stats':'Ordner','selected_stats':'Markiert','free_stats':'Frei','remote_stats':'Remote'},
+'en': {'open_with':'Open with','choose_application':'Choose another application…','application_filter':'Applications','app_launch_error':'The selected application could not be started.','rar_binary': 'RAR executable','rar_auto': 'Automatically detected','rar_browse': 'Select RAR executable…','rar_missing': 'RAR executable not found. Set the path to rar in Settings.','create_rar': 'Create RAR archive','open':'Open','back':'Back','up':'Up one level','home':'Pane start folder','name':'Name','type':'Type','size':'Size','folder':'Folder','file':'File','ready':'Ready','queue':'Transfer queue','new':'New','copy':'Copy','move':'Move','delete':'Delete','rename':'Rename','properties':'Properties','refresh':'Refresh','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnect','search':'Search','settings':'Settings','help':'Help','menu':'Menu','view':'View','edit':'Edit','new_folder':'New folder','exit':'Exit','file_menu':'File','connection':'Connection','view_menu':'View','theme':'Toggle theme','about':'About LunaCommander','single':'Single-click to open','double':'Double-click to open','open_mode':'Open files and folders','language':'Language','scheme':'Color scheme','dark':'Dark','light':'Light','ok':'OK','cancel':'Cancel','connect':'Connect','server':'Server','port':'Port','user':'User','password':'Password','open_other':'Open in other pane','move_other':'Move to other pane','cut':'Cut','paste':'Paste','new_file':'New file','pack':'Create archive','create_zip':'Create ZIP archive','create_targz':'Create TAR.GZ archive','create_tarxz':'Create TAR.XZ archive','create_tarbz2':'Create TAR.BZ2 archive','create_7z':'Create 7z archive','remember_dirs':'Restore last folders at startup','default_left':'Default folder (left)','default_right':'Default folder (right)','browse':'Browse…','start_folders':'Startup folders','show_hidden':'Show hidden files and folders','photo_preview':'Show image thumbnails in the file list','no_photo_preview':'No photo selected','watch_folders':'Automatically monitor folders for changes','file_icon_size':'File/folder icon size','font_size':'Font size','sort':'Sort','sort_by':'Sort by','sort_name':'Name','sort_date':'Date','sort_size':'Size','sort_type':'Type','ascending':'Ascending','descending':'Descending','left_stats':'Left','right_stats':'Right','files_stats':'files','folders_stats':'folders','selected_stats':'Selected','free_stats':'Free','remote_stats':'Remote'},
+'fr': {'open_with':'Ouvrir avec','choose_application':'Choisir une autre application…','application_filter':'Applications','app_launch_error':'Impossible de démarrer l’application sélectionnée.','rar_binary': 'Exécutable RAR','rar_auto': 'Détecté automatiquement','rar_browse': 'Choisir l’exécutable RAR…','rar_missing': 'Exécutable RAR introuvable. Indiquez son chemin dans les paramètres.','create_rar': 'Créer une archive RAR','open':'Ouvrir','back':'Retour','up':'Niveau supérieur','home':'Dossier de démarrage du panneau','name':'Nom','type':'Type','size':'Taille','folder':'Dossier','file':'Fichier','ready':'Prêt','queue':'File de transferts','new':'Nouveau','copy':'Copier','move':'Déplacer','delete':'Supprimer','rename':'Renommer','properties':'Propriétés','refresh':'Actualiser','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Déconnecter','search':'Rechercher','settings':'Paramètres','help':'Aide','menu':'Menu','view':'Afficher','edit':'Modifier','new_folder':'Nouveau dossier','exit':'Quitter','file_menu':'Fichier','connection':'Connexion','view_menu':'Affichage','theme':'Changer le thème','about':'À propos de LunaCommander','single':'Clic simple pour ouvrir','double':'Double-clic pour ouvrir','open_mode':'Ouvrir fichiers et dossiers','language':'Langue','scheme':'Thème de couleurs','dark':'Sombre','light':'Clair','ok':'OK','cancel':'Annuler','connect':'Connecter','server':'Serveur','port':'Port','user':'Utilisateur','password':'Mot de passe','open_other':'Ouvrir dans l’autre panneau','move_other':'Déplacer vers l’autre panneau','cut':'Couper','paste':'Coller','new_file':'Nouveau fichier','pack':'Compresser','create_zip':'Créer une archive ZIP','create_targz':'Créer une archive TAR.GZ','create_tarxz':'Créer une archive TAR.XZ','create_tarbz2':'Créer une archive TAR.BZ2','create_7z':'Créer une archive 7z','remember_dirs':'Restaurer les derniers dossiers au démarrage','default_left':'Dossier par défaut (gauche)','default_right':'Dossier par défaut (droite)','browse':'Parcourir…','start_folders':'Dossiers de démarrage','show_hidden':'Afficher les fichiers et dossiers cachés','photo_preview':'Afficher les miniatures dans la liste des fichiers','no_photo_preview':'Aucune photo sélectionnée','watch_folders':'Surveiller automatiquement les modifications des dossiers','file_icon_size':'Taille des icônes de fichiers/dossiers','font_size':'Taille de police','sort':'Trier','sort_by':'Trier par','sort_name':'Nom','sort_date':'Date','sort_size':'Taille','sort_type':'Type','ascending':'Croissant','descending':'Décroissant','left_stats':'Gauche','right_stats':'Droite','files_stats':'fichiers','folders_stats':'dossiers','selected_stats':'Sélectionnés','free_stats':'Libre','remote_stats':'Distant'},
+'it': {'open_with':'Apri con','choose_application':'Scegli un’altra applicazione…','application_filter':'Applicazioni','app_launch_error':'Impossibile avviare l’applicazione selezionata.','rar_binary': 'Eseguibile RAR','rar_auto': 'Rilevato automaticamente','rar_browse': 'Seleziona eseguibile RAR…','rar_missing': 'Eseguibile RAR non trovato. Imposta il percorso nelle impostazioni.','create_rar': 'Crea archivio RAR','open':'Apri','back':'Indietro','up':'Livello superiore','home':'Cartella iniziale del pannello','name':'Nome','type':'Tipo','size':'Dimensione','folder':'Cartella','file':'File','ready':'Pronto','queue':'Coda trasferimenti','new':'Nuovo','copy':'Copia','move':'Sposta','delete':'Elimina','rename':'Rinomina','properties':'Proprietà','refresh':'Aggiorna','archive':'Archivio','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnetti','search':'Cerca','settings':'Impostazioni','help':'Aiuto','menu':'Menu','view':'Visualizza','edit':'Modifica','new_folder':'Nuova cartella','exit':'Esci','file_menu':'File','connection':'Connessione','view_menu':'Visualizza','theme':'Cambia tema','about':'Informazioni su LunaCommander','single':'Clic singolo per aprire','double':'Doppio clic per aprire','open_mode':'Apri file e cartelle','language':'Lingua','scheme':'Schema colori','dark':'Scuro','light':'Chiaro','ok':'OK','cancel':'Annulla','connect':'Connetti','server':'Server','port':'Porta','user':'Utente','password':'Password','open_other':'Apri nell’altro pannello','move_other':'Sposta nell’altro pannello','cut':'Taglia','paste':'Incolla','new_file':'Nuovo file','pack':'Crea archivio','create_zip':'Crea archivio ZIP','create_targz':'Crea archivio TAR.GZ','create_tarxz':'Crea archivio TAR.XZ','create_tarbz2':'Crea archivio TAR.BZ2','create_7z':'Crea archivio 7z','remember_dirs':'Ripristina le ultime cartelle all’avvio','default_left':'Cartella predefinita (sinistra)','default_right':'Cartella predefinita (destra)','browse':'Sfoglia…','start_folders':'Cartelle iniziali','show_hidden':'Mostra file e cartelle nascosti','photo_preview':'Mostra miniature delle immagini nell’elenco file','no_photo_preview':'Nessuna foto selezionata','watch_folders':'Monitora automaticamente le modifiche alle cartelle','file_icon_size':'Dimensione icone file/cartelle','font_size':'Dimensione carattere','sort':'Ordina','sort_by':'Ordina per','sort_name':'Nome','sort_date':'Data','sort_size':'Dimensione','sort_type':'Tipo','ascending':'Crescente','descending':'Decrescente','left_stats':'Sinistra','right_stats':'Destra','files_stats':'file','folders_stats':'cartelle','selected_stats':'Selezionati','free_stats':'Libero','remote_stats':'Remoto'},
+'nl': {'open_with':'Openen met','choose_application':'Andere toepassing kiezen…','application_filter':'Toepassingen','app_launch_error':'De geselecteerde toepassing kon niet worden gestart.','rar_binary': 'RAR-programma','rar_auto': 'Automatisch gevonden','rar_browse': 'RAR-programma selecteren…','rar_missing': 'RAR-programma niet gevonden. Stel het pad in bij Instellingen.','create_rar': 'RAR-archief maken','open':'Openen','back':'Terug','up':'Een niveau omhoog','home':'Startmap van dit paneel','name':'Naam','type':'Type','size':'Grootte','folder':'Map','file':'Bestand','ready':'Gereed','queue':'Overdrachtwachtrij','new':'Nieuw','copy':'Kopiëren','move':'Verplaatsen','delete':'Verwijderen','rename':'Hernoemen','properties':'Eigenschappen','refresh':'Vernieuwen','archive':'Archief','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Verbinding verbreken','search':'Zoeken','settings':'Instellingen','help':'Help','menu':'Menu','view':'Weergeven','edit':'Bewerken','new_folder':'Nieuwe map','exit':'Afsluiten','file_menu':'Bestand','connection':'Verbinding','view_menu':'Beeld','theme':'Thema wisselen','about':'Over LunaCommander','single':'Enkele klik om te openen','double':'Dubbelklik om te openen','open_mode':'Bestanden en mappen openen','language':'Taal','scheme':'Kleurenschema','dark':'Donker','light':'Licht','ok':'OK','cancel':'Annuleren','connect':'Verbinden','server':'Server','port':'Poort','user':'Gebruiker','password':'Wachtwoord','open_other':'Openen in ander venster','move_other':'Verplaatsen naar ander venster','cut':'Knippen','paste':'Plakken','new_file':'Nieuw bestand','pack':'Archiveren','create_zip':'ZIP-archief maken','create_targz':'TAR.GZ-archief maken','create_tarxz':'TAR.XZ-archief maken','create_tarbz2':'TAR.BZ2-archief maken','create_7z':'7z-archief maken','remember_dirs':'Vorige mappen herstellen bij opstarten','default_left':'Standaardmap (links)','default_right':'Standaardmap (rechts)','browse':'Bladeren…','start_folders':'Startmappen','show_hidden':'Verborgen bestanden en mappen tonen','photo_preview':'Afbeeldingsminiaturen in de bestandslijst tonen','no_photo_preview':'Geen foto geselecteerd','watch_folders':'Mappen automatisch op wijzigingen controleren','file_icon_size':'Bestands-/map-pictogramgrootte','font_size':'Lettergrootte','sort':'Sorteren','sort_by':'Sorteren op','sort_name':'Naam','sort_date':'Datum','sort_size':'Grootte','sort_type':'Type','ascending':'Oplopend','descending':'Aflopend','left_stats':'Links','right_stats':'Rechts','files_stats':'bestanden','folders_stats':'mappen','selected_stats':'Geselecteerd','free_stats':'Vrij','remote_stats':'Extern'},
 }
 
 
@@ -443,6 +443,8 @@ class Pane(QWidget):
         nav_defs=[('back','SP_ArrowBack',self.back),('up','SP_ArrowUp',self.up),('home','SP_DirHomeIcon',self.home)]
         for key,icon_name,fn in nav_defs:
             b=QPushButton(); b.setIcon(QApplication.style().standardIcon(getattr(QStyle,icon_name))); b.setIconSize(QSize(18,18)); b.setFixedSize(34,32); b.setToolTip(app.tr(key)); b.setAccessibleName(app.tr(key)); b.clicked.connect(fn); nav.addWidget(b); self.nav_buttons.append(b)
+        self.drive_buttons=[]
+        self.nav_layout=nav
         v.addLayout(nav)
         self.tree=FileTreeWidget(self); self.tree.setDragEnabled(True); self.tree.setAcceptDrops(True); self.tree.setMouseTracking(True); self.tree.viewport().setMouseTracking(True); self.tree.viewport().setAcceptDrops(True); self.tree.setDragDropMode(QAbstractItemView.DragDrop); self.tree.setDefaultDropAction(Qt.CopyAction); self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection); self.tree.setSelectionBehavior(QAbstractItemView.SelectRows); self._modifier_selection_click=False; self.tree.setColumnCount(3); self.tree.setHeaderLabels([self.app.tr('name'),self.app.tr('type'),self.app.tr('size')]); header=self.tree.header(); header.setStretchLastSection(False); header.setSectionResizeMode(0,QHeaderView.Stretch); header.setSectionResizeMode(1,QHeaderView.Fixed); header.setSectionResizeMode(2,QHeaderView.Fixed); self.tree.setColumnWidth(0,530); self.tree.setColumnWidth(1,105); self.tree.setColumnWidth(2,105); initial_icon_size=int(self.app.config.get('file_icon_size', 32)); self.tree.setIconSize(QSize(initial_icon_size, initial_icon_size)); self.tree.setUniformRowHeights(False); self.tree.setContextMenuPolicy(Qt.CustomContextMenu); self.tree.customContextMenuRequested.connect(self.context_menu); self.tree.itemDoubleClicked.connect(self.activate); self.tree.itemClicked.connect(self.on_item_clicked); self.tree.currentItemChanged.connect(self.on_current_item_changed); self.tree.installEventFilter(self); self.tree.viewport().installEventFilter(self); self.path_edit.installEventFilter(self); self.tree.setExpandsOnDoubleClick(False); v.addWidget(self.tree,1)
         self._watch_snapshot=None; self._context_menu_open=False
@@ -502,6 +504,7 @@ class Pane(QWidget):
         # Keep the active pane in sync even when focus changes without a row click.
         if event.type() in (QEvent.FocusIn,QEvent.MouseButtonPress):
             self.app.active=self
+            if hasattr(self.app, 'update_status_stats'): self.app.update_status_stats()
         # Remember modifier state before QTreeWidget emits itemClicked.
         if event.type()==QEvent.MouseButtonPress and obj in (self.tree, self.tree.viewport(), self.path_edit):
             # Browser-style thumb buttons navigate the history of this pane only.
@@ -622,6 +625,7 @@ class Pane(QWidget):
             # Keep this pane's selected sort mode when refreshing or reopening a folder.
             self._apply_sort()
             self._watch_snapshot=self._folder_snapshot()
+            self.app.update_status_stats()
         except Exception as e:self.app.statusBar().showMessage(f'Fehler: {e}')
     def sort_entries(self, field, descending=False):
         # Remember the selected mode independently for each file pane.
@@ -1072,13 +1076,88 @@ class DeleteBatchWorker(QRunnable):
         self.pane=pane
         self.rows=list(rows)
         self.signals=TransferSignals()
+    @staticmethod
+    def count_local_files(path):
+        """Count regular files before deletion; never follow symlinks."""
+        path = Path(path)
+        if path.is_symlink():
+            return 0
+        if path.is_file():
+            return 1
+        count = 1  # selected directory itself
+        for current, dirs, files in os.walk(path, followlinks=False):
+            safe_dirs = []
+            for name in dirs:
+                candidate = Path(current) / name
+                if not candidate.is_symlink():
+                    safe_dirs.append(name)
+                    count += 1
+            dirs[:] = safe_dirs
+            for name in files:
+                file_path = Path(current) / name
+                try:
+                    if not file_path.is_symlink() and file_path.is_file():
+                        count += 1
+                except OSError:
+                    continue
+        return count
+
+    @staticmethod
+    def count_archive_objects(archive_path, member, is_dir):
+        """Count files and directory objects in an archive subtree."""
+        archive_name = Path(archive_path).name.lower()
+        member = member.strip('/')
+        prefix = member + '/' if is_dir else member
+        try:
+            if archive_name.endswith('.zip'):
+                with zipfile.ZipFile(archive_path) as archive:
+                    names = [info.filename.replace('\\\\', '/').strip('/')
+                             for info in archive.infolist() if info.filename.strip('/')]
+            elif archive_name.endswith(('.tar','.tar.gz','.tgz','.tar.xz','.txz','.tar.bz2','.tbz2','.tar.zst')):
+                with tarfile.open(archive_path, 'r:*') as archive:
+                    names = [item.name.replace('\\\\', '/').strip('/')
+                             for item in archive.getmembers()
+                             if item.isfile() or item.isdir()]
+            else:
+                return 1 if not is_dir else 0
+            if not is_dir:
+                return 1
+            objects = {member}
+            for name in names:
+                if name == member or name.startswith(prefix):
+                    relative = name[len(prefix):] if name.startswith(prefix) else ''
+                    parts = [part for part in relative.split('/') if part]
+                    current = member
+                    for part in parts[:-1] if '/' in relative else parts:
+                        current += '/' + part
+                        objects.add(current)
+                    if relative:
+                        objects.add(member + '/' + relative)
+            return len(objects)
+        except (OSError, tarfile.TarError, zipfile.BadZipFile):
+            return 0
+
     def run(self):
         errors=[]
+        self.deleted_count=0
+        self.deleted_files=0
+        self.deleted_folders=0
         total=len(self.rows)
         for index,(name,is_dir,_size) in enumerate(self.rows,1):
             try:
                 pane=self.pane
                 path=pane.target(name)
+
+                # Calculate the file count BEFORE deleting the directory or
+                # rewriting its archive. Counting afterwards always returned 0.
+                if pane.archive_file:
+                    member='/'.join(x for x in (pane.archive_inner,name) if x)
+                    file_count=self.count_archive_objects(pane.archive_file,member,is_dir)
+                elif pane.remote:
+                    file_count=0 if is_dir else 1
+                else:
+                    file_count=self.count_local_files(path)
+
                 if pane.archive_file:
                     member='/'.join(x for x in (pane.archive_inner,name) if x)
                     pane.app.delete_archive_member(pane.archive_file,member,is_dir)
@@ -1093,6 +1172,11 @@ class DeleteBatchWorker(QRunnable):
                     shutil.rmtree(path)
                 else:
                     Path(path).unlink()
+
+                self.deleted_count += 1
+                self.deleted_files += file_count
+                if is_dir:
+                    self.deleted_folders += 1
             except Exception as exc:
                 errors.append(f'{name}: {exc}')
             self.signals.progress.emit(int(index*100/total))
@@ -1104,10 +1188,56 @@ class TransferWorker(QRunnable):
         super().__init__(); self.src=src; self.dst=dst; self.source_path=source_path; self.target_path=target_path; self.is_dir=is_dir; self.move=move; self.conflict=conflict; self.signals=TransferSignals(); self.total_bytes=0; self.done_bytes=0
         self.archive_file=src.archive_file if not src.remote else None
         self.archive_member='/'.join(x for x in (src.archive_inner, Path(source_path.split('!/')[-1]).name) if x) if self.archive_file else ''
+    def count_source_objects(self):
+        if not self.is_dir:
+            return 1
+        if self.archive_file:
+            base = self.archive_member.strip('/')
+            prefix = base + '/' if base else ''
+            archive_name = self.archive_file.name.lower()
+            count = 0
+            try:
+                if archive_name.endswith('.zip'):
+                    with zipfile.ZipFile(self.archive_file) as archive:
+                        for info in archive.infolist():
+                            raw = info.filename.replace('\\\\', '/').strip('/')
+                            if raw.startswith(prefix) and raw[len(prefix):] and not info.is_dir():
+                                count += 1
+                elif archive_name.endswith(('.tar','.tar.gz','.tgz','.tar.xz','.txz','.tar.bz2','.tbz2','.tar.zst')):
+                    with tarfile.open(self.archive_file, 'r:*') as archive:
+                        for member in archive.getmembers():
+                            raw = member.name.replace('\\\\', '/').strip('/')
+                            if raw.startswith(prefix) and raw[len(prefix):] and member.isfile():
+                                count += 1
+                else:
+                    return 0
+                return count
+            except (OSError, tarfile.TarError, zipfile.BadZipFile):
+                return 0
+        if self.src.remote:
+            return 0
+        count = 1  # the selected top-level directory itself
+        for current, dirs, files in os.walk(self.source_path, followlinks=False):
+            safe_dirs = []
+            for name in dirs:
+                candidate = Path(current) / name
+                if not candidate.is_symlink():
+                    safe_dirs.append(name)
+                    count += 1
+            dirs[:] = safe_dirs
+            for name in files:
+                try:
+                    if not (Path(current) / name).is_symlink():
+                        count += 1
+                except OSError:
+                    continue
+        return count
+
     def run(self):
         name=posixpath.basename(self.source_path.rstrip('/')) or Path(self.source_path).name
         try:
             if self.src.remote and self.dst.remote: raise RuntimeError(self.tr('server_copy_unavailable'))
+            self.object_count = self.count_source_objects()
             self.total_bytes = self.measure_total()
             exists = self.target_exists()
             if exists and self.conflict == 'skip':
@@ -1556,6 +1686,54 @@ class BatchTransferWorker(QRunnable):
         )
 
 
+class PaneFolderSizesSignals(QObject):
+    finished = Signal(str, object, int, str)
+
+
+class PaneFolderSizesWorker(QRunnable):
+    """Calculate immediate subfolder sizes off the GUI thread."""
+    def __init__(self, folder):
+        super().__init__()
+        self.folder = str(folder)
+        self.signals = PaneFolderSizesSignals()
+
+    def run(self):
+        try:
+            root = Path(self.folder)
+            sizes = {}
+            total_folder_bytes = 0
+            for child in root.iterdir():
+                try:
+                    if child.is_dir() and not child.is_symlink():
+                        sizes[child.name] = 0
+                except OSError:
+                    continue
+            for current, dirs, files in os.walk(root, followlinks=False):
+                current_path = Path(current)
+                dirs[:] = [name for name in dirs
+                           if not (current_path / name).is_symlink()]
+                try:
+                    relative = current_path.relative_to(root)
+                except ValueError:
+                    continue
+                top_folder = relative.parts[0] if relative.parts else None
+                if top_folder not in sizes:
+                    continue
+                for name in files:
+                    try:
+                        file_path = current_path / name
+                        if file_path.is_symlink():
+                            continue
+                        byte_count = file_path.stat().st_size
+                        sizes[top_folder] += byte_count
+                        total_folder_bytes += byte_count
+                    except OSError:
+                        continue
+            self.signals.finished.emit(self.folder, sizes, total_folder_bytes, '')
+        except Exception as exc:
+            self.signals.finished.emit(self.folder, {}, 0, str(exc))
+
+
 class DirectoryStatsSignals(QObject):
     finished = Signal(object, str)
 
@@ -1741,20 +1919,420 @@ class Main(QMainWindow):
         self.queue_area=QWidget(); self.queue_layout=QVBoxLayout(self.queue_area)
         self.queue_layout.setContentsMargins(0,0,0,0); self.queue_layout.setSpacing(3)
         self.queue_labels=[]; self.queue_next_index=0
-        for slot in range(3):
+        for slot in range(2):
             row=QWidget(); row.setFixedHeight(25); box=QHBoxLayout(row); box.setContentsMargins(4,0,4,0); box.setSpacing(8)
             title=QLabel(self.tr('ready')); title.setMinimumWidth(220); title.setMaximumWidth(420)
             progress=QProgressBar(); progress.setRange(0,100); progress.setValue(0); progress.setTextVisible(True); progress.setFormat('%p%'); progress.setFixedHeight(18)
             box.addWidget(title); box.addWidget(progress,1)
             self.queue_layout.addWidget(row); self.queue_labels.append((row,title,progress))
-        self.queue_area.setMinimumHeight(87); self.queue_area.setMaximumHeight(87); lay.addWidget(self.queue_area)
+        self.queue_area.setMinimumHeight(58); self.queue_area.setMaximumHeight(58); lay.addWidget(self.queue_area)
         self.setCentralWidget(central); self.statusBar().showMessage('Bereit')
+        self.last_action_status = self.tr('ready')
+        self.status_stats_actions = QLabel()
+        self.status_stats_actions.setMinimumWidth(0)
+        self.status_stats_actions.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        self.status_stats_actions.setText(self._status_prefix() + self.last_action_status)
+        self._fit_action_status_width()
+        self.left.tree.itemSelectionChanged.connect(self.update_status_stats)
+        self.right.tree.itemSelectionChanged.connect(self.update_status_stats)
+        self.status_stats_left=QLabel(); self.status_stats_right=QLabel()
+        for label in (self.status_stats_actions, self.status_stats_left, self.status_stats_right):
+            label.setMinimumWidth(0)
+            label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.status_stats_left.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+        self.status_stats_right.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+        self.status_stats_left.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+        self.status_stats_right.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+        self.statusBar().addPermanentWidget(self.status_stats_actions, 0)
+        self.statusBar().addPermanentWidget(self.status_stats_left, 1)
+        self.statusBar().addPermanentWidget(self.status_stats_right, 1)
+        self.statusBar().setSizeGripEnabled(False)
+        self.update_status_stats()
+        self._external_drives = []
+        self._external_drive_timer = QTimer(self)
+        self._external_drive_timer.setInterval(1800)
+        self._external_drive_timer.timeout.connect(self.refresh_external_drives)
+        self._external_drive_timer.start()
+        QTimer.singleShot(250, self.refresh_external_drives)
         # Apply the saved file-icon size after both panes have been created.
         # This prevents the startup default from replacing the user's selection.
         self.left.apply_file_icon_size(reload_items=False)
         self.right.apply_file_icon_size(reload_items=False)
         self.make_menu(); self.setStyleSheet(self.stylesheet())
         self.click_mode=self.config.get('click_mode','double'); self.apply_language()
+    def _status_prefix(self):
+        return {'de': 'Status: ', 'en': 'Status: ', 'fr': 'État : ',
+                'it': 'Stato: ', 'nl': 'Status: '}.get(self.language, 'Status: ')
+
+    def _fit_action_status_width(self):
+        label = getattr(self, 'status_stats_actions', None)
+        if label is None:
+            return
+        # QLabel.sizeHint() can remain constrained by its previous fixed width.
+        # Measure the text directly so even a short state such as "Bereit" is
+        # never clipped after a longer rename message.
+        metrics = label.fontMetrics()
+        # Reserve enough room for a three-digit transfer count even when the
+        # current message is shorter (for example, "11 Objekte verschoben").
+        # This prevents the action text from being squeezed when the count grows.
+        lang = self.language if self.language in ('de', 'en', 'fr', 'it', 'nl') else 'de'
+        samples = {
+            'de': 'Status: 100 Objekte verschoben',
+            'en': 'Status: 100 objects moved',
+            'fr': 'État : 100 objets déplacé(s)',
+            'it': 'Stato: 100 oggetti spostati',
+            'nl': 'Status: 100 objecten verplaatst',
+        }
+        current_width = metrics.horizontalAdvance(label.text())
+        reserve_width = metrics.horizontalAdvance(samples[lang])
+        width = max(82, current_width, reserve_width) + 18
+        label.setMinimumWidth(width)
+        label.setMaximumWidth(width)
+        label.setFixedWidth(width)
+
+    def set_action_status(self, action, files=0, folders=0, detail=''):
+        """Show only the most recently completed file operation."""
+        if action == 'ready':
+            message = {'de': 'Bereit', 'en': 'Ready', 'fr': 'Prêt',
+                       'it': 'Pronto', 'nl': 'Gereed'}.get(self.language, 'Bereit')
+        elif action == 'rename':
+            if files:
+                message = {
+                    'de': 'umbenannt',
+                    'en': 'renamed',
+                    'fr': 'renommé(s)',
+                    'it': 'rinominato/i',
+                    'nl': 'hernoemd'
+                }.get(self.language, 'umbenannt')
+                message = f"{files} {message}"
+            else:
+                message = {'de': 'Umbenannt', 'en': 'Renamed',
+                           'fr': 'Renommé', 'it': 'Rinominato',
+                           'nl': 'Hernoemd'}.get(self.language, 'Umbenannt')
+        elif action in ('archive_pack', 'archive_extract'):
+            messages = {
+                'de': {'archive_pack': '1 Archiv gepackt', 'archive_extract': '1 Archiv entpackt'},
+                'en': {'archive_pack': '1 archive packed', 'archive_extract': '1 archive extracted'},
+                'fr': {'archive_pack': '1 archive compressée', 'archive_extract': '1 archive extraite'},
+                'it': {'archive_pack': '1 archivio compresso', 'archive_extract': '1 archivio estratto'},
+                'nl': {'archive_pack': '1 archief ingepakt', 'archive_extract': '1 archief uitgepakt'},
+            }
+            lang = self.language if self.language in messages else 'en'
+            message = messages[lang][action]
+        elif action in ('create_folder', 'create_file'):
+            defaults = {
+                'create_folder': {'de': 'Ordner erstellt', 'en': 'Folder created'},
+                'create_file': {'de': 'Datei erstellt', 'en': 'File created'}
+            }
+            message = detail or defaults.get(action, {}).get(self.language, defaults.get(action, {}).get('en', 'Action completed'))
+        elif action in ('copy', 'move', 'delete'):
+            verbs = {
+                'de': {'copy': 'kopiert', 'move': 'verschoben', 'delete': 'gelöscht'},
+                'en': {'copy': 'copied', 'move': 'moved', 'delete': 'deleted'},
+                'fr': {'copy': 'copié(s)', 'move': 'déplacé(s)', 'delete': 'supprimé(s)'},
+                'it': {'copy': 'copiati', 'move': 'spostati', 'delete': 'eliminati'},
+                'nl': {'copy': 'gekopieerd', 'move': 'verplaatst', 'delete': 'verwijderd'}
+            }
+            lang = self.language if self.language in verbs else 'en'
+            noun = {'de': 'Objekt', 'en': 'object', 'fr': 'objet',
+                    'it': 'oggetto', 'nl': 'object'}.get(lang, 'Objekt')
+            noun_plural = {'de': 'Objekte', 'en': 'objects', 'fr': 'objets',
+                           'it': 'oggetti', 'nl': 'objecten'}.get(lang, 'Objekte')
+            count = int(files or 0) + int(folders or 0)
+            message = (f"{count} {noun if count == 1 else noun_plural} "
+                       f"{verbs[lang][action]}") if count else detail or 'Aktion abgeschlossen'
+        self.last_action_status = message
+        if hasattr(self, 'status_stats_actions'):
+            self.status_stats_actions.setText(self._status_prefix() + message)
+            # Keep the action field wide enough for the complete current message.
+            # Both pane-statistic labels continue sharing the remaining space.
+            self._fit_action_status_width()
+            self.status_stats_actions.setToolTip(self.status_stats_actions.text())
+            self.status_stats_actions.updateGeometry()
+            self.statusBar().updateGeometry()
+
+    def _start_pane_folder_size_scan(self, pane):
+        """Start one background size scan per local directory listing."""
+        if pane.remote or pane.archive_file:
+            return
+        folder = str(Path(pane.path).resolve())
+        if getattr(pane, "_folder_size_scan_path", None) == folder:
+            return
+        pane._folder_size_scan_path = folder
+        pane._folder_sizes = {}
+        pane._folder_size_total = 0
+        try:
+            if not Path(folder).is_dir():
+                return
+        except OSError:
+            return
+        worker = PaneFolderSizesWorker(folder)
+        pane._folder_size_worker = worker
+        def finished(scan_path, sizes, total_bytes, error, target=pane):
+            if str(Path(target.path).resolve()) != scan_path:
+                return
+            target._folder_sizes = sizes
+            target._folder_size_total = total_bytes
+            target._folder_size_worker = None
+            self.update_status_stats()
+        worker.signals.finished.connect(finished)
+        QThreadPool.globalInstance().start(worker)
+
+    def update_status_stats(self):
+        """Show recursive folder sizes without blocking the file-manager interface."""
+        def pane_text(pane, side):
+            if not pane.remote and not pane.archive_file:
+                self._start_pane_folder_size_scan(pane)
+            files = folders = total = 0
+            folder_sizes = getattr(pane, "_folder_sizes", {})
+            for index in range(pane.tree.topLevelItemCount()):
+                item = pane.tree.topLevelItem(index)
+                data = item.data(0, Qt.UserRole)
+                if not data or data[0] == '..':
+                    continue
+                if data[1]:
+                    folders += 1
+                    total += int(folder_sizes.get(data[0], 0))
+                else:
+                    files += 1
+                    total += int(data[2] or 0)
+            selected = pane.tree.selectedItems()
+            sel_count = sel_size = 0
+            for item in selected:
+                data = item.data(0, Qt.UserRole)
+                if not data or data[0] == '..':
+                    continue
+                sel_count += 1
+                if data[1]:
+                    sel_size += int(folder_sizes.get(data[0], 0))
+                else:
+                    sel_size += int(data[2] or 0)
+            unit = self.config.get('size_unit', 'auto')
+            if pane.remote:
+                free_value = "Remote"
+            else:
+                try:
+                    free_value = format_file_size(shutil.disk_usage(pane.path).free, unit)
+                except OSError:
+                    free_value = "–"
+            prefix = "Links" if side == "left" else "Rechts"
+            result = (f"{prefix}: {files} Dateien · {folders} Ordner · "
+                      f"{format_file_size(total, unit)}")
+            if sel_count:
+                result += (f" · Markiert: {sel_count} "
+                           f"({format_file_size(sel_size, unit)})")
+            result += f" · Frei: {free_value}"
+            return result
+        if not hasattr(self, 'status_stats_left'):
+            return
+        self.status_stats_left.setText(pane_text(self.left, 'left'))
+        self.status_stats_right.setText(pane_text(self.right, 'right'))
+        self.status_stats_left.setToolTip(
+            f"{self.left.path} — {self.status_stats_left.text()}")
+        self.status_stats_right.setToolTip(
+            f"{self.right.path} — {self.status_stats_right.text()}")
+
+    def _read_external_drives(self):
+        """Return mounted removable/USB partitions, excluding system boot disks."""
+        try:
+            result = subprocess.run(
+                ["lsblk", "--json", "-p", "-o",
+                 "NAME,PATH,TYPE,RM,TRAN,LABEL,MOUNTPOINTS,PKNAME"],
+                capture_output=True, text=True, timeout=5, check=True)
+            tree = json.loads(result.stdout).get("blockdevices", [])
+        except (OSError, subprocess.SubprocessError, ValueError, json.JSONDecodeError):
+            return []
+
+        def is_removable(value):
+            # lsblk may encode RM as a string ("0"/"1"); bool("0") is True.
+            if isinstance(value, bool):
+                return value
+            if isinstance(value, (int, float)):
+                return value == 1
+            return str(value or "").strip().lower() in {"1", "yes", "true"}
+
+        # Protect the whole physical disk containing / or /boot/firmware.
+        # This matters on Raspberry Pi systems booted from an SD card or USB SSD:
+        # the kernel may report that system disk as removable (RM=1).
+        system_mounts = {"/", "/boot/firmware"}
+        protected_disks = set()
+
+        def collect_system_disks(nodes, parent_disk=None):
+            for node in nodes or []:
+                kind = node.get("type", "")
+                path = node.get("path") or node.get("name")
+                disk = path if kind == "disk" else (parent_disk or node.get("pkname"))
+                mounts = node.get("mountpoints") or []
+                if any(m in system_mounts for m in mounts if isinstance(m, str)):
+                    if disk:
+                        protected_disks.add(
+                            disk if str(disk).startswith("/dev/") else "/dev/" + str(disk))
+                    elif path:
+                        protected_disks.add(path)
+                collect_system_disks(node.get("children", []), disk)
+
+        collect_system_disks(tree)
+
+        found = []
+        def walk(nodes, inherited_removable=False, inherited_usb=False, parent_disk=None):
+            for node in nodes or []:
+                kind = node.get("type", "")
+                path = node.get("path") or node.get("name")
+                removable = is_removable(node.get("rm")) or inherited_removable
+                usb = str(node.get("tran") or "").strip().lower() == "usb" or inherited_usb
+                disk = path if kind == "disk" else (parent_disk or node.get("pkname"))
+                disk_path = (disk if str(disk).startswith("/dev/") else
+                             ("/dev/" + str(disk) if disk else path))
+                mounts = node.get("mountpoints") or []
+                mounts = [m for m in mounts if isinstance(m, str) and m and
+                          m not in system_mounts and Path(m).is_dir()]
+                if (kind == "part" and path and mounts and (removable or usb)
+                        and disk_path not in protected_disks):
+                    for mount in mounts:
+                        label = node.get("label") or Path(path).name
+                        found.append({
+                            "device": path, "disk": disk_path,
+                            "mountpoint": mount, "label": str(label),
+                            "key": path + "|" + mount
+                        })
+                walk(node.get("children", []), removable, usb, disk)
+
+        walk(tree)
+        unique = {drive["key"]: drive for drive in found}
+        return sorted(unique.values(), key=lambda d: (d["label"].casefold(), d["mountpoint"]))
+
+    def refresh_external_drives(self):
+        drives = self._read_external_drives()
+        signature = tuple((d["key"], d["label"]) for d in drives)
+        old_signature = tuple((d["key"], d["label"]) for d in getattr(self, "_external_drives", []))
+        if signature == old_signature:
+            return
+        self._external_drives = drives
+        for pane in (self.left, self.right):
+            self._rebuild_drive_buttons(pane, drives)
+
+    def _rebuild_drive_buttons(self, pane, drives):
+        nav = pane.nav_layout
+        # The drive controls follow the three navigation buttons in the path row.
+        for button in getattr(pane, "drive_buttons", []):
+            nav.removeWidget(button)
+            button.deleteLater()
+        pane.drive_buttons = []
+        for drive in drives:
+            button = QToolButton(pane)
+            button.setAutoRaise(True)
+            button.setFixedSize(28, 28)
+            icon = QIcon.fromTheme("drive-removable-media")
+            if icon.isNull():
+                icon = self.style().standardIcon(QStyle.SP_DriveHDIcon)
+            button.setIcon(icon)
+            button.setIconSize(QSize(18, 18))
+            button.setToolTip(f"{drive['label']} — {drive['mountpoint']}")
+            button.setAccessibleName(drive["label"])
+            button.setStyleSheet(
+                "QToolButton{background:transparent;border:0;border-radius:4px;padding:2px}"
+                "QToolButton:hover{background:rgba(80,150,220,55)}")
+            button.clicked.connect(lambda checked=False, p=pane, d=drive: self.open_external_drive(p, d))
+            button.setContextMenuPolicy(Qt.CustomContextMenu)
+            button.customContextMenuRequested.connect(
+                lambda pos, b=button, p=pane, d=drive:
+                    self.show_external_drive_menu(p, d, b.mapToGlobal(pos)))
+            nav.addWidget(button)
+            pane.drive_buttons.append(button)
+
+    def open_external_drive(self, pane, drive):
+        mountpoint = drive.get("mountpoint")
+        if mountpoint and Path(mountpoint).is_dir():
+            pane.load(mountpoint)
+        else:
+            self.refresh_external_drives()
+
+    def show_external_drive_menu(self, pane, drive, global_pos):
+        menu = QMenu(self)
+        open_action = menu.addAction(self.tr("open"))
+        eject_action = menu.addAction("Auswerfen")
+        chosen = menu.exec(global_pos)
+        if chosen == open_action:
+            self.open_external_drive(pane, drive)
+        elif chosen == eject_action:
+            self.eject_external_drive(drive)
+
+    def eject_external_drive(self, drive):
+        if getattr(self, "transfer_busy", False) or getattr(self, "transfer_queue", []):
+            QMessageBox.warning(
+                self, "Laufende Übertragung",
+                "Das Laufwerk kann gerade nicht ausgeworfen werden. "
+                "Bitte warte, bis alle Kopier- und Verschiebevorgänge abgeschlossen sind.")
+            return
+        disk = drive.get("disk") or drive["device"]
+        same_disk = [d for d in self._external_drives if d.get("disk") == disk]
+        confirm = QMessageBox(
+            QMessageBox.Question,
+            "Laufwerk auswerfen",
+            f"Soll „{drive['label']}“ sicher ausgeworfen werden?",
+            QMessageBox.Yes | QMessageBox.No,
+            self)
+        confirm.setButtonText(QMessageBox.Yes, "Ja")
+        confirm.setButtonText(QMessageBox.No, "Nein")
+        confirm.setDefaultButton(QMessageBox.No)
+        answer = confirm.exec()
+        if answer != QMessageBox.Yes:
+            return
+        try:
+            for device in sorted({item["device"] for item in same_disk}):
+                subprocess.run(["udisksctl", "unmount", "-b", device],
+                               capture_output=True, text=True, timeout=30, check=True)
+            subprocess.run(["udisksctl", "power-off", "-b", disk],
+                           capture_output=True, text=True, timeout=30, check=True)
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Auswerfen nicht möglich",
+                                 "udisksctl ist nicht installiert. Bitte installiere das Paket udisks2.")
+            return
+        except subprocess.CalledProcessError as exc:
+            detail = (exc.stderr or exc.stdout or str(exc)).strip()
+            QMessageBox.critical(self, "Auswerfen fehlgeschlagen", detail)
+            return
+        except subprocess.TimeoutExpired:
+            QMessageBox.critical(self, "Auswerfen fehlgeschlagen",
+                                 "Der Vorgang hat zu lange gedauert.")
+            return
+        # After eject, restore each affected pane to its own configured folder.
+        # Prefer its saved per-pane start folder (default_left/default_right);
+        # if that folder is unavailable or lies on the ejected device, fall back
+        # to the pane's last saved path, then to the home directory.
+        mount_root = Path(drive["mountpoint"]).resolve()
+        for pane, side in ((self.left, "left"), (self.right, "right")):
+            try:
+                current = Path(pane.path).resolve()
+                if current != mount_root and mount_root not in current.parents:
+                    continue
+
+                candidates = (
+                    self.config.get("default_" + side),
+                    self.config.get("last_" + side),
+                    str(Path.home()),
+                )
+                restore_path = str(Path.home())
+                for candidate in candidates:
+                    if not candidate:
+                        continue
+                    candidate_path = Path(candidate).expanduser()
+                    try:
+                        resolved = candidate_path.resolve()
+                        if (resolved.is_dir() and resolved != mount_root
+                                and mount_root not in resolved.parents):
+                            restore_path = str(resolved)
+                            break
+                    except (OSError, RuntimeError, ValueError):
+                        continue
+                pane.load(restore_path, remember=False)
+            except (OSError, RuntimeError, ValueError):
+                # Do not prevent eject completion if a pane path vanished meanwhile.
+                fallback = self.config.get("default_" + side) or str(Path.home())
+                if Path(fallback).is_dir():
+                    pane.load(fallback, remember=False)
+        self.refresh_external_drives()
+
     def restore_column_widths(self):
         widths=self.config.get('column_widths', {})
         for pane, side in ((self.left, 'left'), (self.right, 'right')):
@@ -1821,6 +2399,8 @@ class Main(QMainWindow):
                     if data: item.setText(1,self.tr('folder') if data[1] else self.tr('file'))
         self.menuBar().clear(); self.make_menu()
         self.statusBar().showMessage(self.tr('ready'))
+        self.status_stats_actions.setText(self._status_prefix() + self.last_action_status)
+        self.update_status_stats()
     def make_menu(self):
         menus=[
             (self.tr('file_menu'),[(self.tr('new')+'…',self.new_file),(self.tr('new_folder'),self.new_folder),(self.tr('exit'),self.close)]),
@@ -1834,7 +2414,7 @@ class Main(QMainWindow):
             for label,fn in items:
                 a=m.addAction(label); a.triggered.connect(fn)
     def stylesheet(self):
-        fs=int(self.config.get('font_size',14)); return f'QMainWindow,QWidget{{background:#091827;color:#e7f2ff;font-size:{fs}pt}}' + 'QTreeWidget{background:#102235;alternate-background-color:#132a40;selection-background-color:#0864b5;border:1px solid #245b8d} QHeaderView::section{background:#123454;color:white;padding:6px;border:0} QLineEdit{background:#102b43;color:white;padding:6px;border:1px solid #245b8d} QPushButton,QToolButton{background:#104574;color:white;padding:6px;border:1px solid #2677ad;border-radius:4px} QMenu{background:#102b43;color:white} QMenu::item:selected{background:#0864b5} QMenuBar{background:#0b1d2d;color:#e7f2ff} QMenuBar::item:selected{background:#0864b5} QPushButton#functionKey{background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #1264ae,stop:1 #073b78);color:white;border:1px solid #1686e6;border-radius:6px;padding:8px 4px;font-weight:bold;font-size:13px} QPushButton#functionKey:hover{background:#0874d1;border:1px solid #63c5ff} QWidget#topActionBar{background:#0b2034;border:0} QToolButton#topActionButton{background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #17496f,stop:1 #0c2c49);border:1px solid #286b99;border-radius:6px;padding:6px 6px;margin:1px;font-weight:bold} QProgressBar{background:#102b40;color:#f4f8fc;border:1px solid #315c7b;border-radius:5px;text-align:center;height:18px} QProgressBar::chunk{background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #1596e8,stop:1 #49c0ff);border-radius:4px} QToolButton#topActionButton:hover{background:#075ba2} QStatusBar{background:#071522;color:#cfe6ff} QTreeWidget::item{padding:1px}  QHeaderView::section{padding:7px}'
+        fs=int(self.config.get('font_size',14)); return f'QMainWindow,QWidget{{background:#091827;color:#e7f2ff;font-size:{fs}pt}}' + 'QTreeWidget{background:#102235;alternate-background-color:#132a40;selection-background-color:#0864b5;border:1px solid #245b8d} QHeaderView::section{background:#123454;color:white;padding:6px;border:0} QLineEdit{background:#102b43;color:white;padding:6px;border:1px solid #245b8d} QPushButton,QToolButton{background:#104574;color:white;padding:6px;border:1px solid #2677ad;border-radius:4px} QMenu{background:#102b43;color:white} QMenu::item:selected{background:#0864b5} QMenuBar{background:#0b1d2d;color:#e7f2ff} QMenuBar::item:selected{background:#0864b5} QPushButton#functionKey{background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #1264ae,stop:1 #073b78);color:white;border:1px solid #1686e6;border-radius:6px;padding:8px 4px;font-weight:bold;font-size:13px} QPushButton#functionKey:hover{background:#0874d1;border:1px solid #63c5ff} QWidget#topActionBar{background:#0b2034;border:0} QToolButton#topActionButton{background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #17496f,stop:1 #0c2c49);border:1px solid #286b99;border-radius:6px;padding:6px 6px;margin:1px;font-weight:bold} QProgressBar{background:#102b40;color:#f4f8fc;border:1px solid #315c7b;border-radius:5px;text-align:center;height:18px} QProgressBar::chunk{background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #1596e8,stop:1 #49c0ff);border-radius:4px} QToolButton#topActionButton:hover{background:#075ba2} QStatusBar{background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #1264ae,stop:1 #073b78);color:#f0f7ff;border-top:1px solid #1686e6} QStatusBar::item{border:0} QStatusBar QLabel{background:transparent;color:#f0f7ff;padding:2px 4px} QTreeWidget::item{padding:1px}  QHeaderView::section{padding:7px}'
     def show_menu(self):
         # F2 must open a menu, not merely move focus to the menu bar.
         self.menuBar().setVisible(True)
@@ -2361,6 +2941,7 @@ class Main(QMainWindow):
             if result.returncode:
                 raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f'{fmt.upper()}-Erstellung fehlgeschlagen.')
             pane.load(pane.path)
+            self.set_action_status('archive_pack')
             self.statusBar().showMessage(self.tr('archive_created')+target.name)
         except Exception as e:
             try: target.unlink(missing_ok=True)
@@ -2406,7 +2987,9 @@ class Main(QMainWindow):
                 result=subprocess.run(cmd,capture_output=True,text=True)
                 if result.returncode:raise RuntimeError(result.stderr or result.stdout or 'Entpacken fehlgeschlagen.')
             else:raise RuntimeError('Dieses Archivformat wird nicht unterstützt.')
-            self.active.load(self.active.path); self.statusBar().showMessage(self.tr('extracted')+source.name)
+            self.active.load(self.active.path)
+            self.set_action_status('archive_extract')
+            self.statusBar().showMessage(self.tr('extracted')+source.name)
         except Exception as e:QMessageBox.warning(self,self.tr('extract_error'),str(e))
     def open_archive_member(self, archive, member):
         try:
@@ -2804,7 +3387,10 @@ class Main(QMainWindow):
     def new_folder(self):
         p=self.active;n=self.ask_name(self.tr('new_folder'),self.tr('folder_name'))
         if n:
-            try:p.remote.mkdir(posixpath.join(p.path,n)) if p.remote else Path(p.path,n).mkdir();p.load(p.path)
+            try:
+                p.remote.mkdir(posixpath.join(p.path,n)) if p.remote else Path(p.path,n).mkdir()
+                p.load(p.path)
+                self.set_action_status('create_folder', detail='Ordner erstellt' if self.language == 'de' else 'Folder created')
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
     def new_file(self):
         p=self.active;n=self.ask_name(self.tr('new_file'),self.tr('file_name'))
@@ -2817,6 +3403,7 @@ class Main(QMainWindow):
                         import io;p.remote.client.storbinary('STOR '+path,io.BytesIO(b''))
                 else:Path(p.path,n).touch(exist_ok=False)
                 p.load(p.path)
+                self.set_action_status('create_file', detail='Datei erstellt' if self.language == 'de' else 'File created')
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
     def rename(self):
         p=self.active;r=p.selected()
@@ -2833,6 +3420,7 @@ class Main(QMainWindow):
                 if p.remote:p.remote.client.rename(p.target(r[0]),new_target)
                 else:Path(p.target(r[0])).rename(new_target)
                 p.load(p.path)
+                self.set_action_status('rename', files=1)
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
     def delete_archive_member(self, archive, member, is_dir):
         """Remove one member or a complete directory subtree from an archive."""
@@ -2929,6 +3517,8 @@ class Main(QMainWindow):
         self.statusBar().showMessage(self.tr('deleting')+f' ({len(rows)})')
         self.start_next_transfer()
     def delete_finished(self,name,ok,error,worker,label,pane):
+        if getattr(worker, 'deleted_count', 0):
+            self.set_action_status('delete', getattr(worker, 'deleted_files', 0), 0)
         label.setText((self.tr('done') if ok else self.tr('error'))+name+((' – '+error) if error else ''))
         if ok:
             if pane.archive_file: pane.load_archive(pane.archive_file,pane.archive_inner,False)
@@ -3614,6 +4204,8 @@ class Main(QMainWindow):
                 progress.setValue(0)
             self.queue_next_index=0
             batch=BatchTransferWorker(entries)
+            batch._successful_files = 0
+            batch._successful_folders = 0
             batch.signals.item_started.connect(
                 lambda index,w=batch,m=move: self.queue_item_started_bridge.emit(index,w,m)
             )
@@ -3658,7 +4250,9 @@ class Main(QMainWindow):
         if ok and progress is not None:
             progress.setValue(100)
         label.setText((self.tr('done') if ok else self.tr('error'))+name+((' – '+error) if error else ''))
-        if not ok:
+        if ok and not error:
+            batch._successful_files += int(getattr(worker, 'object_count', 1) or 0)
+        else:
             batch._had_error=True
             self.statusBar().showMessage(self.tr('transfer_error')+error)
 
@@ -3690,6 +4284,9 @@ class Main(QMainWindow):
                     f'{len(batch.entries)} Einträge erfolgreich übertragen.'
                     if self.language=='de' else f'{len(batch.entries)} items transferred successfully.'
                 )
+            if getattr(batch, '_successful_files', 0) or getattr(batch, '_successful_folders', 0):
+                self.set_action_status('move' if batch.entries[0][0].move else 'copy',
+                                       batch._successful_files, 0)
             self.transfer_busy=False
             QTimer.singleShot(0,self.start_next_transfer)
 
@@ -3703,6 +4300,9 @@ class Main(QMainWindow):
             else: src.load(src.path)
             if dst.archive_file: dst.load_archive(dst.archive_file,dst.archive_inner,False)
             else: dst.load(dst.path)
+            if not error:
+                self.set_action_status('move' if worker.move else 'copy',
+                                       int(getattr(worker, 'object_count', 1) or 0), 0)
             self.statusBar().showMessage((self.tr('moved') if worker.move else self.tr('copied'))+name)
         else:self.statusBar().showMessage(self.tr('transfer_error')+error)
         self.transfer_busy=False; QTimer.singleShot(0,self.start_next_transfer)

@@ -6,8 +6,8 @@ Standards-Version: 4.6.2
 Build-Depends: debhelper-compat (= 13)
 
 Package: lunacommander
-Version: 0.7.2
+Version: 0.7.3
 Architecture: all
-Depends: ${misc:Depends}, python3, python3-pyside6.qtwidgets, python3-paramiko, xdg-utils, zip, tar, gzip, xz-utils, bzip2, 7zip, unar, unrar-free
+Depends: ${misc:Depends}, udisks2, python3, python3-pyside6.qtwidgets, python3-paramiko, xdg-utils, zip, tar, gzip, xz-utils, bzip2, 7zip, unar, unrar-free
 Description: Qt6 dual-pane file manager with FTP, FTPS and SFTP
  A dual-pane file manager with remote browsing, transfers and native Qt context menus.

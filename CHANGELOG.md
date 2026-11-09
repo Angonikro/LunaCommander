@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.7.3 – Statusleiste und externe Laufwerke
+- Warteschlange zeigt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Statusleiste zeigt Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster sowie Markierung und freien Speicherplatz.
+- Unten links steht dauerhaft „Status: Bereit“; nach einer Aktion wird dort ausschließlich das Ergebnis der letzten Aktion angezeigt (z. B. „6 Dateien kopiert“).
+- Statusmeldungen umfassen Kopieren, Verschieben, Löschen, Erstellen und Umbenennen; Verzeichniswechsel überschreiben die letzte Aktionsmeldung nicht.
+- Statusleiste farblich an die blauen Werkzeug- und Funktionstasten angepasst.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+- Dateioperationen: Statusmeldungen zeigen eine einzige Gesamtzahl als „Objekte“; Dateien und Ordner einschließlich aller Unterordner werden zusammengezählt.
+- Löschen: Dateizahlen werden jetzt vor dem Entfernen ermittelt; Dateien in Ordner-Unterbäumen und Archiv-Unterordnern fließen dadurch vollständig in die Statusmeldung ein.
+- Löschen: Statusmeldung zählt ausschließlich gelöschte Dateien; Dateien in gelöschten Ordnern werden rekursiv mitgezählt, Ordner selbst nicht separat.
+- Kopieren/Verschieben: Statusmeldung zählt nur Dateien; Dateien in übertragenen Ordnern werden rekursiv mitgezählt, Ordner selbst erscheinen nicht mehr als separate Anzahl.
+- Statusleiste: Ordnergrößen werden rekursiv im Hintergrund berechnet und in Gesamt- sowie Markierungsgröße beider Fenster eingerechnet; symbolische Links werden nicht verfolgt und die Oberfläche bleibt während der Berechnung bedienbar.
+- Umbenennen: Dateinamen werden nicht mehr in der Statusleiste wiederholt; stattdessen erscheint eine kurze Meldung wie „1 umbenannt“.
+- Statusfeld: Textbreite wird anhand der tatsächlichen Schriftbreite berechnet, damit auch „Status: Bereit“ vollständig sichtbar bleibt.
+- Statusleisten-Layout: Das Aktionsfeld passt seine Breite dynamisch an den vollständigen Meldungstext an (z. B. „12 umbenannt“); der verbleibende Platz wird weiterhin gleichmäßig auf beide Fensterstatistiken verteilt.
+- Statusleiste verwendet wieder vollständige deutsche Bezeichnungen („Links“, „Dateien“, „Ordner“, „Markiert“, „Frei“) statt schwer verständlicher Kürzel.
+- Statusleiste: Das Aktionsfeld reserviert ausreichend Platz für dreistellige Meldungen wie „100 Objekte verschoben“, damit die Meldung vollständig sichtbar bleibt.\n- Auswerfen stellt jedes betroffene Fenster auf seinen jeweils gespeicherten Standardordner (`default_left` bzw. `default_right`) zurück; nur wenn dieser nicht verfügbar ist, wird ein gültiger gespeicherter Pfad oder Home verwendet.\n# Changelog\n\n## 0.7.3\n- Fehlerkorrektur: Der gesamte Datenträger mit `/` oder `/boot/firmware` wird von der Laufwerksleiste ausgeschlossen – auch wenn der Raspberry Pi davon bootet und `RM=1` meldet.\n# Changelog
+- Nach erfolgreichem Erstellen eines Archivs zeigt die Statusleiste „1 Archiv gepackt“ an.
+- Nach erfolgreichem Entpacken zeigt die Statusleiste „1 Archiv entpackt“ an.
+- Fehler werden weiterhin über die vorhandenen Fehlermeldungen angezeigt.
+- Angeschlossene, gemountete USB-/Wechseldatenträger werden regelmäßig erkannt und in beiden Fenstern als Laufwerkssymbole eingeblendet.
+- Linksklick öffnet den Datenträger im jeweiligen Fenster; Rechtsklick bietet Öffnen und sicheres Auswerfen.
+- Auswerfen wird bei laufenden oder wartenden Übertragungen blockiert und nutzt UDisks2 zum Aushängen und Ausschalten.
+- Sicherheitsabfrage zum Auswerfen zeigt die Schaltflächen ausdrücklich als „Ja“ und „Nein“, unabhängig von der Desktop-Sprache.
+- Auswerfen: Dateifenster, die das ausgeworfene Laufwerk geöffnet hatten, wechseln danach zurück nach zum letzten Ordner.
+- Statusleiste neu ausbalanciert: Aktionsstatus nutzt nur seine benötigte Breite; linke und rechte Kurzstatistik teilen sich den restlichen Platz und zeigen Markierungsgröße sowie freien Speicher kompakt.
+- Statusleiste zeigt Datei-/Ordneranzahl, Gesamtgröße, Markierungsanzahl/-größe und freien Speicher für linkes und rechtes Fenster getrennt.
+- Größenänderungsgriff unten rechts deaktiviert; Fenster bleibt über die Fensterränder skalierbar.
+
 ## 0.7.2 – Drag-and-drop-Warteschlange
 - Interne Drag-&-Drop-Kopien zwischen linkem und rechtem Dateifenster werden jetzt als Batch über die zentrale Übertragungswarteschlange ausgeführt.
 - Jede Datei und jeder Ordner erscheint beim Start des jeweiligen Eintrags mit Status und Fortschritt in der Warteschlange.
@@ -151,6 +180,13 @@
 
 # Changelog
 
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
+
 ## 0.6.59
 - Beim Erstellen eines Archivs kann jetzt vor dem Start ein eigener Archivname eingegeben werden.
 - Die passende Dateiendung wird automatisch für das gewählte Archivformat ergänzt und nicht doppelt angehängt.
@@ -283,6 +319,13 @@
 
 # Changelog
 
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
+
 ## 0.6.31
 - Fixed RAR archive paths: creation now runs in the selected item’s parent directory and passes only the item basename.
 - Prevents absolute paths such as `/home/pi/...` from being stored inside newly created RAR archives.
@@ -309,6 +352,13 @@
 
 # Changelog
 
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
+
 ## 0.6.23
 - Fixed F2 so it opens the File menu instead of only focusing the menu bar.
 - Fixed F5/F6 function-key handling when a file pane has focus.
@@ -324,6 +374,13 @@
 
 # Changelog
 
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
+
 ## 0.6.19
 - Restore the original 0.6.17 toolbar icon size and button proportions.
 - Slightly reduce only toolbar spacing and horizontal button padding so Settings fits; labels and icons remain full-size.
@@ -335,6 +392,13 @@
 
 # Changelog
 
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
+
 ## 0.6.15
 - Replaced emoji toolbar and function-key symbols with consistent native Qt icons.
 - Kept the exact F1–F10 mapping and improved button spacing and legibility.
@@ -343,6 +407,13 @@
 - Reserved all three queue rows at startup so the complete queue area is visible immediately.
 
 # Changelog
+
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
 
 ## 0.6.14
 - Redesigned the Qt6 toolbar with clearer action symbols and improved spacing.
@@ -358,6 +429,13 @@
 - Archive operations continue to refresh the affected panes when complete.
 
 # Changelog
+
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
 
 ## 0.6.12
 - Added deletion of selected files and complete folders directly inside ZIP and TAR/TAR.GZ/TAR.XZ/TAR.BZ2 archives.
@@ -380,11 +458,25 @@
 
 # Changelog
 
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
+
 ## 0.6.2
 - Dateifenster nutzen den verfügbaren Platz; größere Dateisymbole und Zeilen.
 - Einfach- oder Doppelklick zum Öffnen wieder in Einstellungen auswählbar und gespeichert.
 
 # Changelog
+
+## 0.7.3 – Statusleiste und kompaktere Warteschlange
+- Warteschlange zeigt jetzt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
+- Neue Statusleiste mit Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster.
+- Zeigt zusätzlich die Anzahl und Gesamtgröße der markierten Einträge sowie den freien Speicherplatz des aktiven lokalen Laufwerks.
+- Statusangaben aktualisieren sich bei Verzeichniswechsel und Auswahländerungen.
+
 
 ## 0.6.1
 - Restored the Midnight Commander-style F1–F10 function bar.
