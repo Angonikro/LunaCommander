@@ -44,8 +44,22 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.5'
+    APP_VERSION = '0.7.6'
 ICON_SIZES = (24, 32, 40, 48, 64)
+
+
+def tinted_standard_icon(style, standard_pixmap, color):
+    """Keep the platform's original standard icon shape, changing only its foreground color."""
+    source = style.standardIcon(standard_pixmap).pixmap(QSize(32, 32)).toImage().convertToFormat(QImage.Format_ARGB32)
+    target = QImage(source.size(), QImage.Format_ARGB32)
+    target.fill(Qt.transparent)
+    tint = QColor(color)
+    for y in range(source.height()):
+        for x in range(source.width()):
+            pixel = source.pixelColor(x, y)
+            if pixel.alpha() > 0:
+                target.setPixelColor(x, y, QColor(tint.red(), tint.green(), tint.blue(), pixel.alpha()))
+    return QIcon(QPixmap.fromImage(target))
 
 def icon_category(filename, is_dir=False):
     if is_dir: return 'folder'
@@ -2063,7 +2077,12 @@ class Main(QMainWindow):
         ]
         self.toolbar_actions=[]; self.toolbar_buttons=[]
         for key,icon_name,fn in toolbar_actions:
-            a=QAction(self.style().standardIcon(getattr(QStyle,icon_name)),self.tr(key),self); a.triggered.connect(fn)
+            base_icon = self.style().standardIcon(getattr(QStyle,icon_name))
+            if key == 'rename':
+                base_icon = tinted_standard_icon(self.style(), getattr(QStyle,icon_name), '#e8f2ff')
+            elif key == 'disconnect':
+                base_icon = tinted_standard_icon(self.style(), getattr(QStyle,icon_name), '#ff5555')
+            a=QAction(base_icon,self.tr(key),self); a.triggered.connect(fn)
             b=QToolButton(); b.setDefaultAction(a); b.setToolButtonStyle(Qt.ToolButtonTextUnderIcon); b.setIconSize(QSize(24,24))
             b.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred); b.setMinimumWidth(0); b.setMinimumHeight(52)
             b.setObjectName('topActionButton'); top_layout.addWidget(b,1); self.toolbar_actions.append((a,key)); self.toolbar_buttons.append(b)
@@ -2077,7 +2096,11 @@ class Main(QMainWindow):
         ]
         self.function_buttons=[]
         for i,(key,icon_name,fn) in enumerate(function_defs,1):
-            label=f'F{i} {self.tr(key)}'; b=QPushButton(label); b.setIcon(self.style().standardIcon(getattr(QStyle,icon_name))); b.setIconSize(QSize(20,20)); b.setObjectName('functionKey'); b.setMinimumHeight(44); b.setMinimumWidth(100); b.setToolTip(label)
+            label=f'F{i} {self.tr(key)}'; b=QPushButton(label)
+            function_icon = self.style().standardIcon(getattr(QStyle,icon_name))
+            if key == 'rename':
+                function_icon = tinted_standard_icon(self.style(), getattr(QStyle,icon_name), '#e8f2ff')
+            b.setIcon(function_icon); b.setIconSize(QSize(20,20)); b.setObjectName('functionKey'); b.setMinimumHeight(44); b.setMinimumWidth(100); b.setToolTip(label)
             b.clicked.connect(fn); self.function_layout.addWidget(b,1); self.function_buttons.append(b)
             shortcut=QAction(self); shortcut.setShortcut(QKeySequence(f'F{i}')); shortcut.setShortcutContext(Qt.ApplicationShortcut)
             shortcut.triggered.connect(fn); self.addAction(shortcut)

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.6 – Symbolfarben
+- Die ursprünglichen Qt-Symbole für „Umbenennen“ und „Trennen“ bleiben erhalten.
+- „Umbenennen“ wird hell eingefärbt; „Trennen“ erhält eine gut sichtbare rote Farbe.
+- Keine Änderung an Symbolformen, Schaltflächenanordnung oder Dateifunktionen.
+
+
 ## 0.7.5 – Dauerhafter Größen-Cache
 - Dateioperationen aktualisieren den persistenten Größen-Cache gezielt: Kopieren, Löschen, Verschieben, Umbenennen, Erstellen, Überschreiben und Entpacken ändern nur betroffene Verzeichnisaggregate.
 - Mehrfachauswahl, Drag & Drop und Desktop-Import berücksichtigen erfolgreiche Änderungen einzeln; bei Fehlern oder Abbruch werden nur tatsächlich geschriebene/entfernte Daten verbucht.
