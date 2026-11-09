@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.5 – Dauerhafter Größen-Cache
+- Dateioperationen aktualisieren den persistenten Größen-Cache gezielt: Kopieren, Löschen, Verschieben, Umbenennen, Erstellen, Überschreiben und Entpacken ändern nur betroffene Verzeichnisaggregate.
+- Mehrfachauswahl, Drag & Drop und Desktop-Import berücksichtigen erfolgreiche Änderungen einzeln; bei Fehlern oder Abbruch werden nur tatsächlich geschriebene/entfernte Daten verbucht.
+- Beide Fenster übernehmen dieselben Cache-Deltas sofort. Nicht betroffene Cache-Einträge bleiben erhalten; laufende, inzwischen überholte Hintergrundscans werden verworfen.
+- Rekursiv berechnete Ordnergrößen werden in einer SQLite-Datenbank unter `~/.config/lunacommander/size_cache.db` gespeichert und über Programmneustarts hinweg wiederverwendet.
+- Bereits gespeicherte Größen erscheinen sofort; Einträge werden nach fünf Minuten im Hintergrund aktualisiert.
+- Das Dateisystem-Stammverzeichnis `/` wird nicht mehr rekursiv durchlaufen. Dort zeigt die Statusleiste den vom Dateisystem gemeldeten belegten Speicherplatz.
+- Die Größenberechnung bleibt im Hintergrund und blockiert die Dateifenster nicht.
+
 ## 0.7.4 – Korrektur der Dateigrößenanzeige
 - Fehler bei der Größenformatierung behoben: Bei ganzzahlig gerundeten Werten ab 100 KB/MB/GB/TB werden abschließende Nullen nicht mehr entfernt (z. B. 110 KB wird nicht mehr als 11 KB angezeigt).
 - Die Korrektur gilt einheitlich für Dateilisten, Eigenschaften-Dialoge und alle weiteren Anzeigen, die `format_file_size()` verwenden.

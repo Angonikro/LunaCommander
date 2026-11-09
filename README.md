@@ -1,8 +1,8 @@
-# LunaCommander 0.7.4
+# LunaCommander 0.7.5
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
-![LunaCommander](lunacommander.png)
+![LunaCommander](lunacommander1.png)
 
 [Github Seite](https://github.com/Angonikro/LunaCommander/)
 
@@ -43,6 +43,12 @@ LunaCommander unterstützt den System-Datei-Clipboard unter MATE/Caja für lokal
 ## RAR-Hinweis
 
 Für das Erstellen von RAR-Archiven wird das externe RARLAB-Programm `rar` benötigt. Es wird nicht automatisch installiert. Wenn `rar` vorhanden ist, wird es erkannt; andernfalls kann der Programmpfad in **Einstellungen → Archivprogramme → RAR** angegeben werden. Zum Entpacken werden die installierten Debian-Werkzeuge verwendet.
+
+## Dauerhafter Größen-Cache der Statusleiste
+
+LunaCommander speichert rekursiv berechnete Ordnergrößen jetzt dauerhaft in einer SQLite-Datenbank unter `~/.config/lunacommander/size_cache.db`. Bereits bekannte Werte werden nach einem Neustart sofort wieder angezeigt. Einträge werden im Hintergrund nach spätestens fünf Minuten neu berechnet; währenddessen bleibt der zuletzt gespeicherte Wert sichtbar. So blockiert die Berechnung die Dateifenster nicht und bereits besuchte Ordner müssen nicht bei jedem Wechsel erneut vollständig gescannt werden.
+
+Im Dateisystem-Stammverzeichnis `/` wird keine rekursive Vollplatten-Suche gestartet. Die Größenanzeige verwendet dort stattdessen den vom Dateisystem gemeldeten belegten Speicherplatz. Dadurch wird ein unnötiger Scan des gesamten Datenträgers vermieden.
 
 ## Einstellungen und gespeicherte Öffnen-mit-Zuordnungen
 
@@ -89,7 +95,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.7.4_GITHUB.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.7.5_GITHUB.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -100,7 +106,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.7.4_all.deb
+sudo apt install ./lunacommander_0.7.5_all.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -114,7 +120,7 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.7.4
+- Version: 0.7.5
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.

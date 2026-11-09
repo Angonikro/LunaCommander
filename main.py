@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """LunaCommander Qt6 edition."""
-import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfile, subprocess, mimetypes, io
+import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfile, subprocess, mimetypes, io, sqlite3, time
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
@@ -44,7 +44,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.4'
+    APP_VERSION = '0.7.5'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):
@@ -807,7 +807,16 @@ class Pane(QWidget):
             return
         def work():
             errors=[]
+            cache_deltas={}
+            removed_paths=[]
             for src,target,conflict in jobs:
+                source_before=TransferWorker.local_bytes(src)
+                target_before=0
+                merge_overwritten=0
+                if conflict=='replace' and target.exists():
+                    target_before=TransferWorker.local_bytes(target)
+                elif conflict=='merge' and target.exists():
+                    merge_overwritten=TransferWorker.matching_target_bytes(src,target)
                 try:
                     if conflict=='replace' and target.exists():
                         shutil.rmtree(target) if target.is_dir() and not target.is_symlink() else target.unlink()
@@ -821,9 +830,36 @@ class Pane(QWidget):
                         shutil.copytree(src,target,dirs_exist_ok=True)
                     else:
                         shutil.copy2(src,target)
+                    if conflict=='merge' and target.exists():
+                        target_delta=source_before-merge_overwritten
+                    else:
+                        target_delta=source_before-target_before
+                    if target_delta:
+                        cache_deltas[str(target)]=cache_deltas.get(str(target),0)+target_delta
+                    if move:
+                        cache_deltas[str(src)]=cache_deltas.get(str(src),0)-source_before
+                        if not src.exists() and source_before:
+                            removed_paths.append(str(src))
                 except Exception as e:
                     errors.append(f"{src.name}: {e}")
-            QTimer.singleShot(0, lambda: (self.load(str(dst), remember=False), self.app.statusBar().showMessage(self.app.tr('ready') if not errors else '; '.join(errors))))
+                    # A failed transfer can leave partial output. Reconcile only
+                    # this target, not unrelated cached directories.
+                    actual_delta=TransferWorker.local_bytes(target)-target_before
+                    if actual_delta:
+                        cache_deltas[str(target)]=cache_deltas.get(str(target),0)+actual_delta
+                    if move:
+                        source_after=TransferWorker.local_bytes(src)
+                        source_delta=source_after-source_before
+                        if source_delta:
+                            cache_deltas[str(src)]=cache_deltas.get(str(src),0)+source_delta
+                        if not src.exists() and source_before:
+                            removed_paths.append(str(src))
+            def finish_import():
+                if cache_deltas or removed_paths:
+                    self.app._apply_size_cache_deltas(cache_deltas, removed_paths=removed_paths)
+                self.load(str(dst), remember=False)
+                self.app.statusBar().showMessage(self.app.tr('ready') if not errors else '; '.join(errors))
+            QTimer.singleShot(0, finish_import)
         threading.Thread(target=work, daemon=True).start()
 
     def context_menu(self,pos):
@@ -1104,6 +1140,30 @@ class DeleteBatchWorker(QRunnable):
         return count
 
     @staticmethod
+    def count_local_bytes(path):
+        """Return logical bytes removed, without following symbolic links."""
+        path = Path(path)
+        try:
+            if path.is_symlink():
+                return 0
+            if path.is_file():
+                return int(path.stat().st_size)
+            total = 0
+            for current, dirs, files in os.walk(path, followlinks=False):
+                dirs[:] = [name for name in dirs
+                           if not (Path(current) / name).is_symlink()]
+                for name in files:
+                    candidate = Path(current) / name
+                    try:
+                        if not candidate.is_symlink():
+                            total += int(candidate.stat().st_size)
+                    except OSError:
+                        continue
+            return total
+        except OSError:
+            return 0
+
+    @staticmethod
     def count_archive_objects(archive_path, member, is_dir):
         """Count files and directory objects in an archive subtree."""
         archive_name = Path(archive_path).name.lower()
@@ -1143,6 +1203,7 @@ class DeleteBatchWorker(QRunnable):
         self.deleted_count=0
         self.deleted_files=0
         self.deleted_folders=0
+        self.deleted_bytes_by_path = {}
         total=len(self.rows)
         for index,(name,is_dir,_size) in enumerate(self.rows,1):
             try:
@@ -1158,6 +1219,7 @@ class DeleteBatchWorker(QRunnable):
                     file_count=0 if is_dir else 1
                 else:
                     file_count=self.count_local_files(path)
+                    self.deleted_bytes_by_path[os.path.abspath(os.path.expanduser(str(path)))] = self.count_local_bytes(path)
 
                 if pane.archive_file:
                     member='/'.join(x for x in (pane.archive_inner,name) if x)
@@ -1234,13 +1296,114 @@ class TransferWorker(QRunnable):
                     continue
         return count
 
+    @staticmethod
+    def local_bytes(path):
+        path = Path(path)
+        try:
+            if path.is_symlink():
+                return 0
+            if path.is_file():
+                return int(path.stat().st_size)
+            if not path.is_dir():
+                return 0
+            total = 0
+            for current, dirs, files in os.walk(path, followlinks=False):
+                base = Path(current)
+                dirs[:] = [name for name in dirs if not (base / name).is_symlink()]
+                for filename in files:
+                    item = base / filename
+                    try:
+                        if not item.is_symlink():
+                            total += int(item.stat().st_size)
+                    except OSError:
+                        continue
+            return total
+        except OSError:
+            return 0
+
+    @staticmethod
+    def matching_target_bytes(source, target):
+        """Count only destination files that a local directory merge overwrites."""
+        source = Path(source)
+        target = Path(target)
+        if source.is_file() and not source.is_symlink():
+            candidate = target
+            try:
+                return int(candidate.stat().st_size) if candidate.is_file() and not candidate.is_symlink() else 0
+            except OSError:
+                return 0
+        total = 0
+        if not source.is_dir() or source.is_symlink():
+            return 0
+        for current, dirs, files in os.walk(source, followlinks=False):
+            base = Path(current)
+            dirs[:] = [name for name in dirs if not (base / name).is_symlink()]
+            relative = base.relative_to(source)
+            target_dir = target / relative
+            for filename in files:
+                incoming = base / filename
+                if incoming.is_symlink():
+                    continue
+                existing = target_dir / filename
+                try:
+                    if existing.is_file() and not existing.is_symlink():
+                        total += int(existing.stat().st_size)
+                except OSError:
+                    continue
+        return total
+
+    def finish_cache_metrics(self, source_bytes, target_before, target_was_local,
+                             target_delta_hint=None, success=False):
+        """Record only the changed source/target subtree, including partial writes."""
+        self.cache_deltas = {}
+        self.cache_removed_paths = []
+        if target_was_local:
+            target = Path(self.target_path)
+            if success and target_delta_hint is not None:
+                delta = int(target_delta_hint)
+            else:
+                delta = self.local_bytes(target) - int(target_before or 0)
+            if delta:
+                self.cache_deltas[str(target)] = delta
+            if not target.exists() and target_before:
+                self.cache_removed_paths.append(str(target))
+        if self.move and not self.src.remote and not self.src.archive_file:
+            source = Path(self.source_path)
+            if success and not source.exists():
+                source_delta = -int(source_bytes or 0)
+            else:
+                source_delta = self.local_bytes(source) - int(source_bytes or 0)
+            if source_delta:
+                self.cache_deltas[str(source)] = self.cache_deltas.get(str(source), 0) + source_delta
+            if not source.exists() and source_bytes:
+                self.cache_removed_paths.append(str(source))
+
     def run(self):
         name=posixpath.basename(self.source_path.rstrip('/')) or Path(self.source_path).name
+        source_bytes = 0
+        target_was_local = not self.dst.remote and not self.dst.archive_file
+        target_before = 0
+        target_delta_hint = None
+        if target_was_local:
+            target = Path(self.target_path)
+            if self.conflict == 'replace' and target.exists():
+                target_before = self.local_bytes(target)
+            elif target.exists() and self.conflict == 'merge' and not self.src.remote and not self.archive_file:
+                target_before = 0
+            elif target.exists():
+                target_before = self.local_bytes(target)
         try:
             if self.src.remote and self.dst.remote: raise RuntimeError(self.tr('server_copy_unavailable'))
             self.object_count = self.count_source_objects()
             self.total_bytes = self.measure_total()
+            source_bytes = int(self.total_bytes or 0)
             exists = self.target_exists()
+            if target_was_local and not self.src.remote and not self.archive_file:
+                if exists and self.conflict == 'merge':
+                    overwritten = self.matching_target_bytes(self.source_path, self.target_path)
+                    target_delta_hint = source_bytes - overwritten
+                else:
+                    target_delta_hint = source_bytes - int(target_before or 0)
             if exists and self.conflict == 'skip':
                 self.signals.finished.emit(name, True, 'Übersprungen – Ziel existiert bereits.'); return
             if exists and self.conflict == 'replace':
@@ -1270,9 +1433,12 @@ class TransferWorker(QRunnable):
             if self.move and not self.archive_file and not self.dst.archive_file:
                 if self.src.remote: self.remove_remote(self.source_path,self.is_dir)
                 else: shutil.rmtree(self.source_path) if self.is_dir else os.unlink(self.source_path)
+            self.finish_cache_metrics(source_bytes, target_before, target_was_local, target_delta_hint, True)
             self.signals.progress.emit(100)
             self.signals.finished.emit(name,True,'')
-        except Exception as e: self.signals.finished.emit(name,False,str(e))
+        except Exception as e:
+            self.finish_cache_metrics(source_bytes, target_before, target_was_local, None, False)
+            self.signals.finished.emit(name,False,str(e))
     def archive_entries(self):
         """Return (name, is_dir, size) entries relative to the selected archive folder."""
         archive=self.archive_file; base=self.archive_member.strip('/')
@@ -2052,30 +2218,330 @@ class Main(QMainWindow):
             self.status_stats_actions.updateGeometry()
             self.statusBar().updateGeometry()
 
+    def _size_cache_db(self):
+        """Persistent cache for recursive folder sizes (survives restarts)."""
+        path = Path.home() / '.config' / 'lunacommander' / 'size_cache.db'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(path, timeout=5) as db:
+            db.execute("""CREATE TABLE IF NOT EXISTS folder_sizes (
+                path TEXT PRIMARY KEY, scanned_at REAL NOT NULL, root_mtime REAL,
+                sizes_json TEXT NOT NULL, total_bytes INTEGER NOT NULL
+            )""")
+        return path
+
+    def _read_size_cache(self, folder):
+        try:
+            db_path = self._size_cache_db()
+            with sqlite3.connect(db_path, timeout=5) as db:
+                row = db.execute(
+                    'SELECT scanned_at, root_mtime, sizes_json, total_bytes FROM folder_sizes WHERE path=?',
+                    (folder,)).fetchone()
+            if not row:
+                return None
+            return {'scanned_at': float(row[0]), 'root_mtime': row[1],
+                    'sizes': json.loads(row[2]), 'total': int(row[3])}
+        except (OSError, sqlite3.Error, ValueError, TypeError):
+            return None
+
+    def _write_size_cache(self, folder, sizes, total_bytes):
+        try:
+            root_mtime = Path(folder).stat().st_mtime
+            db_path = self._size_cache_db()
+            with sqlite3.connect(db_path, timeout=5) as db:
+                db.execute("""INSERT INTO folder_sizes(path, scanned_at, root_mtime, sizes_json, total_bytes)
+                    VALUES(?,?,?,?,?) ON CONFLICT(path) DO UPDATE SET
+                    scanned_at=excluded.scanned_at, root_mtime=excluded.root_mtime,
+                    sizes_json=excluded.sizes_json, total_bytes=excluded.total_bytes""",
+                    (folder, time.time(), root_mtime, json.dumps(sizes), int(total_bytes)))
+        except (OSError, sqlite3.Error, TypeError):
+            pass
+
+    @staticmethod
+    def _local_tree_bytes(path):
+        """Measure one changed local item only; never walk unrelated cache roots."""
+        path = Path(path)
+        try:
+            if path.is_symlink():
+                return 0
+            if path.is_file():
+                return int(path.stat().st_size)
+            if not path.is_dir():
+                return 0
+            total = 0
+            for current, dirs, files in os.walk(path, followlinks=False):
+                base = Path(current)
+                dirs[:] = [name for name in dirs if not (base / name).is_symlink()]
+                for name in files:
+                    item = base / name
+                    try:
+                        if not item.is_symlink():
+                            total += int(item.stat().st_size)
+                    except OSError:
+                        continue
+            return total
+        except OSError:
+            return 0
+
+    def _apply_size_cache_deltas(self, deltas=None, removed_paths=(), renamed_paths=None, created_paths=()):
+        """Update only cache aggregates touched by completed filesystem operations.
+
+        Each cache row stores recursive bytes per first-level directory plus a
+        total. Deltas are applied to the matching first-level bucket and total;
+        unrelated rows are left byte-for-byte untouched.
+        """
+        deltas = {str(Path(p).expanduser().resolve(strict=False)): int(v)
+                  for p, v in (deltas or {}).items() if p and int(v or 0) != 0}
+        removed = [str(Path(p).expanduser().resolve(strict=False)) for p in removed_paths if p]
+        renamed_paths = renamed_paths or {}
+        created = [str(Path(p).expanduser().resolve(strict=False)) for p in created_paths if p]
+        if not deltas and not removed and not renamed_paths and not created:
+            return
+        try:
+            db_path = self._size_cache_db()
+            with sqlite3.connect(db_path, timeout=10) as db:
+                rows = db.execute('SELECT path, sizes_json, total_bytes FROM folder_sizes').fetchall()
+                for cached_path, sizes_json, total_bytes in rows:
+                    root = Path(cached_path)
+                    try:
+                        sizes = json.loads(sizes_json)
+                        total = int(total_bytes)
+                    except (TypeError, ValueError):
+                        continue
+                    changed = False
+                    purge = False
+                    for removed_path in removed:
+                        gone = Path(removed_path)
+                        try:
+                            rel = gone.relative_to(root)
+                            if not rel.parts:
+                                purge = True
+                                continue
+                            if rel.parts:
+                                first = rel.parts[0]
+                                if len(rel.parts) == 1:
+                                    sizes.pop(first, None)
+                                else:
+                                    sizes[first] = max(0, int(sizes.get(first, 0)))
+                                changed = True
+                        except ValueError:
+                            try:
+                                root.relative_to(gone)
+                                purge = True
+                            except ValueError:
+                                pass
+                    if purge:
+                        db.execute('DELETE FROM folder_sizes WHERE path=?', (cached_path,))
+                        continue
+                    for changed_path, delta in deltas.items():
+                        item = Path(changed_path)
+                        try:
+                            root.relative_to(item)
+                            if item.is_dir():
+                                # A changed directory may contain this cached root,
+                                # including a cache rooted at that exact directory.
+                                # Purge only that affected subtree's row.
+                                purge = True
+                                continue
+                        except ValueError:
+                            pass
+                        try:
+                            rel = item.relative_to(root)
+                        except ValueError:
+                            continue
+                        if not rel.parts:
+                            # A cached root itself changed. Its contents cannot
+                            # be represented by a simple child delta.
+                            continue
+                        first = rel.parts[0]
+                        if len(rel.parts) == 1 and item.is_dir():
+                            sizes[first] = max(0, int(sizes.get(first, 0)) + delta)
+                        elif first in sizes:
+                            sizes[first] = max(0, int(sizes[first]) + delta)
+                        total = max(0, total + delta)
+                        changed = True
+                    for created_path in created:
+                        item = Path(created_path)
+                        try:
+                            rel = item.relative_to(root)
+                        except ValueError:
+                            continue
+                        if len(rel.parts) == 1:
+                            if item.is_dir():
+                                sizes.setdefault(item.name, 0)
+                            changed = True
+                    for old_path, new_path in renamed_paths.items():
+                        old = Path(old_path)
+                        newp = Path(new_path)
+                        try:
+                            rel = old.relative_to(root)
+                            if len(rel.parts) == 1:
+                                if rel.parts[0] in sizes:
+                                    sizes[newp.name] = sizes.pop(rel.parts[0])
+                                changed = True
+                        except ValueError:
+                            # Nested cache rows are migrated to the new path below.
+                            pass
+                    if purge:
+                        db.execute('DELETE FROM folder_sizes WHERE path=?', (cached_path,))
+                    elif changed:
+                        try:
+                            root_mtime = root.stat().st_mtime
+                        except OSError:
+                            root_mtime = None
+                        db.execute('UPDATE folder_sizes SET scanned_at=?, root_mtime=?, sizes_json=?, total_bytes=? WHERE path=?',
+                                   (time.time(), root_mtime, json.dumps(sizes), total, cached_path))
+                # A rename changes cached path identities for nested roots.
+                for old_path, new_path in renamed_paths.items():
+                    old_text = str(Path(old_path).resolve(strict=False))
+                    new_text = str(Path(new_path).resolve(strict=False))
+                    exact = db.execute('SELECT 1 FROM folder_sizes WHERE path=?', (old_text,)).fetchone()
+                    if exact:
+                        db.execute('UPDATE OR REPLACE folder_sizes SET path=? WHERE path=?', (new_text, old_text))
+                    nested = db.execute('SELECT path FROM folder_sizes WHERE path LIKE ?',
+                                        (old_text.rstrip(os.sep) + os.sep + '%',)).fetchall()
+                    for row in nested:
+                        suffix = row[0][len(old_text):]
+                        db.execute('UPDATE OR REPLACE folder_sizes SET path=? WHERE path=?', (new_text + suffix, row[0]))
+        except (OSError, sqlite3.Error, ValueError, TypeError):
+            pass
+
+        # Update both live panes from the same deltas; never clear unrelated data.
+        for pane in (getattr(self, 'left', None), getattr(self, 'right', None)):
+            if pane is None or pane.remote or pane.archive_file or not pane.path:
+                continue
+            try:
+                root = Path(pane.path).resolve()
+            except (OSError, RuntimeError):
+                continue
+            # Keep a second pane open inside a renamed directory attached to
+            # the new path instead of leaving it pointed at a stale location.
+            renamed_pane = False
+            for old_path, new_path in renamed_paths.items():
+                old_root = Path(old_path)
+                try:
+                    suffix = root.relative_to(old_root)
+                    new_root = Path(new_path) / suffix
+                    if new_root.is_dir():
+                        pane.load(str(new_root), remember=False)
+                        root = new_root.resolve()
+                        renamed_pane = True
+                        break
+                except ValueError:
+                    continue
+            if renamed_pane:
+                continue
+            sizes = dict(getattr(pane, '_folder_sizes', {}) or {})
+            for removed_path in removed:
+                gone = Path(removed_path)
+                try:
+                    rel = gone.relative_to(root)
+                    if len(rel.parts) == 1:
+                        sizes.pop(rel.parts[0], None)
+                except ValueError:
+                    pass
+            for changed_path, delta in deltas.items():
+                item = Path(changed_path)
+                try:
+                    rel = item.relative_to(root)
+                except ValueError:
+                    continue
+                if rel.parts:
+                    first = rel.parts[0]
+                    if len(rel.parts) == 1 and item.is_dir():
+                        sizes[first] = max(0, int(sizes.get(first, 0)) + delta)
+                    elif first in sizes:
+                        sizes[first] = max(0, int(sizes[first]) + delta)
+            for created_path in created:
+                item = Path(created_path)
+                try:
+                    rel = item.relative_to(root)
+                    if len(rel.parts) == 1 and item.is_dir():
+                        sizes.setdefault(item.name, 0)
+                except ValueError:
+                    pass
+            for old_path, new_path in renamed_paths.items():
+                try:
+                    rel = Path(old_path).relative_to(root)
+                    if len(rel.parts) == 1 and rel.parts[0] in sizes:
+                        sizes[Path(new_path).name] = sizes.pop(rel.parts[0])
+                except ValueError:
+                    pass
+            pane._folder_sizes = sizes
+            pane._folder_size_generation = getattr(pane, '_folder_size_generation', 0) + 1
+            pane._folder_size_scan_path = str(root)
+            pane._folder_size_worker = None
+            # If the pane itself is inside a changed directory, its own cached
+            # aggregate may have changed; refresh only this displayed subtree.
+            if any((root == Path(changed) or root.is_relative_to(Path(changed)))
+                   for changed in list(deltas) + removed):
+                pane._folder_sizes = {}
+                pane._folder_size_scan_path = None
+                if root.is_dir():
+                    self._start_pane_folder_size_scan(pane)
+        self.update_status_stats()
+
+    def _apply_size_cache_delete_delta(self, deleted_bytes_by_path):
+        """Subtract deleted byte counts from affected aggregates only."""
+        if not deleted_bytes_by_path:
+            return
+        deltas = {path: -int(size or 0) for path, size in deleted_bytes_by_path.items()}
+        self._apply_size_cache_deltas(deltas, removed_paths=deleted_bytes_by_path.keys())
+
     def _start_pane_folder_size_scan(self, pane):
-        """Start one background size scan per local directory listing."""
-        if pane.remote or pane.archive_file:
+        """Use persistent cached sizes immediately and refresh stale entries in background."""
+        if pane.remote or pane.archive_file or not pane.path:
             return
         folder = str(Path(pane.path).resolve())
-        if getattr(pane, "_folder_size_scan_path", None) == folder:
+        # The filesystem root is special: recursively walking it would scan the
+        # complete disk (including mounted devices). Its size is shown as the
+        # filesystem's used space in update_status_stats() instead.
+        if folder == str(Path(folder).anchor):
+            pane._folder_sizes = {}
+            pane._folder_size_total = 0
+            pane._folder_size_scan_path = folder
             return
-        pane._folder_size_scan_path = folder
-        pane._folder_sizes = {}
-        pane._folder_size_total = 0
         try:
             if not Path(folder).is_dir():
                 return
         except OSError:
             return
+
+        cached = self._read_size_cache(folder)
+        if cached:
+            pane._folder_sizes = cached['sizes']
+            pane._folder_size_total = cached['total']
+            pane._folder_size_scan_path = folder
+            # Refresh after five minutes; cached values remain visible while the
+            # background scan runs. The cache is intentionally persistent.
+            if time.time() - cached['scanned_at'] < 300:
+                return
+        elif getattr(pane, '_folder_size_scan_path', None) != folder:
+            pane._folder_sizes = {}
+            pane._folder_size_total = 0
+
+        if getattr(pane, '_folder_size_worker', None) is not None:
+            return
+        pane._folder_size_scan_path = folder
         worker = PaneFolderSizesWorker(folder)
         pane._folder_size_worker = worker
-        def finished(scan_path, sizes, total_bytes, error, target=pane):
-            if str(Path(target.path).resolve()) != scan_path:
+        generation = getattr(pane, '_folder_size_generation', 0)
+        def finished(scan_path, sizes, total_bytes, error, target=pane, scan_generation=generation, scan_worker=worker):
+            # Discard results from scans that were overtaken by a filesystem mutation.
+            if getattr(target, '_folder_size_generation', 0) != scan_generation:
+                if getattr(target, '_folder_size_worker', None) is scan_worker:
+                    target._folder_size_worker = None
+                self.update_status_stats()
                 return
-            target._folder_sizes = sizes
-            target._folder_size_total = total_bytes
-            target._folder_size_worker = None
-            self.update_status_stats()
+            if not error:
+                self._write_size_cache(scan_path, sizes, total_bytes)
+            if str(Path(target.path).resolve()) == scan_path:
+                if not error:
+                    target._folder_sizes = sizes
+                    target._folder_size_total = total_bytes
+                target._folder_size_worker = None
+                self.update_status_stats()
+            else:
+                target._folder_size_worker = None
         worker.signals.finished.connect(finished)
         QThreadPool.globalInstance().start(worker)
 
@@ -2113,7 +2579,10 @@ class Main(QMainWindow):
                 free_value = "Remote"
             else:
                 try:
-                    free_value = format_file_size(shutil.disk_usage(pane.path).free, unit)
+                    disk_usage = shutil.disk_usage(pane.path)
+                    free_value = format_file_size(disk_usage.free, unit)
+                    if str(Path(pane.path).resolve()) == str(Path(pane.path).anchor):
+                        total = disk_usage.used
                 except OSError:
                     free_value = "–"
             prefix = "Links" if side == "left" else "Rechts"
@@ -2917,6 +3386,7 @@ class Main(QMainWindow):
             QMessageBox.information(self, title, 'Ungültiger Archivname.' if self.language == 'de' else 'Invalid archive name.')
             return
         target=parent/(name+suffix)
+        target_before=self._local_tree_bytes(target)
         tool=self.archive_tool(fmt)
         if not tool:
             QMessageBox.warning(self,self.tr('pack_error'),f'Für {fmt.upper()} ist kein Programm eingerichtet. Bitte den Programmpfad in den Einstellungen eintragen.')
@@ -2941,12 +3411,19 @@ class Main(QMainWindow):
             result=subprocess.run(cmd,cwd=str(parent),capture_output=True,text=True)
             if result.returncode:
                 raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f'{fmt.upper()}-Erstellung fehlgeschlagen.')
+            target_delta=self._local_tree_bytes(target)-target_before
+            if target_delta:
+                self._apply_size_cache_deltas({str(target): target_delta})
             pane.load(pane.path)
             self.set_action_status('archive_pack')
             self.statusBar().showMessage(self.tr('archive_created')+target.name)
         except Exception as e:
             try: target.unlink(missing_ok=True)
             except Exception: pass
+            target_delta=self._local_tree_bytes(target)-target_before
+            if target_delta:
+                self._apply_size_cache_deltas({str(target): target_delta},
+                                               removed_paths=[str(target)] if not target.exists() and target_before else [])
             QMessageBox.warning(self,self.tr('pack_error'),str(e))
     def extract_selected(self):
         source=self.archive_path()
@@ -2959,39 +3436,101 @@ class Main(QMainWindow):
         if dest:self.extract_archive(source,Path(dest))
     def extract_archive(self,source,destination):
         name=source.name.lower()
+        destination=Path(destination)
+        before_sizes={}
+        created_dirs=[]
         try:
+            members=[]
             if name.endswith('.zip'):
                 with zipfile.ZipFile(source) as z:
                     root=destination.resolve()
                     for member in z.infolist():
                         out=(destination/member.filename).resolve()
-                        if root not in out.parents and out!=root:raise RuntimeError('Unsicherer Archivpfad wurde blockiert.')
+                        if root not in out.parents and out!=root:
+                            raise RuntimeError('Unsicherer Archivpfad wurde blockiert.')
+                        if member.is_dir():
+                            created_dirs.append(str(out))
+                        else:
+                            members.append(out)
+                    for out in members:
+                        before_sizes[str(out)]=self._local_tree_bytes(out)
                     z.extractall(destination)
             elif name.endswith(('.tar','.tar.gz','.tgz','.tar.xz','.txz','.tar.bz2','.tbz2','.tar.zst')):
                 with tarfile.open(source,'r:*') as t:
                     root=destination.resolve()
                     for member in t.getmembers():
                         out=(destination/member.name).resolve()
-                        if root not in out.parents and out!=root:raise RuntimeError('Unsicherer Archivpfad wurde blockiert.')
-                        if member.issym() or member.islnk():raise RuntimeError('Archive mit symbolischen/harten Links werden aus Sicherheitsgründen nicht entpackt.')
+                        if root not in out.parents and out!=root:
+                            raise RuntimeError('Unsicherer Archivpfad wurde blockiert.')
+                        if member.issym() or member.islnk():
+                            raise RuntimeError('Archive mit symbolischen/harten Links werden aus Sicherheitsgründen nicht entpackt.')
+                        if member.isdir():
+                            created_dirs.append(str(out))
+                        elif member.isfile():
+                            members.append(out)
+                    for out in members:
+                        before_sizes[str(out)]=self._local_tree_bytes(out)
                     t.extractall(destination,filter='data')
             elif name.endswith(('.rar','.7z')):
                 if name.endswith('.rar'):
-                    # Prefer unar/unrar for RAR: Debian's free 7zip build omits the proprietary RAR decoder.
                     tool=shutil.which('unar') or shutil.which('unrar') or shutil.which('7zz') or shutil.which('7z')
                 else:
                     tool=shutil.which('7zz') or shutil.which('7z') or shutil.which('unar')
-                if not tool:raise RuntimeError('Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.')
-                if Path(tool).name in ('7z','7zz'):cmd=[tool,'x','-y',f'-o{destination}',str(source)]
-                elif Path(tool).name=='unar':cmd=[tool,'-o',str(destination),str(source)]
-                else:cmd=[tool,'x','-o+',str(source),str(destination)]
+                if not tool:
+                    raise RuntimeError('Archivprogramm fehlt. Installiere unter Debian: sudo apt install 7zip unar unrar-free.')
+                if Path(tool).name in ('7z','7zz'):
+                    listing=subprocess.run([tool,'l','-slt',str(source)],capture_output=True,text=True)
+                    if listing.returncode:
+                        raise RuntimeError(listing.stderr or listing.stdout or 'Archiv kann nicht gelesen werden.')
+                    current={}
+                    for line in listing.stdout.splitlines()+['']:
+                        if not line.strip():
+                            rel=current.get('Path','')
+                            if rel and rel not in (str(source),):
+                                out=(destination/rel).resolve()
+                                if destination.resolve() not in out.parents and out!=destination.resolve():
+                                    raise RuntimeError('Unsicherer Archivpfad wurde blockiert.')
+                                if current.get('Folder')=='+':
+                                    created_dirs.append(str(out))
+                                else:
+                                    members.append(out)
+                                    try: before_sizes[str(out)]=self._local_tree_bytes(out)
+                                    except Exception: before_sizes[str(out)]=0
+                            current={}
+                        elif ' = ' in line:
+                            key,value=line.split(' = ',1); current[key]=value
+                    cmd=[tool,'x','-y',f'-o{destination}',str(source)]
+                elif Path(tool).name=='unar':
+                    cmd=[tool,'-o',str(destination),str(source)]
+                else:
+                    cmd=[tool,'x','-o+',str(source),str(destination)]
                 result=subprocess.run(cmd,capture_output=True,text=True)
-                if result.returncode:raise RuntimeError(result.stderr or result.stdout or 'Entpacken fehlgeschlagen.')
-            else:raise RuntimeError('Dieses Archivformat wird nicht unterstützt.')
+                if result.returncode:
+                    raise RuntimeError(result.stderr or result.stdout or 'Entpacken fehlgeschlagen.')
+            else:
+                raise RuntimeError('Dieses Archivformat wird nicht unterstützt.')
+
+            deltas={}
+            for out in members:
+                delta=self._local_tree_bytes(out)-before_sizes.get(str(out),0)
+                if delta:
+                    deltas[str(out)]=delta
+            if deltas or created_dirs:
+                self._apply_size_cache_deltas(deltas, created_paths=created_dirs)
             self.active.load(self.active.path)
             self.set_action_status('archive_extract')
             self.statusBar().showMessage(self.tr('extracted')+source.name)
-        except Exception as e:QMessageBox.warning(self,self.tr('extract_error'),str(e))
+        except Exception as e:
+            # A failed extraction may still have written some members. Reconcile
+            # only the paths discovered before extraction, never the whole cache.
+            deltas={}
+            for out in members:
+                delta=self._local_tree_bytes(out)-before_sizes.get(str(out),0)
+                if delta:
+                    deltas[str(out)]=delta
+            if deltas or created_dirs:
+                self._apply_size_cache_deltas(deltas, created_paths=created_dirs)
+            QMessageBox.warning(self,self.tr('extract_error'),str(e))
     def open_archive_member(self, archive, member):
         try:
             import tempfile
@@ -3390,6 +3929,8 @@ class Main(QMainWindow):
         if n:
             try:
                 p.remote.mkdir(posixpath.join(p.path,n)) if p.remote else Path(p.path,n).mkdir()
+                if not p.remote and not p.archive_file:
+                    self._apply_size_cache_deltas({}, created_paths=[str(Path(p.path, n))])
                 p.load(p.path)
                 self.set_action_status('create_folder', detail='Ordner erstellt' if self.language == 'de' else 'Folder created')
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
@@ -3403,6 +3944,8 @@ class Main(QMainWindow):
                     else:
                         import io;p.remote.client.storbinary('STOR '+path,io.BytesIO(b''))
                 else:Path(p.path,n).touch(exist_ok=False)
+                if not p.remote and not p.archive_file:
+                    self._apply_size_cache_deltas({}, created_paths=[str(Path(p.path, n))])
                 p.load(p.path)
                 self.set_action_status('create_file', detail='Datei erstellt' if self.language == 'de' else 'File created')
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
@@ -3418,8 +3961,11 @@ class Main(QMainWindow):
                 if self.target_exists_for_pane(p,new_target):
                     QMessageBox.warning(self,self.tr('target_exists'),self.tr('rename_exists').format(name=n))
                     return
-                if p.remote:p.remote.client.rename(p.target(r[0]),new_target)
-                else:Path(p.target(r[0])).rename(new_target)
+                old_target = p.target(r[0])
+                if p.remote:p.remote.client.rename(old_target,new_target)
+                else:Path(old_target).rename(new_target)
+                if not p.remote and not p.archive_file:
+                    self._apply_size_cache_deltas({}, renamed_paths={old_target: new_target})
                 p.load(p.path)
                 self.set_action_status('rename', files=1)
             except Exception as e:QMessageBox.warning(self,self.tr('generic_error'),str(e))
@@ -3521,9 +4067,12 @@ class Main(QMainWindow):
         if getattr(worker, 'deleted_count', 0):
             self.set_action_status('delete', getattr(worker, 'deleted_files', 0), 0)
         label.setText((self.tr('done') if ok else self.tr('error'))+name+((' – '+error) if error else ''))
-        if ok:
+        if getattr(worker, 'deleted_count', 0) and not pane.archive_file and not pane.remote:
+            self._apply_size_cache_delete_delta(getattr(worker, 'deleted_bytes_by_path', {}))
+        if ok or getattr(worker, 'deleted_count', 0):
             if pane.archive_file: pane.load_archive(pane.archive_file,pane.archive_inner,False)
             else: pane.load(pane.path)
+        if ok:
             self.statusBar().showMessage(self.tr('deleted')+name)
         else:self.statusBar().showMessage(self.tr('delete_error')+error)
         self.transfer_busy=False; QTimer.singleShot(0,self.start_next_transfer)
@@ -4262,6 +4811,14 @@ class Main(QMainWindow):
         # after each directory used to interrupt the visible selection and
         # made the queue's state difficult to follow.
         refresh_error = ''
+        cache_deltas = {}
+        cache_removed = []
+        for worker, _label in batch.entries:
+            for changed_path, delta in getattr(worker, 'cache_deltas', {}).items():
+                cache_deltas[changed_path] = cache_deltas.get(changed_path, 0) + int(delta)
+            cache_removed.extend(getattr(worker, 'cache_removed_paths', []))
+        if cache_deltas or cache_removed:
+            self._apply_size_cache_deltas(cache_deltas, removed_paths=cache_removed)
         try:
             if src.archive_file:
                 src.load_archive(src.archive_file,src.archive_inner,False)
@@ -4296,11 +4853,16 @@ class Main(QMainWindow):
         self.transfer_busy=True; self.current_transfer=self.transfer_queue.pop(0); self.thread_pool.start(self.current_transfer)
     def transfer_finished(self,name,ok,error,worker,label,src,dst):
         label.setText((self.tr('done') if ok else self.tr('error'))+name+((' – '+error) if error else ''))
-        if ok:
+        cache_deltas = getattr(worker, 'cache_deltas', {})
+        cache_removed = getattr(worker, 'cache_removed_paths', [])
+        if cache_deltas or cache_removed:
+            self._apply_size_cache_deltas(cache_deltas, removed_paths=cache_removed)
+        if ok or cache_deltas or cache_removed:
             if src.archive_file: src.load_archive(src.archive_file,src.archive_inner,False)
             else: src.load(src.path)
             if dst.archive_file: dst.load_archive(dst.archive_file,dst.archive_inner,False)
             else: dst.load(dst.path)
+        if ok:
             if not error:
                 self.set_action_status('move' if worker.move else 'copy',
                                        int(getattr(worker, 'object_count', 1) or 0), 0)
