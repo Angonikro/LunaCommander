@@ -2,7 +2,7 @@
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
-![LunaCommander](lunacommander1.png)
+![LunaCommander](lunacommander.png)
 
 [Github Seite](https://github.com/Angonikro/LunaCommander/)
 
