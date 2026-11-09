@@ -44,7 +44,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.6'
+    APP_VERSION = '0.7.7'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 
@@ -301,6 +301,31 @@ class Remote:
     def rmdir(self,path):
         if self.proto=='SFTP':self.client.rmdir(path)
         else:self.client.rmd(path)
+    def count_objects(self, path, is_dir=True):
+        """Count a remote entry and all descendants without following links."""
+        count = 1
+        if not is_dir:
+            return count
+        for name, is_child_dir, _size in self.list(path):
+            if name in ('.', '..'):
+                continue
+            child = posixpath.join(path.rstrip('/'), name)
+            count += self.count_objects(child, is_child_dir)
+        return count
+    def delete_tree(self, path, is_dir=True):
+        """Delete a remote tree bottom-up for FTP, FTPS and SFTP."""
+        if not is_dir:
+            if self.proto == 'SFTP':
+                self.client.remove(path)
+            else:
+                self.client.delete(path)
+            return
+        for name, is_child_dir, _size in self.list(path):
+            if name in ('.', '..'):
+                continue
+            child = posixpath.join(path.rstrip('/'), name)
+            self.delete_tree(child, is_child_dir)
+        self.rmdir(path)
     def close(self):
         try: self.client.close(); self.ssh.close() if self.proto=='SFTP' else self.client.quit()
         except Exception: pass
@@ -1113,8 +1138,7 @@ class DeleteWorker(QRunnable):
                 member='/'.join(x for x in (p.archive_inner,self.name) if x)
                 p.app.delete_archive_member(p.archive_file,member,self.is_dir)
             elif p.remote:
-                if self.is_dir: raise RuntimeError('Das rekursive Löschen entfernter Ordner wird derzeit nicht unterstützt.')
-                p.remote.client.remove(path) if p.remote.proto=='SFTP' else p.remote.client.delete(path)
+                p.remote.delete_tree(path, self.is_dir)
             elif self.is_dir: shutil.rmtree(path)
             else: Path(path).unlink()
             self.signals.progress.emit(100); self.signals.finished.emit(self.name,True,'')
@@ -1230,7 +1254,7 @@ class DeleteBatchWorker(QRunnable):
                     member='/'.join(x for x in (pane.archive_inner,name) if x)
                     file_count=self.count_archive_objects(pane.archive_file,member,is_dir)
                 elif pane.remote:
-                    file_count=0 if is_dir else 1
+                    file_count=pane.remote.count_objects(path, is_dir)
                 else:
                     file_count=self.count_local_files(path)
                     self.deleted_bytes_by_path[os.path.abspath(os.path.expanduser(str(path)))] = self.count_local_bytes(path)
@@ -1239,12 +1263,7 @@ class DeleteBatchWorker(QRunnable):
                     member='/'.join(x for x in (pane.archive_inner,name) if x)
                     pane.app.delete_archive_member(pane.archive_file,member,is_dir)
                 elif pane.remote:
-                    if is_dir:
-                        raise RuntimeError('Das rekursive Löschen entfernter Ordner wird derzeit nicht unterstützt.')
-                    if pane.remote.proto=='SFTP':
-                        pane.remote.client.remove(path)
-                    else:
-                        pane.remote.client.delete(path)
+                    pane.remote.delete_tree(path, is_dir)
                 elif is_dir:
                     shutil.rmtree(path)
                 else:
@@ -1292,7 +1311,22 @@ class TransferWorker(QRunnable):
             except (OSError, tarfile.TarError, zipfile.BadZipFile):
                 return 0
         if self.src.remote:
-            return 0
+            # Remote directories must be counted too; returning zero made
+            # successful FTP/FTPS/SFTP transfers leave the action status at
+            # 'Bereit' even though the queue showed the item as finished.
+            remote = self.src.remote
+            def count_remote(path, is_root=False):
+                total = 1 if is_root else 0
+                for child_name, child_is_dir, _child_size in remote.list(path):
+                    if child_name in ('.', '..'):
+                        continue
+                    total += 1
+                    if child_is_dir:
+                        total += count_remote(posixpath.join(path, child_name), False)
+                return total
+            if not self.is_dir:
+                return 1
+            return count_remote(self.source_path, True)
         count = 1  # the selected top-level directory itself
         for current, dirs, files in os.walk(self.source_path, followlinks=False):
             safe_dirs = []
@@ -1803,18 +1837,67 @@ class TransferWorker(QRunnable):
                     def cb(block):
                         f.write(block); self.report_bytes(len(block))
                     remote.client.retrbinary('RETR '+rpath,cb,blocksize=65536)
+    def _ftp_ensure_directory(self, path):
+        """Create a remote FTP directory tree using cwd/mkd, not absolute MKD paths."""
+        client=self.dst.remote.client
+        path=str(path or '.')
+        old=client.pwd()
+        try:
+            if path.startswith('/'):
+                client.cwd('/')
+            parts=[part for part in path.replace('\\','/').split('/') if part not in ('', '.')]
+            for part in parts:
+                if part=='..':
+                    client.cwd('..')
+                    continue
+                try:
+                    client.cwd(part)
+                except Exception:
+                    try: client.mkd(part)
+                    except Exception:
+                        # Another process may have created it between cwd and mkd.
+                        client.cwd(part)
+                    else:
+                        client.cwd(part)
+        finally:
+            try: client.cwd(old)
+            except Exception: pass
+
+    def _ftp_store_file(self, local_path, remote_path):
+        """Upload in the destination directory; many FTP servers reject absolute STOR paths."""
+        client=self.dst.remote.client
+        parent,name=posixpath.split(str(remote_path).rstrip('/'))
+        if not name:
+            raise RuntimeError('Ungültiger FTP-Zieldateiname: '+str(remote_path))
+        old=client.pwd()
+        try:
+            client.cwd(parent or '.')
+            with open(local_path,'rb') as stream:
+                client.storbinary('STOR '+name,stream,blocksize=65536,
+                                  callback=lambda block:self.report_bytes(len(block)))
+        finally:
+            try: client.cwd(old)
+            except Exception: pass
+
     def local_to_remote(self,lpath,rpath,is_dir):
         remote=self.dst.remote
         if is_dir:
-            try: remote.mkdir(rpath)
-            except Exception: remote.list(rpath)
-            for child in Path(lpath).iterdir(): self.local_to_remote(str(child),posixpath.join(rpath,child.name),child.is_dir() and not child.is_symlink())
+            if remote.proto=='SFTP':
+                try: remote.client.mkdir(rpath)
+                except Exception:
+                    remote.client.stat(rpath)
+            else:
+                self._ftp_ensure_directory(rpath)
+            for child in Path(lpath).iterdir():
+                self.local_to_remote(str(child),posixpath.join(rpath,child.name),child.is_dir() and not child.is_symlink())
         elif remote.proto=='SFTP':
-            size=Path(lpath).stat().st_size; remote.client.put(lpath,rpath,callback=lambda done,total:self.signals.progress.emit(min(99,int((self.done_bytes+done)*100/self.total_bytes))) if self.total_bytes else None); self.done_bytes+=size
+            size=Path(lpath).stat().st_size
+            remote.client.put(lpath,rpath,callback=lambda done,total:self.signals.progress.emit(min(99,int((self.done_bytes+done)*100/self.total_bytes))) if self.total_bytes else None)
+            self.done_bytes+=size
         else:
-            with open(lpath,'rb') as f:
-                def cb(block): self.report_bytes(len(block))
-                remote.client.storbinary('STOR '+rpath,f,blocksize=65536,callback=cb)
+            parent=posixpath.dirname(str(rpath))
+            self._ftp_ensure_directory(parent or '.')
+            self._ftp_store_file(lpath,rpath)
     def remove_remote(self,rpath,is_dir):
         remote=self.src.remote
         if is_dir:
@@ -4824,7 +4907,11 @@ class Main(QMainWindow):
             progress.setValue(100)
         label.setText((self.tr('done') if ok else self.tr('error'))+name+((' – '+error) if error else ''))
         if ok and not error:
-            batch._successful_files += int(getattr(worker, 'object_count', 1) or 0)
+            # Count every successfully transferred object, including the
+            # selected directory itself and all nested files/directories.
+            # count_source_objects() provides this recursive total for local,
+            # archive and remote sources.
+            batch._successful_files += int(getattr(worker, 'object_count', 1) or 1)
         else:
             batch._had_error=True
             self.statusBar().showMessage(self.tr('transfer_error')+error)
@@ -4866,6 +4953,8 @@ class Main(QMainWindow):
                     if self.language=='de' else f'{len(batch.entries)} items transferred successfully.'
                 )
             if getattr(batch, '_successful_files', 0) or getattr(batch, '_successful_folders', 0):
+                # Files and directories are combined into the familiar
+                # 'N Objekte kopiert' status, including recursive contents.
                 self.set_action_status('move' if batch.entries[0][0].move else 'copy',
                                        batch._successful_files, 0)
             self.transfer_busy=False

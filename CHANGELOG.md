@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.7 – FTP-Statusanzeige und Upload korrigiert - Rekursives Löschen auf FTP/FTPS/SFTP
+- Erfolgreiche FTP-, FTPS- und SFTP-Übertragungen werden in der Aktionsanzeige der Statusleiste gezählt; Dateien und Ordner zählen jeweils als ein Objekt (z. B. „5 Objekte kopiert“).
+- Korrektur: Erfolgreich kopierte oder verschobene Ordner werden in Batch-Übertragungen jetzt ebenfalls an den gemeinsamen Objektzähler der Statusleiste übergeben.
+- Remote-Verzeichnisse werden für die Übertragungszählung rekursiv erfasst, statt fälschlich null Objekte zu melden.
+- FTP- und FTPS-Uploads wechseln vor `STOR` in den Zielordner und übertragen mit dem reinen Dateinamen. Dadurch werden absolute Zielpfade vermieden, die manche FTP-Server nicht akzeptieren.
+- Ziel-Unterordner werden bei FTP/FTPS schrittweise angelegt; bestehende Ordner werden weiterverwendet.
+- SFTP-Uploads bleiben beim Paramiko-Uploadpfad; lokale Dateioperationen und der persistente Größen-Cache bleiben unverändert.
+- Entfernte Ordner können jetzt rekursiv gelöscht werden: Dateien werden zuerst entfernt, Unterordner anschließend von unten nach oben.
+- Die Funktion zählt den gesamten entfernten Verzeichnisbaum vor dem Löschen und verwendet dieselbe Objektzählung für die Statusmeldung.
+
 ## 0.7.6 – Symbolfarben
 - Die ursprünglichen Qt-Symbole für „Umbenennen“ und „Trennen“ bleiben erhalten.
 - „Umbenennen“ wird hell eingefärbt; „Trennen“ erhält eine gut sichtbare rote Farbe.
