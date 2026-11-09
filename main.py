@@ -31,19 +31,20 @@ def format_file_size(size, unit='auto'):
     if unit == 'b':
         return f'{size:,} B'
     if value >= 100:
+        # Integer formatting may legitimately end in zero (110, 1,000).
+        # Stripping those zeroes caused 110 KB to be displayed as 11 KB.
         text = f'{value:,.0f}'
     elif value >= 10:
-        text = f'{value:,.1f}'
+        text = f'{value:,.1f}'.rstrip('0').rstrip('.')
     else:
-        text = f'{value:,.2f}'
-    text = text.rstrip('0').rstrip('.')
+        text = f'{value:,.2f}'.rstrip('0').rstrip('.')
     return f'{text} {labels[unit]}'
 
 APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.7.3'
+    APP_VERSION = '0.7.4'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 def icon_category(filename, is_dir=False):

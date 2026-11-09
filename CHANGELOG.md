@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.4 – Korrektur der Dateigrößenanzeige
+- Fehler bei der Größenformatierung behoben: Bei ganzzahlig gerundeten Werten ab 100 KB/MB/GB/TB werden abschließende Nullen nicht mehr entfernt (z. B. 110 KB wird nicht mehr als 11 KB angezeigt).
+- Die Korrektur gilt einheitlich für Dateilisten, Eigenschaften-Dialoge und alle weiteren Anzeigen, die `format_file_size()` verwenden.
+
 ## 0.7.3 – Statusleiste und externe Laufwerke
 - Warteschlange zeigt zwei statt drei Fortschrittszeilen und benötigt dadurch weniger Höhe.
 - Statusleiste zeigt Datei-/Ordneranzahl und Gesamtgröße für beide Dateifenster sowie Markierung und freien Speicherplatz.
