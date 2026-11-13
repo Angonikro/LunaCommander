@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.9 – Korrektur der DEB-Programmzuordnung
+- Programmstarts laufen über eine gemeinsame Startfunktion mit verständlicher Fehlermeldung.
+- Programmaufrufe mit Argumenten werden unterstützt.
+
 ## 0.7.8 – Kopieren-Schaltfläche der oberen Leiste korrigiert
 - Die Kopieren-Schaltfläche in der oberen Symbolleiste verwendet jetzt dieselbe direkte Übertragungsfunktion wie F5.
 - Ausgewählte Dateien und Ordner werden in das jeweils andere Dateifenster kopiert, statt nur in die Zwischenablage übernommen zu werden.
@@ -602,3 +606,6 @@
 
 ## 0.6.79
 - Fixed file-list columns: Name now uses remaining pane width; Type and Size have fixed widths. Long filenames no longer shift the other columns.
+
+### 0.7.9 – Fehlerkorrektur
+- Behoben: Doppelklick auf Dateien mit konfiguriertem externem Programm verursachte einen `shlex`-UnboundLocalError. Der bereits global importierte `shlex`-Modulname wird jetzt ohne lokalen Import verwendet.

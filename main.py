@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """LunaCommander Qt6 edition."""
-import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfile, subprocess, mimetypes, io, sqlite3, time
+import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfile, subprocess, mimetypes, io, sqlite3, time, shlex
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
 from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
@@ -545,6 +545,13 @@ class Pane(QWidget):
         if event.type() in (QEvent.FocusIn,QEvent.MouseButtonPress):
             self.app.active=self
             if hasattr(self.app, 'update_status_stats'): self.app.update_status_stats()
+        # Handle right-click explicitly on the viewport. This keeps the file
+        # context menu reliable even when another event filter consumes the event.
+        if (obj is self.tree.viewport() and event.type()==QEvent.MouseButtonPress
+                and event.button()==Qt.RightButton):
+            self.app.active=self
+            self.context_menu(event.position().toPoint())
+            return True
         # Remember modifier state before QTreeWidget emits itemClicked.
         if event.type()==QEvent.MouseButtonPress and obj in (self.tree, self.tree.viewport(), self.path_edit):
             # Browser-style thumb buttons navigate the history of this pane only.
@@ -969,15 +976,24 @@ class Pane(QWidget):
         row=item.data(0,Qt.UserRole)
         if not row or row[1]:
             return
-        target=Path(self.target(row[0]))
-        if not os.path.isfile(program) or not os.access(program,os.X_OK):
-            QMessageBox.warning(self,self.app.tr('open_with'),self.app.tr('app_launch_error'))
-            return
-        if not QProcess.startDetached(program, [str(target)]):
-            QMessageBox.warning(self,self.app.tr('open_with'),self.app.tr('app_launch_error'))
-            return
-        if remember:
-            self.app.remember_open_with(target,program)
+        target=Path(self.target(row[0])).resolve()
+        try:
+            parts=shlex.split(str(program))
+            if not parts:
+                raise ValueError('Leerer Programmaufruf')
+            executable=shutil.which(parts[0]) or (parts[0] if os.path.isabs(parts[0]) else None)
+            if not executable or not os.path.isfile(executable) or not os.access(executable,os.X_OK):
+                raise FileNotFoundError(parts[0])
+            args=parts[1:]
+            # LunaPaket needs its explicit DEB-open mode.
+            if target.suffix.lower()=='.deb' and Path(executable).name=='lunapaket' and '--open-deb' not in args:
+                args.append('--open-deb')
+            self.app.start_external_application(target, program)
+            if remember:
+                self.app.remember_open_with(target, program)
+        except Exception as exc:
+            QMessageBox.warning(self,self.app.tr('open_with'),
+                self.app.tr('app_launch_error')+'\n'+str(exc))
 
     def back(self):
         if not self.history:
@@ -3303,6 +3319,26 @@ class Main(QMainWindow):
                 self.right.load(self.config['default_right'], remember=False)
             self.apply_language()
             self.setStyleSheet(self.stylesheet() if self.dark else 'QWidget{background:#edf3f8;color:#172b3d} QTreeWidget{background:white;color:#172b3d} QLineEdit{background:white;color:#172b3d}')
+    def start_external_application(self, target, program):
+        """Start the exact selected application for double-click and Open With."""
+        try:
+            parts=shlex.split(str(program))
+            if not parts:
+                raise RuntimeError('Leerer Programmaufruf')
+            executable=shutil.which(parts[0])
+            if not executable and Path(parts[0]).expanduser().is_file():
+                executable=str(Path(parts[0]).expanduser().resolve())
+            if not executable or not os.access(executable,os.X_OK):
+                raise FileNotFoundError('Programm nicht gefunden oder nicht ausführbar: '+parts[0])
+            args=parts[1:]
+            if Path(target).suffix.lower()=='.deb' and Path(executable).name=='lunapaket' and '--open-deb' not in args:
+                args.append('--open-deb')
+            subprocess.Popen([executable]+args+[str(Path(target).resolve())],
+                             start_new_session=True)
+        except Exception as exc:
+            QMessageBox.warning(self,self.tr('open_with'),
+                                self.tr('app_launch_error')+'\n'+str(program)+'\n'+str(exc))
+
     def open_with_external_program(self, target):
         """Open a file with a configured category program, otherwise the OS default."""
         name=target.name.lower()
@@ -3318,12 +3354,18 @@ class Main(QMainWindow):
             'ebook':('.epub','.mobi'), 'torrent':('.torrent',),
             'archive':('.zip','.rar','.7z','.tar','.gz','.tgz','.xz','.bz2','.tar.gz','.tar.xz','.tar.bz2')}
         category=next((k for k,values in groups.items() if ext in values),None)
+        # DEB files use the same remembered application as Favorites/Open With.
+        # LunaPaket is only the default when the user has not selected a handler.
+        if ext == '.deb':
+            remembered=self.config.get('open_with_apps',{}).get(ext,{})
+            program=(remembered.get('program') or 'lunapaket --open-deb').strip()
+            self.start_external_application(target, program)
+            return
         program=(self.config.get('external_programs',{}).get(category,'') or '').strip() if category else ''
         if program:
             # A configured handler must be used exactly; never fall back to a
             # different application. Accept executable paths (including paths
             # containing spaces), command names, arguments and .desktop files.
-            import shlex
             try:
                 configured=program.strip()
                 if Path(configured).is_file() and configured.lower().endswith('.desktop'):
@@ -3962,8 +4004,44 @@ class Main(QMainWindow):
     def remember_open_with(self, target, program):
         name=target.name.lower()
         ext=next((x for x in ('.tar.gz','.tar.xz','.tar.bz2') if name.endswith(x)),target.suffix.lower()) or '[no-extension]'
+        parts=shlex.split(str(program))
+        if not parts:
+            return
+        executable=shutil.which(parts[0]) or (parts[0] if os.path.isabs(parts[0]) else None)
+        if not executable:
+            return
+        # Keep arguments such as LunaPaket's --open-deb switch; otherwise
+        # double-click would launch the wrong mode or fall back to xdg-open.
+        stored=shlex.join([executable]+parts[1:])
         apps=self.config.setdefault('open_with_apps',{})
-        apps[ext]={'program':str(Path(program).resolve()),'name':Path(program).name}
+        entry=apps.get(ext,{})
+        # Migrate the old single-favorite format without discarding it.
+        if isinstance(entry,dict):
+            favorites=list(entry.get('favorites',[]))
+            legacy=entry.get('program')
+            if legacy:
+                favorites.append({'program':legacy,'name':entry.get('name') or Path(shlex.split(legacy)[0]).name})
+        elif isinstance(entry,list):
+            favorites=list(entry)
+        else:
+            favorites=[]
+        identity=os.path.realpath(executable)
+        updated=[]
+        for favorite in favorites:
+            if not isinstance(favorite,dict) or not favorite.get('program'):
+                continue
+            try:
+                favorite_parts=shlex.split(favorite['program'])
+                favorite_exe=shutil.which(favorite_parts[0]) or favorite_parts[0]
+                if os.path.realpath(favorite_exe)==identity and favorite_parts[1:]==parts[1:]:
+                    continue
+            except Exception:
+                continue
+            updated.append(favorite)
+        updated.append({'program':stored,'name':Path(executable).name})
+        # Keep the most recently chosen handler as the double-click default,
+        # while preserving every other favorite independently.
+        apps[ext]={'program':stored,'name':Path(executable).name,'favorites':updated}
         self.save_config()
 
     def open_with_suggestions(self, target):
@@ -3979,6 +4057,7 @@ class Main(QMainWindow):
             'office': ('.doc','.docx','.odt','.rtf','.xls','.xlsx','.ods','.ppt','.pptx','.odp'),
             'archive': ('.zip','.rar','.7z','.tar','.gz','.tgz','.xz','.bz2','.tar.gz','.tar.xz','.tar.bz2'),
             'ebook': ('.epub','.mobi'),
+            'package': ('.deb',),
         }
         candidates={
             'video': [('VLC','vlc'),('MPV','mpv')],
@@ -3989,18 +4068,43 @@ class Main(QMainWindow):
             'office': [('LibreOffice','libreoffice'),('OnlyOffice','onlyoffice-desktopeditors')],
             'archive': [('Engrampa','engrampa'),('File Roller','file-roller'),('Ark','ark'),('Xarchiver','xarchiver')],
             'ebook': [('Calibre','ebook-viewer'),('Foliate','foliate'),('Okular','okular')],
+            'package': [('LunaPaket','lunapaket --open-deb')],
         }
         kind=next((k for k,extensions in groups.items() if ext in extensions),None)
         result=[]; seen=set()
         remembered=self.config.get('open_with_apps',{}).get(ext,{})
-        if remembered:
-            program=remembered.get('program','')
-            if program and Path(program).is_file() and os.access(program,os.X_OK):
-                result.append((remembered.get('name') or Path(program).name,program,True)); seen.add(os.path.realpath(program))
+        if isinstance(remembered,dict):
+            favorites=list(remembered.get('favorites',[]))
+            # Include legacy/default favorite if it is not already in the list.
+            if remembered.get('program'):
+                favorites.append({'program':remembered['program'],'name':remembered.get('name','')})
+        elif isinstance(remembered,list):
+            favorites=list(remembered)
+        else:
+            favorites=[]
+        for favorite in favorites:
+            if not isinstance(favorite,dict) or not favorite.get('program'):
+                continue
+            try:
+                parts=shlex.split(favorite['program'])
+                if not parts:
+                    continue
+                executable=shutil.which(parts[0]) or (parts[0] if Path(parts[0]).is_file() else None)
+            except Exception:
+                parts=[]; executable=None
+            if executable and os.access(executable,os.X_OK):
+                identity=os.path.realpath(executable)
+                # Keep distinct commands even when they use the same binary
+                # with different arguments; avoid only exact duplicates.
+                command=shlex.join([executable]+parts[1:])
+                if command not in {item[1] for item in result}:
+                    result.append((favorite.get('name') or Path(executable).name,command,True))
+                seen.add(identity)
         for name,command in candidates.get(kind,[]):
-            program=shutil.which(command)
+            parts=shlex.split(command)
+            program=shutil.which(parts[0]) if parts else None
             if program and os.path.realpath(program) not in seen:
-                result.append((name,program,False)); seen.add(os.path.realpath(program))
+                result.append((name,shlex.join([program]+parts[1:]),False)); seen.add(os.path.realpath(program))
         return result
     def connect_remote(self,proto):
         d=QDialog(self);d.setWindowTitle(proto+' '+self.tr('connect').lower());f=QFormLayout(d);last=self.config.get('last_connection',{}); host=QLineEdit(last.get('host',''));port=QLineEdit(str(last.get('port',{'FTP':21,'FTPS':21,'SFTP':22}[proto])));user=QLineEdit(last.get('user',''));pw=QLineEdit(last.get('password',''));pw.setEchoMode(QLineEdit.Password)
