@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.8.0 Duplikatfinder (Erweiterung) Bug Fixes
+- Gesamtfensterbreite um ca. 8 mm vergrößert (Startbreite 1520 statt 1500 Qt-Pixel; Mindestbreite 1070 statt 1050), damit die Beschriftung der F2-Schaltfläche „Eigenschaften“ mehr Platz erhält.
+- Bestehende Funktionen, insbesondere Ausschneiden/Einfügen, bleiben unverändert.
+- Die Namensspalte im Duplikatfinder nutzt jetzt den verfügbaren Dialogplatz; das Fenster ist breiter und die Spalten für Größe, Typ und Status bleiben kompakt.
+- Neue Dateityp-Filterung: z. B. `*.pdf`, `*.jpg` oder `mp3`; mehrere Muster können mit Leerzeichen oder Semikolon getrennt werden. Ein leeres Feld durchsucht alle Dateitypen.
+- Die Trefferliste zeigt Dateiendung und weiterhin den Schutzstatus des Originals bzw. die Löschmarkierung getrennt an.
+- Neuer Duplikatfinder für lokale Ordner mit optionaler Unterordnersuche.
+- Verzeichnisse und Dateien werden im Hintergrund über `QThreadPool` durchsucht; identische Dateien werden erst nach Größenvergleich per SHA-256 bestätigt.
+- Treffer erscheinen gruppiert; pro Gruppe bleibt ein Original standardmäßig geschützt. Löschungen erfolgen ausschließlich nach manueller Auswahl und Sicherheitsabfrage.
+
 ## 0.7.9 – Korrektur der DEB-Programmzuordnung
 - Programmstarts laufen über eine gemeinsame Startfunktion mit verständlicher Fehlermeldung.
 - Programmaufrufe mit Argumenten werden unterstützt.
@@ -609,3 +619,9 @@
 
 ### 0.7.9 – Fehlerkorrektur
 - Behoben: Doppelklick auf Dateien mit konfiguriertem externem Programm verursachte einen `shlex`-UnboundLocalError. Der bereits global importierte `shlex`-Modulname wird jetzt ohne lokalen Import verwendet.
+
+## 0.8.0 – Zwischenablage und Aktualisierung
+
+- Fehler bei der Fertigmeldung von externen Ausschneiden-/Einfügen-Aufträgen behoben: Der Abschluss wird jetzt über ein Qt-Signal sicher in den GUI-Thread zurückgemeldet, statt einen Qt-Timer aus einem Thread ohne Event-Loop aufzurufen.
+- Zielordner wird nach Abschluss zuverlässig neu geladen.
+- Bei Verschiebeaktionen werden zusätzlich geöffnete Quellordner in beiden Dateifenstern aktualisiert.

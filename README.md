@@ -1,4 +1,4 @@
-# LunaCommander 0.7.9
+# LunaCommander 0.8.0
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
@@ -11,12 +11,10 @@ LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. 
 - Eigenschaften-Dialog für Dateien und Ordner mit Inhaltsübersicht, rekursiver Gesamtgröße und belegtem Speicherplatz; Analyse läuft im Hintergrund.
 - POSIX-Berechtigungen für Besitzer, Gruppe und Andere (Lesen/Schreiben/Ausführen) mit Oktalanzeige; Änderungen optional rekursiv auf Unterordner und Dateien anwenden.
 - Besitzer und Gruppe können bei vorhandenen Systemrechten ebenfalls geändert werden.
-
 - Komfortable Dateisuche im eigenen Dialog; die Suche läuft im Hintergrund, Treffer erscheinen laufend, mit Fortschrittsanzeige und Abbruchfunktion.
-
 - Komfortabler Suchdialog mit Pfadauswahl, Unterordnersuche, versteckten Dateien, Dateityp- und Größenfiltern sowie Ergebnisliste.
+- Duplikatfinder für lokale Ordner: Größen-Vorsortierung und SHA-256-Prüfung laufen im Hintergrund; identische Dateien werden gruppiert angezeigt. Ein Original pro Gruppe ist geschützt, Löschen erfolgt nur nach Auswahl und Bestätigung.
 - Die Archivfunktionen sind weiterhin über das Menü und die Kontextmenüs erreichbar; der separate Archiv-Button wurde aus der oberen Symbolleiste entfernt.
-
 - Zwei Dateifenster mit unabhängiger Navigation und eigener Zurück-/Vorwärts-Historie; unterstützt auch die seitlichen Maus-Back-/Forward-Tasten.
 - Mehrfachauswahl mit **STRG + Linksklick** und **SHIFT + Linksklick**.
 - Markierte lokale Dateien und Ordner lassen sich per gedrückter linker Maustaste aus dem Dateifenster in den Desktop oder andere Dateimanager ziehen; mehrere ausgewählte Einträge werden gemeinsam als Datei-URLs übergeben.
@@ -95,7 +93,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.7.9_GITHUB.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.8.0_GITHUB.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -106,7 +104,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.7.9_all.deb
+sudo apt install ./lunacommander_0.8.0_all.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -120,7 +118,7 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.7.9
+- Version: 0.8.0
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.
