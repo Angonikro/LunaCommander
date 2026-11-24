@@ -2,8 +2,8 @@
 """LunaCommander Qt6 edition."""
 import os, sys, json, shutil, stat, ftplib, posixpath, threading, zipfile, tarfile, subprocess, mimetypes, io, sqlite3, time, shlex
 from pathlib import Path
-from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl
-from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont
+from PySide6.QtCore import Qt, QTimer, QSize, QObject, Signal, QRunnable, QThreadPool, QEvent, QPoint, QProcess, QMimeData, QUrl, QStandardPaths
+from PySide6.QtGui import QAction, QKeySequence, QIcon, QCursor, QPixmap, QImage, QPainter, QColor, QPen, QFont, QDrag
 from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QSplitter,QLineEdit,QPushButton,QTreeWidget,QTreeWidgetItem,QMenu,QInputDialog,QMessageBox,QFileDialog,QLabel,QProgressBar,QToolBar,QToolButton,QSizePolicy,QDialog,QFormLayout,QComboBox,QDialogButtonBox,QCheckBox,QStyle,QProgressBar,QHBoxLayout,QVBoxLayout,QAbstractItemView,QTextBrowser,QPlainTextEdit,QTabWidget,QListWidget,QListWidgetItem,QSpinBox,QGroupBox,QGridLayout,QFormLayout,QScrollArea,QHeaderView)
 
 
@@ -44,7 +44,7 @@ APP_DIR = Path(__file__).resolve().parent
 try:
     APP_VERSION = (APP_DIR / 'VERSION').read_text(encoding='utf-8').strip()
 except OSError:
-    APP_VERSION = '0.8.0'
+    APP_VERSION = '0.8.1'
 ICON_SIZES = (24, 32, 40, 48, 64)
 
 
@@ -184,11 +184,11 @@ def filetype_icon(filename):
 
 
 TRANSLATIONS = {
-'de': {'open_with':'Öffnen mit','choose_application':'Andere Anwendung auswählen…','application_filter':'Programme','app_launch_error':'Die ausgewählte Anwendung konnte nicht gestartet werden.','rar_binary': 'RAR-Programm (rar)','rar_auto': 'Automatisch gefunden','rar_browse': 'RAR-Datei auswählen…','rar_missing': 'RAR-Programm nicht gefunden. Bitte in den Einstellungen den Pfad zu rar eintragen.','create_rar': 'RAR-Archiv erstellen','open':'Öffnen','back':'Zurück','up':'Eine Ebene höher','home':'Eigener Startordner','name':'Name','type':'Typ','size':'Größe','folder':'Ordner','file':'Datei','ready':'Bereit','queue':'Übertragungswarteschlange','new':'Neu','copy':'Kopieren','move':'Verschieben','delete':'Löschen','rename':'Umbenennen','properties':'Eigenschaften','refresh':'Aktualisieren','archive':'Archiv','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Trennen','search':'Suchen','settings':'Einstellungen','help':'Hilfe','menu':'Menü','view':'Anzeigen','edit':'Bearbeiten','new_folder':'Neuer Ordner','exit':'Beenden','file_menu':'Datei','connection':'Verbindung','view_menu':'Ansicht','theme':'Design wechseln','about':'Über LunaCommander','single':'Einfachklick zum Öffnen','double':'Doppelklick zum Öffnen','open_mode':'Dateien und Ordner öffnen','language':'Sprache','scheme':'Farbschema','dark':'Dunkel','light':'Hell','ok':'OK','cancel':'Abbrechen','connect':'Verbinden','server':'Server','port':'Port','user':'Benutzer','password':'Passwort','open_other':'In anderem Fenster öffnen','move_other':'In anderes Fenster verschieben','cut':'Ausschneiden','paste':'Einfügen','new_file':'Neue Datei','pack':'Packen','create_zip':'ZIP-Archiv erstellen','create_targz':'TAR.GZ-Archiv erstellen','create_tarxz':'TAR.XZ-Archiv erstellen','create_tarbz2':'TAR.BZ2-Archiv erstellen','create_7z':'7z-Archiv erstellen','remember_dirs':'Letzte Ordner beim Start wiederherstellen','default_left':'Standardordner links','default_right':'Standardordner rechts','browse':'Durchsuchen…','start_folders':'Startordner','show_hidden':'Versteckte Dateien und Ordner anzeigen','photo_preview':'Bild-Miniaturansichten in der Dateiliste anzeigen','no_photo_preview':'Kein Foto ausgewählt','watch_folders':'Ordner automatisch auf Änderungen überwachen','file_icon_size':'Datei-/Ordner-Icongröße','font_size':'Schriftgröße','sort':'Sortieren','sort_by':'Sortieren nach','sort_name':'Name','sort_date':'Datum','sort_size':'Größe','sort_type':'Typ','ascending':'Aufsteigend','descending':'Absteigend','left_stats':'Links','right_stats':'Rechts','files_stats':'Dateien','folders_stats':'Ordner','selected_stats':'Markiert','free_stats':'Frei','remote_stats':'Remote','duplicates':'Duplikate','duplicates_title':'Duplikatfinder','duplicates_folder':'Ordner durchsuchen','duplicates_recursive':'Unterordner einbeziehen','duplicates_start':'Suche starten','duplicates_running':'Suche läuft…','duplicates_stop':'Suche abbrechen','duplicates_groups':'Duplikatgruppen','duplicates_original':'Original (geschützt)','duplicates_mark':'Zum Löschen markieren','duplicates_delete':'Ausgewählte Duplikate löschen','duplicates_none':'Keine Duplikate gefunden.','duplicates_confirm':'Duplikate löschen?','duplicates_confirm_text':'Die markierten Dateien werden endgültig gelöscht.','duplicates_done':'Duplikatsuche abgeschlossen','duplicates_error':'Duplikatsuche fehlgeschlagen'},
-'en': {'open_with':'Open with','choose_application':'Choose another application…','application_filter':'Applications','app_launch_error':'The selected application could not be started.','rar_binary': 'RAR executable','rar_auto': 'Automatically detected','rar_browse': 'Select RAR executable…','rar_missing': 'RAR executable not found. Set the path to rar in Settings.','create_rar': 'Create RAR archive','open':'Open','back':'Back','up':'Up one level','home':'Pane start folder','name':'Name','type':'Type','size':'Size','folder':'Folder','file':'File','ready':'Ready','queue':'Transfer queue','new':'New','copy':'Copy','move':'Move','delete':'Delete','rename':'Rename','properties':'Properties','refresh':'Refresh','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnect','search':'Search','settings':'Settings','help':'Help','menu':'Menu','view':'View','edit':'Edit','new_folder':'New folder','exit':'Exit','file_menu':'File','connection':'Connection','view_menu':'View','theme':'Toggle theme','about':'About LunaCommander','single':'Single-click to open','double':'Double-click to open','open_mode':'Open files and folders','language':'Language','scheme':'Color scheme','dark':'Dark','light':'Light','ok':'OK','cancel':'Cancel','connect':'Connect','server':'Server','port':'Port','user':'User','password':'Password','open_other':'Open in other pane','move_other':'Move to other pane','cut':'Cut','paste':'Paste','new_file':'New file','pack':'Create archive','create_zip':'Create ZIP archive','create_targz':'Create TAR.GZ archive','create_tarxz':'Create TAR.XZ archive','create_tarbz2':'Create TAR.BZ2 archive','create_7z':'Create 7z archive','remember_dirs':'Restore last folders at startup','default_left':'Default folder (left)','default_right':'Default folder (right)','browse':'Browse…','start_folders':'Startup folders','show_hidden':'Show hidden files and folders','photo_preview':'Show image thumbnails in the file list','no_photo_preview':'No photo selected','watch_folders':'Automatically monitor folders for changes','file_icon_size':'File/folder icon size','font_size':'Font size','sort':'Sort','sort_by':'Sort by','sort_name':'Name','sort_date':'Date','sort_size':'Size','sort_type':'Type','ascending':'Ascending','descending':'Descending','left_stats':'Left','right_stats':'Right','files_stats':'files','folders_stats':'folders','selected_stats':'Selected','free_stats':'Free','remote_stats':'Remote','duplicates':'Duplicates','duplicates_title':'Duplicate finder','duplicates_folder':'Folder to scan','duplicates_recursive':'Include subfolders','duplicates_start':'Start scan','duplicates_running':'Scanning…','duplicates_stop':'Stop scan','duplicates_groups':'Duplicate groups','duplicates_original':'Original (protected)','duplicates_mark':'Mark for deletion','duplicates_delete':'Delete selected duplicates','duplicates_none':'No duplicates found.','duplicates_confirm':'Delete duplicates?','duplicates_confirm_text':'The selected files will be permanently deleted.','duplicates_done':'Duplicate scan complete','duplicates_error':'Duplicate scan failed'},
-'fr': {'open_with':'Ouvrir avec','choose_application':'Choisir une autre application…','application_filter':'Applications','app_launch_error':'Impossible de démarrer l’application sélectionnée.','rar_binary': 'Exécutable RAR','rar_auto': 'Détecté automatiquement','rar_browse': 'Choisir l’exécutable RAR…','rar_missing': 'Exécutable RAR introuvable. Indiquez son chemin dans les paramètres.','create_rar': 'Créer une archive RAR','open':'Ouvrir','back':'Retour','up':'Niveau supérieur','home':'Dossier de démarrage du panneau','name':'Nom','type':'Type','size':'Taille','folder':'Dossier','file':'Fichier','ready':'Prêt','queue':'File de transferts','new':'Nouveau','copy':'Copier','move':'Déplacer','delete':'Supprimer','rename':'Renommer','properties':'Propriétés','refresh':'Actualiser','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Déconnecter','search':'Rechercher','settings':'Paramètres','help':'Aide','menu':'Menu','view':'Afficher','edit':'Modifier','new_folder':'Nouveau dossier','exit':'Quitter','file_menu':'Fichier','connection':'Connexion','view_menu':'Affichage','theme':'Changer le thème','about':'À propos de LunaCommander','single':'Clic simple pour ouvrir','double':'Double-clic pour ouvrir','open_mode':'Ouvrir fichiers et dossiers','language':'Langue','scheme':'Thème de couleurs','dark':'Sombre','light':'Clair','ok':'OK','cancel':'Annuler','connect':'Connecter','server':'Serveur','port':'Port','user':'Utilisateur','password':'Mot de passe','open_other':'Ouvrir dans l’autre panneau','move_other':'Déplacer vers l’autre panneau','cut':'Couper','paste':'Coller','new_file':'Nouveau fichier','pack':'Compresser','create_zip':'Créer une archive ZIP','create_targz':'Créer une archive TAR.GZ','create_tarxz':'Créer une archive TAR.XZ','create_tarbz2':'Créer une archive TAR.BZ2','create_7z':'Créer une archive 7z','remember_dirs':'Restaurer les derniers dossiers au démarrage','default_left':'Dossier par défaut (gauche)','default_right':'Dossier par défaut (droite)','browse':'Parcourir…','start_folders':'Dossiers de démarrage','show_hidden':'Afficher les fichiers et dossiers cachés','photo_preview':'Afficher les miniatures dans la liste des fichiers','no_photo_preview':'Aucune photo sélectionnée','watch_folders':'Surveiller automatiquement les modifications des dossiers','file_icon_size':'Taille des icônes de fichiers/dossiers','font_size':'Taille de police','sort':'Trier','sort_by':'Trier par','sort_name':'Nom','sort_date':'Date','sort_size':'Taille','sort_type':'Type','ascending':'Croissant','descending':'Décroissant','left_stats':'Gauche','right_stats':'Droite','files_stats':'fichiers','folders_stats':'dossiers','selected_stats':'Sélectionnés','free_stats':'Libre','remote_stats':'Distant','duplicates':'Doublons','duplicates_title':'Recherche de doublons','duplicates_folder':'Dossier à analyser','duplicates_recursive':'Inclure les sous-dossiers','duplicates_start':'Lancer l’analyse','duplicates_running':'Analyse en cours…','duplicates_stop':'Arrêter','duplicates_groups':'Groupes de doublons','duplicates_original':'Original (protégé)','duplicates_mark':'Marquer pour suppression','duplicates_delete':'Supprimer les doublons sélectionnés','duplicates_none':'Aucun doublon trouvé.','duplicates_confirm':'Supprimer les doublons ?','duplicates_confirm_text':'Les fichiers sélectionnés seront définitivement supprimés.','duplicates_done':'Analyse des doublons terminée','duplicates_error':'Échec de l’analyse'},
-'it': {'open_with':'Apri con','choose_application':'Scegli un’altra applicazione…','application_filter':'Applicazioni','app_launch_error':'Impossibile avviare l’applicazione selezionata.','rar_binary': 'Eseguibile RAR','rar_auto': 'Rilevato automaticamente','rar_browse': 'Seleziona eseguibile RAR…','rar_missing': 'Eseguibile RAR non trovato. Imposta il percorso nelle impostazioni.','create_rar': 'Crea archivio RAR','open':'Apri','back':'Indietro','up':'Livello superiore','home':'Cartella iniziale del pannello','name':'Nome','type':'Tipo','size':'Dimensione','folder':'Cartella','file':'File','ready':'Pronto','queue':'Coda trasferimenti','new':'Nuovo','copy':'Copia','move':'Sposta','delete':'Elimina','rename':'Rinomina','properties':'Proprietà','refresh':'Aggiorna','archive':'Archivio','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnetti','search':'Cerca','settings':'Impostazioni','help':'Aiuto','menu':'Menu','view':'Visualizza','edit':'Modifica','new_folder':'Nuova cartella','exit':'Esci','file_menu':'File','connection':'Connessione','view_menu':'Visualizza','theme':'Cambia tema','about':'Informazioni su LunaCommander','single':'Clic singolo per aprire','double':'Doppio clic per aprire','open_mode':'Apri file e cartelle','language':'Lingua','scheme':'Schema colori','dark':'Scuro','light':'Chiaro','ok':'OK','cancel':'Annulla','connect':'Connetti','server':'Server','port':'Porta','user':'Utente','password':'Password','open_other':'Apri nell’altro pannello','move_other':'Sposta nell’altro pannello','cut':'Taglia','paste':'Incolla','new_file':'Nuovo file','pack':'Crea archivio','create_zip':'Crea archivio ZIP','create_targz':'Crea archivio TAR.GZ','create_tarxz':'Crea archivio TAR.XZ','create_tarbz2':'Crea archivio TAR.BZ2','create_7z':'Crea archivio 7z','remember_dirs':'Ripristina le ultime cartelle all’avvio','default_left':'Cartella predefinita (sinistra)','default_right':'Cartella predefinita (destra)','browse':'Sfoglia…','start_folders':'Cartelle iniziali','show_hidden':'Mostra file e cartelle nascosti','photo_preview':'Mostra miniature delle immagini nell’elenco file','no_photo_preview':'Nessuna foto selezionata','watch_folders':'Monitora automaticamente le modifiche alle cartelle','file_icon_size':'Dimensione icone file/cartelle','font_size':'Dimensione carattere','sort':'Ordina','sort_by':'Ordina per','sort_name':'Nome','sort_date':'Data','sort_size':'Dimensione','sort_type':'Tipo','ascending':'Crescente','descending':'Decrescente','left_stats':'Sinistra','right_stats':'Destra','files_stats':'file','folders_stats':'cartelle','selected_stats':'Selezionati','free_stats':'Libero','remote_stats':'Remoto','duplicates':'Duplicati','duplicates_title':'Ricerca duplicati','duplicates_folder':'Cartella da analizzare','duplicates_recursive':'Includi sottocartelle','duplicates_start':'Avvia scansione','duplicates_running':'Scansione in corso…','duplicates_stop':'Interrompi','duplicates_groups':'Gruppi di duplicati','duplicates_original':'Originale (protetto)','duplicates_mark':'Seleziona per eliminare','duplicates_delete':'Elimina duplicati selezionati','duplicates_none':'Nessun duplicato trovato.','duplicates_confirm':'Eliminare i duplicati?','duplicates_confirm_text':'I file selezionati saranno eliminati definitivamente.','duplicates_done':'Scansione duplicati completata','duplicates_error':'Scansione duplicati non riuscita'},
-'nl': {'open_with':'Openen met','choose_application':'Andere toepassing kiezen…','application_filter':'Toepassingen','app_launch_error':'De geselecteerde toepassing kon niet worden gestart.','rar_binary': 'RAR-programma','rar_auto': 'Automatisch gevonden','rar_browse': 'RAR-programma selecteren…','rar_missing': 'RAR-programma niet gevonden. Stel het pad in bij Instellingen.','create_rar': 'RAR-archief maken','open':'Openen','back':'Terug','up':'Een niveau omhoog','home':'Startmap van dit paneel','name':'Naam','type':'Type','size':'Grootte','folder':'Map','file':'Bestand','ready':'Gereed','queue':'Overdrachtwachtrij','new':'Nieuw','copy':'Kopiëren','move':'Verplaatsen','delete':'Verwijderen','rename':'Hernoemen','properties':'Eigenschappen','refresh':'Vernieuwen','archive':'Archief','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Verbinding verbreken','search':'Zoeken','settings':'Instellingen','help':'Help','menu':'Menu','view':'Weergeven','edit':'Bewerken','new_folder':'Nieuwe map','exit':'Afsluiten','file_menu':'Bestand','connection':'Verbinding','view_menu':'Beeld','theme':'Thema wisselen','about':'Over LunaCommander','single':'Enkele klik om te openen','double':'Dubbelklik om te openen','open_mode':'Bestanden en mappen openen','language':'Taal','scheme':'Kleurenschema','dark':'Donker','light':'Licht','ok':'OK','cancel':'Annuleren','connect':'Verbinden','server':'Server','port':'Poort','user':'Gebruiker','password':'Wachtwoord','open_other':'Openen in ander venster','move_other':'Verplaatsen naar ander venster','cut':'Knippen','paste':'Plakken','new_file':'Nieuw bestand','pack':'Archiveren','create_zip':'ZIP-archief maken','create_targz':'TAR.GZ-archief maken','create_tarxz':'TAR.XZ-archief maken','create_tarbz2':'TAR.BZ2-archief maken','create_7z':'7z-archief maken','remember_dirs':'Vorige mappen herstellen bij opstarten','default_left':'Standaardmap (links)','default_right':'Standaardmap (rechts)','browse':'Bladeren…','start_folders':'Startmappen','show_hidden':'Verborgen bestanden en mappen tonen','photo_preview':'Afbeeldingsminiaturen in de bestandslijst tonen','no_photo_preview':'Geen foto geselecteerd','watch_folders':'Mappen automatisch op wijzigingen controleren','file_icon_size':'Bestands-/map-pictogramgrootte','font_size':'Lettergrootte','sort':'Sorteren','sort_by':'Sorteren op','sort_name':'Naam','sort_date':'Datum','sort_size':'Grootte','sort_type':'Type','ascending':'Oplopend','descending':'Aflopend','left_stats':'Links','right_stats':'Rechts','files_stats':'bestanden','folders_stats':'mappen','selected_stats':'Geselecteerd','free_stats':'Vrij','remote_stats':'Extern','duplicates':'Duplicaten','duplicates_title':'Duplicatenzoeker','duplicates_folder':'Te doorzoeken map','duplicates_recursive':'Submappen meenemen','duplicates_start':'Scan starten','duplicates_running':'Bezig met scannen…','duplicates_stop':'Stoppen','duplicates_groups':'Duplicaatgroepen','duplicates_original':'Origineel (beschermd)','duplicates_mark':'Markeren voor verwijderen','duplicates_delete':'Geselecteerde duplicaten verwijderen','duplicates_none':'Geen duplicaten gevonden.','duplicates_confirm':'Duplicaten verwijderen?','duplicates_confirm_text':'De geselecteerde bestanden worden definitief verwijderd.','duplicates_done':'Duplicatenscan voltooid','duplicates_error':'Duplicatenscan mislukt'},
+'de': {'drop_title':'Dateien ablegen','drop_question':'Wie sollen die Elemente nach „{destination}“ übertragen werden?','open_with':'Öffnen mit','choose_application':'Andere Anwendung auswählen…','application_filter':'Programme','app_launch_error':'Die ausgewählte Anwendung konnte nicht gestartet werden.','rar_binary': 'RAR-Programm (rar)','rar_auto': 'Automatisch gefunden','rar_browse': 'RAR-Datei auswählen…','rar_missing': 'RAR-Programm nicht gefunden. Bitte in den Einstellungen den Pfad zu rar eintragen.','create_rar': 'RAR-Archiv erstellen','open':'Öffnen','back':'Zurück','up':'Eine Ebene höher','home':'Eigener Startordner','name':'Name','type':'Typ','size':'Größe','folder':'Ordner','file':'Datei','ready':'Bereit','queue':'Übertragungswarteschlange','new':'Neu','copy':'Kopieren','move':'Verschieben','delete':'Löschen','rename':'Umbenennen','properties':'Eigenschaften','refresh':'Aktualisieren','archive':'Archiv','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Trennen','search':'Suchen','settings':'Einstellungen','help':'Hilfe','menu':'Menü','view':'Anzeigen','edit':'Bearbeiten','new_folder':'Neuer Ordner','exit':'Beenden','file_menu':'Datei','connection':'Verbindung','view_menu':'Ansicht','theme':'Design wechseln','about':'Über LunaCommander','single':'Einfachklick zum Öffnen','double':'Doppelklick zum Öffnen','open_mode':'Dateien und Ordner öffnen','language':'Sprache','scheme':'Farbschema','dark':'Dunkel','light':'Hell','ok':'OK','cancel':'Abbrechen','connect':'Verbinden','server':'Server','port':'Port','user':'Benutzer','password':'Passwort','open_other':'In anderem Fenster öffnen','move_other':'In anderes Fenster verschieben','cut':'Ausschneiden','paste':'Einfügen','new_file':'Neue Datei','pack':'Packen','create_zip':'ZIP-Archiv erstellen','create_targz':'TAR.GZ-Archiv erstellen','create_tarxz':'TAR.XZ-Archiv erstellen','create_tarbz2':'TAR.BZ2-Archiv erstellen','create_7z':'7z-Archiv erstellen','remember_dirs':'Letzte Ordner beim Start wiederherstellen','default_left':'Standardordner links','default_right':'Standardordner rechts','browse':'Durchsuchen…','start_folders':'Startordner','show_hidden':'Versteckte Dateien und Ordner anzeigen','photo_preview':'Bild-Miniaturansichten in der Dateiliste anzeigen','no_photo_preview':'Kein Foto ausgewählt','watch_folders':'Ordner automatisch auf Änderungen überwachen','file_icon_size':'Datei-/Ordner-Icongröße','font_size':'Schriftgröße','sort':'Sortieren','sort_by':'Sortieren nach','sort_name':'Name','sort_date':'Datum','sort_size':'Größe','sort_type':'Typ','ascending':'Aufsteigend','descending':'Absteigend','left_stats':'Links','right_stats':'Rechts','files_stats':'Dateien','folders_stats':'Ordner','selected_stats':'Markiert','free_stats':'Frei','remote_stats':'Remote','duplicates':'Duplikate','duplicates_title':'Duplikatfinder','duplicates_folder':'Ordner durchsuchen','duplicates_recursive':'Unterordner einbeziehen','duplicates_start':'Suche starten','duplicates_running':'Suche läuft…','duplicates_stop':'Suche abbrechen','duplicates_groups':'Duplikatgruppen','duplicates_original':'Original (geschützt)','duplicates_mark':'Zum Löschen markieren','duplicates_delete':'Ausgewählte Duplikate löschen','duplicates_none':'Keine Duplikate gefunden.','duplicates_confirm':'Duplikate löschen?','duplicates_confirm_text':'Die markierten Dateien werden endgültig gelöscht.','duplicates_done':'Duplikatsuche abgeschlossen','duplicates_error':'Duplikatsuche fehlgeschlagen'},
+'en': {'drop_title':'Drop files','drop_question':'How should the items be transferred to “{destination}”?','open_with':'Open with','choose_application':'Choose another application…','application_filter':'Applications','app_launch_error':'The selected application could not be started.','rar_binary': 'RAR executable','rar_auto': 'Automatically detected','rar_browse': 'Select RAR executable…','rar_missing': 'RAR executable not found. Set the path to rar in Settings.','create_rar': 'Create RAR archive','open':'Open','back':'Back','up':'Up one level','home':'Pane start folder','name':'Name','type':'Type','size':'Size','folder':'Folder','file':'File','ready':'Ready','queue':'Transfer queue','new':'New','copy':'Copy','move':'Move','delete':'Delete','rename':'Rename','properties':'Properties','refresh':'Refresh','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnect','search':'Search','settings':'Settings','help':'Help','menu':'Menu','view':'View','edit':'Edit','new_folder':'New folder','exit':'Exit','file_menu':'File','connection':'Connection','view_menu':'View','theme':'Toggle theme','about':'About LunaCommander','single':'Single-click to open','double':'Double-click to open','open_mode':'Open files and folders','language':'Language','scheme':'Color scheme','dark':'Dark','light':'Light','ok':'OK','cancel':'Cancel','connect':'Connect','server':'Server','port':'Port','user':'User','password':'Password','open_other':'Open in other pane','move_other':'Move to other pane','cut':'Cut','paste':'Paste','new_file':'New file','pack':'Create archive','create_zip':'Create ZIP archive','create_targz':'Create TAR.GZ archive','create_tarxz':'Create TAR.XZ archive','create_tarbz2':'Create TAR.BZ2 archive','create_7z':'Create 7z archive','remember_dirs':'Restore last folders at startup','default_left':'Default folder (left)','default_right':'Default folder (right)','browse':'Browse…','start_folders':'Startup folders','show_hidden':'Show hidden files and folders','photo_preview':'Show image thumbnails in the file list','no_photo_preview':'No photo selected','watch_folders':'Automatically monitor folders for changes','file_icon_size':'File/folder icon size','font_size':'Font size','sort':'Sort','sort_by':'Sort by','sort_name':'Name','sort_date':'Date','sort_size':'Size','sort_type':'Type','ascending':'Ascending','descending':'Descending','left_stats':'Left','right_stats':'Right','files_stats':'files','folders_stats':'folders','selected_stats':'Selected','free_stats':'Free','remote_stats':'Remote','duplicates':'Duplicates','duplicates_title':'Duplicate finder','duplicates_folder':'Folder to scan','duplicates_recursive':'Include subfolders','duplicates_start':'Start scan','duplicates_running':'Scanning…','duplicates_stop':'Stop scan','duplicates_groups':'Duplicate groups','duplicates_original':'Original (protected)','duplicates_mark':'Mark for deletion','duplicates_delete':'Delete selected duplicates','duplicates_none':'No duplicates found.','duplicates_confirm':'Delete duplicates?','duplicates_confirm_text':'The selected files will be permanently deleted.','duplicates_done':'Duplicate scan complete','duplicates_error':'Duplicate scan failed'},
+'fr': {'drop_title':'Déposer les fichiers','drop_question':'Comment transférer les éléments vers « {destination} » ?','open_with':'Ouvrir avec','choose_application':'Choisir une autre application…','application_filter':'Applications','app_launch_error':'Impossible de démarrer l’application sélectionnée.','rar_binary': 'Exécutable RAR','rar_auto': 'Détecté automatiquement','rar_browse': 'Choisir l’exécutable RAR…','rar_missing': 'Exécutable RAR introuvable. Indiquez son chemin dans les paramètres.','create_rar': 'Créer une archive RAR','open':'Ouvrir','back':'Retour','up':'Niveau supérieur','home':'Dossier de démarrage du panneau','name':'Nom','type':'Type','size':'Taille','folder':'Dossier','file':'Fichier','ready':'Prêt','queue':'File de transferts','new':'Nouveau','copy':'Copier','move':'Déplacer','delete':'Supprimer','rename':'Renommer','properties':'Propriétés','refresh':'Actualiser','archive':'Archive','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Déconnecter','search':'Rechercher','settings':'Paramètres','help':'Aide','menu':'Menu','view':'Afficher','edit':'Modifier','new_folder':'Nouveau dossier','exit':'Quitter','file_menu':'Fichier','connection':'Connexion','view_menu':'Affichage','theme':'Changer le thème','about':'À propos de LunaCommander','single':'Clic simple pour ouvrir','double':'Double-clic pour ouvrir','open_mode':'Ouvrir fichiers et dossiers','language':'Langue','scheme':'Thème de couleurs','dark':'Sombre','light':'Clair','ok':'OK','cancel':'Annuler','connect':'Connecter','server':'Serveur','port':'Port','user':'Utilisateur','password':'Mot de passe','open_other':'Ouvrir dans l’autre panneau','move_other':'Déplacer vers l’autre panneau','cut':'Couper','paste':'Coller','new_file':'Nouveau fichier','pack':'Compresser','create_zip':'Créer une archive ZIP','create_targz':'Créer une archive TAR.GZ','create_tarxz':'Créer une archive TAR.XZ','create_tarbz2':'Créer une archive TAR.BZ2','create_7z':'Créer une archive 7z','remember_dirs':'Restaurer les derniers dossiers au démarrage','default_left':'Dossier par défaut (gauche)','default_right':'Dossier par défaut (droite)','browse':'Parcourir…','start_folders':'Dossiers de démarrage','show_hidden':'Afficher les fichiers et dossiers cachés','photo_preview':'Afficher les miniatures dans la liste des fichiers','no_photo_preview':'Aucune photo sélectionnée','watch_folders':'Surveiller automatiquement les modifications des dossiers','file_icon_size':'Taille des icônes de fichiers/dossiers','font_size':'Taille de police','sort':'Trier','sort_by':'Trier par','sort_name':'Nom','sort_date':'Date','sort_size':'Taille','sort_type':'Type','ascending':'Croissant','descending':'Décroissant','left_stats':'Gauche','right_stats':'Droite','files_stats':'fichiers','folders_stats':'dossiers','selected_stats':'Sélectionnés','free_stats':'Libre','remote_stats':'Distant','duplicates':'Doublons','duplicates_title':'Recherche de doublons','duplicates_folder':'Dossier à analyser','duplicates_recursive':'Inclure les sous-dossiers','duplicates_start':'Lancer l’analyse','duplicates_running':'Analyse en cours…','duplicates_stop':'Arrêter','duplicates_groups':'Groupes de doublons','duplicates_original':'Original (protégé)','duplicates_mark':'Marquer pour suppression','duplicates_delete':'Supprimer les doublons sélectionnés','duplicates_none':'Aucun doublon trouvé.','duplicates_confirm':'Supprimer les doublons ?','duplicates_confirm_text':'Les fichiers sélectionnés seront définitivement supprimés.','duplicates_done':'Analyse des doublons terminée','duplicates_error':'Échec de l’analyse'},
+'it': {'drop_title':'Rilascia file','drop_question':'Come trasferire gli elementi in “{destination}”?','open_with':'Apri con','choose_application':'Scegli un’altra applicazione…','application_filter':'Applicazioni','app_launch_error':'Impossibile avviare l’applicazione selezionata.','rar_binary': 'Eseguibile RAR','rar_auto': 'Rilevato automaticamente','rar_browse': 'Seleziona eseguibile RAR…','rar_missing': 'Eseguibile RAR non trovato. Imposta il percorso nelle impostazioni.','create_rar': 'Crea archivio RAR','open':'Apri','back':'Indietro','up':'Livello superiore','home':'Cartella iniziale del pannello','name':'Nome','type':'Tipo','size':'Dimensione','folder':'Cartella','file':'File','ready':'Pronto','queue':'Coda trasferimenti','new':'Nuovo','copy':'Copia','move':'Sposta','delete':'Elimina','rename':'Rinomina','properties':'Proprietà','refresh':'Aggiorna','archive':'Archivio','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Disconnetti','search':'Cerca','settings':'Impostazioni','help':'Aiuto','menu':'Menu','view':'Visualizza','edit':'Modifica','new_folder':'Nuova cartella','exit':'Esci','file_menu':'File','connection':'Connessione','view_menu':'Visualizza','theme':'Cambia tema','about':'Informazioni su LunaCommander','single':'Clic singolo per aprire','double':'Doppio clic per aprire','open_mode':'Apri file e cartelle','language':'Lingua','scheme':'Schema colori','dark':'Scuro','light':'Chiaro','ok':'OK','cancel':'Annulla','connect':'Connetti','server':'Server','port':'Porta','user':'Utente','password':'Password','open_other':'Apri nell’altro pannello','move_other':'Sposta nell’altro pannello','cut':'Taglia','paste':'Incolla','new_file':'Nuovo file','pack':'Crea archivio','create_zip':'Crea archivio ZIP','create_targz':'Crea archivio TAR.GZ','create_tarxz':'Crea archivio TAR.XZ','create_tarbz2':'Crea archivio TAR.BZ2','create_7z':'Crea archivio 7z','remember_dirs':'Ripristina le ultime cartelle all’avvio','default_left':'Cartella predefinita (sinistra)','default_right':'Cartella predefinita (destra)','browse':'Sfoglia…','start_folders':'Cartelle iniziali','show_hidden':'Mostra file e cartelle nascosti','photo_preview':'Mostra miniature delle immagini nell’elenco file','no_photo_preview':'Nessuna foto selezionata','watch_folders':'Monitora automaticamente le modifiche alle cartelle','file_icon_size':'Dimensione icone file/cartelle','font_size':'Dimensione carattere','sort':'Ordina','sort_by':'Ordina per','sort_name':'Nome','sort_date':'Data','sort_size':'Dimensione','sort_type':'Tipo','ascending':'Crescente','descending':'Decrescente','left_stats':'Sinistra','right_stats':'Destra','files_stats':'file','folders_stats':'cartelle','selected_stats':'Selezionati','free_stats':'Libero','remote_stats':'Remoto','duplicates':'Duplicati','duplicates_title':'Ricerca duplicati','duplicates_folder':'Cartella da analizzare','duplicates_recursive':'Includi sottocartelle','duplicates_start':'Avvia scansione','duplicates_running':'Scansione in corso…','duplicates_stop':'Interrompi','duplicates_groups':'Gruppi di duplicati','duplicates_original':'Originale (protetto)','duplicates_mark':'Seleziona per eliminare','duplicates_delete':'Elimina duplicati selezionati','duplicates_none':'Nessun duplicato trovato.','duplicates_confirm':'Eliminare i duplicati?','duplicates_confirm_text':'I file selezionati saranno eliminati definitivamente.','duplicates_done':'Scansione duplicati completata','duplicates_error':'Scansione duplicati non riuscita'},
+'nl': {'drop_title':'Bestanden neerzetten','drop_question':'Hoe moeten de items naar “{destination}” worden overgezet?','open_with':'Openen met','choose_application':'Andere toepassing kiezen…','application_filter':'Toepassingen','app_launch_error':'De geselecteerde toepassing kon niet worden gestart.','rar_binary': 'RAR-programma','rar_auto': 'Automatisch gevonden','rar_browse': 'RAR-programma selecteren…','rar_missing': 'RAR-programma niet gevonden. Stel het pad in bij Instellingen.','create_rar': 'RAR-archief maken','open':'Openen','back':'Terug','up':'Een niveau omhoog','home':'Startmap van dit paneel','name':'Naam','type':'Type','size':'Grootte','folder':'Map','file':'Bestand','ready':'Gereed','queue':'Overdrachtwachtrij','new':'Nieuw','copy':'Kopiëren','move':'Verplaatsen','delete':'Verwijderen','rename':'Hernoemen','properties':'Eigenschappen','refresh':'Vernieuwen','archive':'Archief','ftp':'FTP','sftp':'SFTP','ftps':'FTPS','disconnect':'Verbinding verbreken','search':'Zoeken','settings':'Instellingen','help':'Help','menu':'Menu','view':'Weergeven','edit':'Bewerken','new_folder':'Nieuwe map','exit':'Afsluiten','file_menu':'Bestand','connection':'Verbinding','view_menu':'Beeld','theme':'Thema wisselen','about':'Over LunaCommander','single':'Enkele klik om te openen','double':'Dubbelklik om te openen','open_mode':'Bestanden en mappen openen','language':'Taal','scheme':'Kleurenschema','dark':'Donker','light':'Licht','ok':'OK','cancel':'Annuleren','connect':'Verbinden','server':'Server','port':'Poort','user':'Gebruiker','password':'Wachtwoord','open_other':'Openen in ander venster','move_other':'Verplaatsen naar ander venster','cut':'Knippen','paste':'Plakken','new_file':'Nieuw bestand','pack':'Archiveren','create_zip':'ZIP-archief maken','create_targz':'TAR.GZ-archief maken','create_tarxz':'TAR.XZ-archief maken','create_tarbz2':'TAR.BZ2-archief maken','create_7z':'7z-archief maken','remember_dirs':'Vorige mappen herstellen bij opstarten','default_left':'Standaardmap (links)','default_right':'Standaardmap (rechts)','browse':'Bladeren…','start_folders':'Startmappen','show_hidden':'Verborgen bestanden en mappen tonen','photo_preview':'Afbeeldingsminiaturen in de bestandslijst tonen','no_photo_preview':'Geen foto geselecteerd','watch_folders':'Mappen automatisch op wijzigingen controleren','file_icon_size':'Bestands-/map-pictogramgrootte','font_size':'Lettergrootte','sort':'Sorteren','sort_by':'Sorteren op','sort_name':'Naam','sort_date':'Datum','sort_size':'Grootte','sort_type':'Type','ascending':'Oplopend','descending':'Aflopend','left_stats':'Links','right_stats':'Rechts','files_stats':'bestanden','folders_stats':'mappen','selected_stats':'Geselecteerd','free_stats':'Vrij','remote_stats':'Extern','duplicates':'Duplicaten','duplicates_title':'Duplicatenzoeker','duplicates_folder':'Te doorzoeken map','duplicates_recursive':'Submappen meenemen','duplicates_start':'Scan starten','duplicates_running':'Bezig met scannen…','duplicates_stop':'Stoppen','duplicates_groups':'Duplicaatgroepen','duplicates_original':'Origineel (beschermd)','duplicates_mark':'Markeren voor verwijderen','duplicates_delete':'Geselecteerde duplicaten verwijderen','duplicates_none':'Geen duplicaten gevonden.','duplicates_confirm':'Duplicaten verwijderen?','duplicates_confirm_text':'De geselecteerde bestanden worden definitief verwijderd.','duplicates_done':'Duplicatenscan voltooid','duplicates_error':'Duplicatenscan mislukt'},
 }
 
 
@@ -391,6 +391,101 @@ class FileTreeWidget(QTreeWidget):
         self.pane = pane
         self.setAcceptDrops(True)
 
+    def supportedDropActions(self):
+        return Qt.CopyAction | Qt.MoveAction
+
+    def startDrag(self, supported_actions):
+        """Drag the complete selection; ask for the action after a Caja desktop drop."""
+        if self.pane is None or self.pane.remote or self.pane.archive_file:
+            return
+        items = self.selectedItems()
+        if not items:
+            return
+        mime = self.mimeData(items)
+        if not mime.hasUrls():
+            return
+
+        paths = [Path(url.toLocalFile()).resolve() for url in mime.urls() if url.isLocalFile()]
+        desktop = self._desktop_directory()
+        before = set()
+        if desktop is not None:
+            try:
+                before = {entry.name for entry in desktop.iterdir()}
+            except OSError:
+                desktop = None
+
+        drag = QDrag(self)
+        drag.setMimeData(mime)
+        # Keep the originals until the user chooses what to do after dropping
+        # onto Caja's desktop. Caja receives ordinary file URLs via XDND.
+        result = drag.exec(Qt.CopyAction | Qt.MoveAction, Qt.CopyAction)
+        if result == Qt.IgnoreAction or desktop is None or drag.target() is not None:
+            return
+
+        # Caja writes desktop drops into the XDG Desktop directory. Only exact
+        # names that did not exist before this drag are considered our payload.
+        targets = []
+        for source in paths:
+            target = desktop / source.name
+            try:
+                if source.exists() and source.name not in before and target.exists():
+                    targets.append((source, target))
+            except OSError:
+                continue
+        if not paths or len(targets) != len(paths):
+            return
+
+        operation = self.pane.app.ask_drop_action(str(desktop))
+        if operation == 'copy':
+            return
+        # For Move, remove the originals only after confirmation. For Cancel,
+        # remove only the newly-created desktop copies, leaving the sources intact.
+        self._finish_desktop_drop(targets, remove_sources=(operation == 'move'))
+
+    @staticmethod
+    def _desktop_directory():
+        """Resolve MATE/Caja's XDG Desktop directory without assuming ~/Desktop."""
+        try:
+            value = subprocess.run(['xdg-user-dir', 'DESKTOP'], capture_output=True,
+                                   text=True, timeout=2, check=False).stdout.strip()
+            if value:
+                path = Path(value).expanduser()
+                if path.is_dir():
+                    return path.resolve()
+        except (OSError, subprocess.SubprocessError):
+            pass
+        value = QStandardPaths.writableLocation(QStandardPaths.DesktopLocation)
+        path = Path(value).expanduser() if value else Path.home() / 'Desktop'
+        return path.resolve() if path.is_dir() else None
+
+    def _finish_desktop_drop(self, pairs, remove_sources):
+        """Finalize a confirmed Caja desktop drop off the GUI thread."""
+        bridge = ImportSignals(self)
+        def finished(result):
+            errors, removed = result
+            if removed:
+                self.pane.load(self.pane.path, remember=False)
+            if errors:
+                self.pane.app.statusBar().showMessage('; '.join(errors))
+            bridge.deleteLater()
+        bridge.finished.connect(finished)
+
+        def work():
+            errors, removed = [], []
+            for source, target in pairs:
+                path = source if remove_sources else target
+                try:
+                    if path.is_symlink() or path.is_file():
+                        path.unlink()
+                    elif path.is_dir():
+                        shutil.rmtree(path)
+                    if remove_sources:
+                        removed.append(str(source))
+                except Exception as exc:
+                    errors.append(f'{path.name}: {exc}')
+            bridge.finished.emit((errors, removed))
+        threading.Thread(target=work, daemon=True).start()
+
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
             event.acceptProposedAction()
@@ -402,30 +497,54 @@ class FileTreeWidget(QTreeWidget):
         else: event.ignore()
 
     def dropEvent(self, event):
-        if self.pane is not None and event.mimeData().hasUrls():
-            paths = [u.toLocalFile() for u in event.mimeData().urls() if u.isLocalFile()]
-            mime = event.mimeData()
-            internal = None
-            if mime.hasFormat('application/x-lunacommander-internal'):
-                try:
-                    internal = json.loads(bytes(mime.data('application/x-lunacommander-internal')).decode('utf-8'))
-                except (ValueError, UnicodeDecodeError, TypeError):
-                    internal = None
-            if internal and internal.get('side') in ('left', 'right'):
-                source_pane = getattr(self.pane.app, internal['side'], None)
-                if source_pane is not None and source_pane is not self.pane:
-                    self.pane.app.copy_transfer(
-                        False, source_pane=source_pane,
-                        destination_pane=self.pane, source_paths=paths)
-                else:
-                    self.pane.import_urls(paths)
-            else:
-                # Desktop/Caja and other external file managers keep their
-                # established import path; only pane-to-pane drops use our queue.
-                self.pane.import_urls(paths)
-            event.acceptProposedAction()
-        else:
+        if self.pane is None or not event.mimeData().hasUrls():
             event.ignore()
+            return
+        paths = [u.toLocalFile() for u in event.mimeData().urls() if u.isLocalFile()]
+        if not paths:
+            event.ignore()
+            return
+
+        # A drop on a folder targets that folder; an empty area targets the
+        # directory currently displayed in this pane. The question is shown
+        # only now, after the user has released the left mouse button.
+        pos = event.position().toPoint() if hasattr(event, 'position') else event.pos()
+        target_item = self.itemAt(pos)
+        destination = self.pane.path
+        if target_item is not None:
+            row = target_item.data(0, Qt.UserRole)
+            if row and row[0] == '..':
+                destination = str(Path(self.pane.path).parent)
+            elif row and row[1]:
+                destination = str(Path(self.pane.path) / row[0])
+
+        operation = self.pane.app.ask_drop_action(destination)
+        if operation is None:
+            event.ignore()
+            return
+        move = operation == 'move'
+
+        mime = event.mimeData()
+        internal = None
+        if mime.hasFormat('application/x-lunacommander-internal'):
+            try:
+                internal = json.loads(bytes(mime.data('application/x-lunacommander-internal')).decode('utf-8'))
+            except (ValueError, UnicodeDecodeError, TypeError):
+                internal = None
+
+        source_pane = None
+        if internal and internal.get('side') in ('left', 'right'):
+            source_pane = getattr(self.pane.app, internal['side'], None)
+        if source_pane is not None:
+            self.pane.app.copy_transfer(
+                move, source_pane=source_pane, destination_pane=self.pane,
+                source_paths=paths, destination_path=destination)
+        else:
+            # For external drag sources, the XDND MoveAction tells the source
+            # application to remove its originals after our destination copy.
+            self.pane.import_urls(paths, move=False, destination_path=destination)
+        event.setDropAction(Qt.MoveAction if move else Qt.CopyAction)
+        event.accept()
 
     def viewportEvent(self, event):
         # QTreeWidget receives pointer events through its viewport. Set the
@@ -819,11 +938,11 @@ class Pane(QWidget):
                 except Exception as e:QMessageBox.warning(self,self.app.tr('archive_label'),str(e))
                 return
             self.app.open_with_external_program(target)
-    def import_urls(self, paths, move=False):
-        """Import desktop clipboard files and ask before overwriting existing entries."""
+    def import_urls(self, paths, move=False, destination_path=None):
+        """Import dropped/clipboard files into a chosen local destination."""
         if self.remote or self.archive_file or not paths:
             return
-        dst=Path(self.path)
+        dst=Path(destination_path or self.path).expanduser().resolve()
         valid=[Path(x) for x in paths if x and Path(x).exists()]
         if not valid:
             return
@@ -963,7 +1082,7 @@ class Pane(QWidget):
                     open_with.addSeparator()
                 choose=open_with.addAction(self.app.tr('choose_application'))
                 choose.triggered.connect(lambda checked=False,item=it:self.open_with_application(item))
-        actions += [(self.app.tr('copy')+' → '+self.app.tr('open_other'),self.app.copy_other),(self.app.tr('move')+' → '+self.app.tr('move_other'),self.app.move_other),(self.app.tr('rename'),self.app.rename),(self.app.tr('delete'),self.app.delete),(self.app.tr('properties'),self.app.properties),(self.app.tr('new_folder'),self.app.new_folder),(self.app.tr('new_file'),self.app.new_file),(self.app.tr('cut'),self.app.cut),(self.app.tr('copy'),self.app.copy),(self.app.tr('paste'),self.app.paste),(self.app.tr('refresh'),lambda:self.load(self.path))]
+        actions += [(self.app.tr('copy')+' → '+self.app.tr('open_other'),self.app.copy_other),(self.app.tr('move')+' → '+self.app.tr('move_other'),self.app.move_other),(self.app.tr('rename'),self.app.rename),(self.app.tr('delete'),self.app.delete),(self.app.tr('properties'),self.app.properties),(self.app.tr('new_folder'),self.app.new_folder),(self.app.tr('new_file'),self.app.new_file),(self.app.tr('cut'),self.app.cut),(self.app.tr('copy'),self.app.copy),(self.app.tr('paste'),lambda checked=False, dest=(str(Path(self.path).parent) if it and it.data(0,Qt.UserRole) and it.data(0,Qt.UserRole)[0]=='..' else (str(Path(self.path)/it.data(0,Qt.UserRole)[0]) if it and it.data(0,Qt.UserRole) and it.data(0,Qt.UserRole)[1] else self.path)), pane=self:self.app.paste(destination_path=dest,destination_pane=pane)),(self.app.tr('refresh'),lambda:self.load(self.path))]
         for label,fn in actions:
             a=m.addAction(label); a.triggered.connect(fn)
         m.addSeparator()
@@ -2281,7 +2400,7 @@ class Main(QMainWindow):
         self.queue_item_started_bridge.connect(self.transfer_batch_item_started)
         self.queue_item_finished_bridge.connect(self.transfer_batch_item_finished)
         self.queue_batch_finished_bridge.connect(self.transfer_batch_finished)
-        self.language='de'; self.setWindowTitle(self.tr('about_version')); self.resize(1532,900); self.setMinimumSize(1082,680); self.active=None; self.clip=None; self.dark=True; self.click_mode='double'; self.config_path=Path.home()/'.config/lunacommander/settings.json'; self.config={}; self.load_config(); self.language=self.config.get('language','de')
+        self.language='de'; self.setWindowTitle(self.tr('about_version')); self.resize(1532,900); self.setMinimumSize(1082,680); self.active=None; self.clip=None; self.clip_source_path=None; self.dark=True; self.click_mode='double'; self.config_path=Path.home()/'.config/lunacommander/settings.json'; self.config={}; self.load_config(); self.language=self.config.get('language','de')
         self._restoring_column_widths=True; self.left=Pane(self,'left'); self.right=Pane(self,'right'); self.active=self.left
         # Restore each pane's sort mode before loading the startup folders.
         for pane, side in ((self.left, 'left'), (self.right, 'right')):
@@ -4976,6 +5095,7 @@ class Main(QMainWindow):
         mime = QMimeData()
         mime.setData('x-special/mate-copied-files',
                      (action + "\n" + "\n".join(uris)).encode('utf-8'))
+        mime.setData('application/x-lunacommander-clipboard', b'1')
         mime.setData('text/uri-list', ("\r\n".join(uris) + "\r\n").encode('utf-8'))
         # Plain text remains useful to terminal paste; for multiple files use one path per line.
         plain = "\n".join(str(path) for path in resolved)
@@ -5028,32 +5148,106 @@ class Main(QMainWindow):
         rows=self._selected_transfer_rows(self.active)
         if rows:
             self.clip=(self.active,rows,False)
+            # Snapshot the source directory: the pane itself is navigable, so
+            # its path may change before the user pastes the clipboard later.
+            self.clip_source_path = (str(Path(self.active.path).expanduser().resolve())
+                                     if not self.active.remote and not self.active.archive_file
+                                     else self.active.path)
             if not self.active.remote and not self.active.archive_file:
-                self._set_system_file_clipboard([Path(self.active.path)/name for name,_ in rows],False)
+                self._set_system_file_clipboard([Path(self.clip_source_path)/name for name,_ in rows],False)
 
     def cut(self):
         rows=self._selected_transfer_rows(self.active)
         if rows:
             self.clip=(self.active,rows,True)
+            # Keep the original location even after navigating to another folder.
+            self.clip_source_path = (str(Path(self.active.path).expanduser().resolve())
+                                     if not self.active.remote and not self.active.archive_file
+                                     else self.active.path)
             if not self.active.remote and not self.active.archive_file:
-                self._set_system_file_clipboard([Path(self.active.path)/name for name,_ in rows],True)
+                self._set_system_file_clipboard([Path(self.clip_source_path)/name for name,_ in rows],True)
 
-    def paste(self):
+    def ask_drop_action(self, destination):
+        """Ask copy/move/cancel after a completed drop gesture."""
+        box = QMessageBox(self)
+        box.setWindowTitle(self.tr('drop_title'))
+        box.setText(self.tr('drop_question').format(destination=destination))
+        copy_button = box.addButton(self.tr('copy'), QMessageBox.ActionRole)
+        move_button = box.addButton(self.tr('move'), QMessageBox.ActionRole)
+        box.addButton(self.tr('cancel'), QMessageBox.RejectRole)
+        box.setDefaultButton(copy_button)
+        box.exec()
+        clicked = box.clickedButton()
+        if clicked is copy_button:
+            return 'copy'
+        if clicked is move_button:
+            return 'move'
+        return None
+
+    def _clipboard_matches_internal_selection(self, clipboard_paths):
+        """Detect our own file selection even if Caja strips private MIME types.
+
+        Some MATE/Caja clipboard-manager paths preserve text/uri-list but drop
+        application-specific formats. Comparing canonical local paths keeps
+        LunaCommander's in-memory source pane and cut/copy state authoritative.
+        """
+        if not self.clip:
+            return False
+        src, rows, _cut = self.clip
+        # Remote and archive selections do not have a local URI-list payload.
+        if src.remote or src.archive_file:
+            return True
+        try:
+            source_path = getattr(self, 'clip_source_path', None) or src.path
+            expected = {
+                os.path.realpath(str(Path(source_path) / (row if isinstance(row, str) else row[0])))
+                for row in rows
+            }
+            actual = {os.path.realpath(path) for path in (clipboard_paths or []) if path}
+            return bool(expected) and expected == actual
+        except (OSError, TypeError, ValueError):
+            return False
+
+    def paste(self, destination_path=None, destination_pane=None):
+        destination_path = str(Path(destination_path).expanduser().resolve()) if destination_path else None
+        # Keep the pane that opened the context menu as the destination. QAction
+        # emits a checked boolean; the callback consumes it explicitly above.
+        dst = destination_pane or self.active
+        clipboard_mime = QApplication.clipboard().mimeData()
+        own_clipboard = bool(clipboard_mime and clipboard_mime.hasFormat('application/x-lunacommander-clipboard'))
         external_paths, external_cut = self._system_clipboard_files()
-        if external_paths:
-            self.active.import_urls(external_paths, move=external_cut)
+        internal_clip = bool(self.clip) and (
+            own_clipboard or self._clipboard_matches_internal_selection(external_paths)
+        )
+        # Prefer the captured in-app selection when it is demonstrably the same
+        # URI list. Caja may discard our private marker while retaining file URIs.
+        if external_paths and not internal_clip:
+            dst.import_urls(external_paths, move=external_cut, destination_path=destination_path)
             return
-        if not self.clip: return
+        if not internal_clip:
+            return
         src,rows,cut=self.clip
         # Backward compatibility with an older in-memory single-item clipboard.
         if rows and isinstance(rows[0],str): rows=[(rows[0],False)]
-        dst=self.active
+        source_path = getattr(self, 'clip_source_path', None) or src.path
         queued=0
+        destination_path = destination_path or dst.path
         remembered_conflict=None
         for name,is_dir in rows:
-            a=src.target(name)
-            b='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
-            if not src.remote and not dst.remote and os.path.abspath(a)==os.path.abspath(b): continue
+            if not src.remote and not src.archive_file:
+                a=str(Path(source_path)/name)
+            else:
+                a=src.target(name)
+            b='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else str(Path(destination_path)/name)
+            if not src.remote and not dst.remote:
+                try:
+                    source_real=Path(a).resolve()
+                    destination_real=Path(destination_path).resolve()
+                    if is_dir and (destination_real == source_real or source_real in destination_real.parents):
+                        continue
+                except (OSError, RuntimeError):
+                    continue
+                if os.path.abspath(a)==os.path.abspath(b): continue
             if src.remote and dst.remote:
                 QMessageBox.information(self,self.tr('help'),self.tr('server_copy_unavailable')); return
             conflict='merge'
@@ -5078,8 +5272,11 @@ class Main(QMainWindow):
             if progress is not None: worker.signals.progress.connect(progress.setValue)
             worker.signals.finished.connect(lambda n,ok,error,w=worker,l=label,s=src,d=dst:self.transfer_finished(n,ok,error,w,l,s,d))
             self.transfer_queue.append(worker); queued+=1
-        if cut: self.clip=None
-        if queued: self.start_next_transfer()
+        if cut and queued:
+            self.clip=None
+            self.clip_source_path=None
+        if queued:
+            self.start_next_transfer()
     def target_exists_for_pane(self,pane,target):
         if pane.remote:
             try:
@@ -5139,7 +5336,7 @@ class Main(QMainWindow):
         self.queue_labels[index]=(row,label,progress)
         progress.setValue(0); progress.setVisible(True)
         return progress
-    def copy_transfer(self,move,source_pane=None,destination_pane=None,source_paths=None):
+    def copy_transfer(self,move,source_pane=None,destination_pane=None,source_paths=None,destination_path=None):
         """Transfer a captured selection as one sequential, visible batch."""
         src=source_pane or self.active or self.left
         dst=destination_pane or self.other(src)
@@ -5180,7 +5377,16 @@ class Main(QMainWindow):
         remembered_conflict=None
         for name,is_dir in filtered:
             source=src.target(name)
-            target='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else dst.target(name)
+            target='/'.join(x for x in (dst.archive_inner,name) if x) if dst.archive_file else str(Path(destination_path or dst.path)/name)
+            if is_dir and not src.remote and not dst.remote and not dst.archive_file:
+                try:
+                    source_real = Path(source).resolve()
+                    destination_real = Path(destination_path or dst.path).resolve()
+                    if destination_real == source_real or source_real in destination_real.parents:
+                        # Never copy/move a directory into itself or one of its descendants.
+                        continue
+                except (OSError, RuntimeError):
+                    continue
             if not src.remote and not dst.remote and os.path.abspath(source)==os.path.abspath(target):
                 continue
             conflict='merge'

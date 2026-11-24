@@ -1,4 +1,4 @@
-# LunaCommander 0.8.0
+# LunaCommander 0.8.1
 
 LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. Zielsystem ist Debian 13 (Trixie) beziehungsweise Raspberry Pi OS auf ARM64. Das Programm kann auch auf anderen Debian-basierten Linux-Systemen mit den genannten Abhängigkeiten laufen.
 
@@ -29,6 +29,23 @@ LunaCommander ist ein zweispaltiger Dateimanager auf Basis von Python und Qt 6. 
 - Dunkles/helles Farbschema sowie Deutsch, Englisch, Französisch, Italienisch und Niederländisch.
 - Einzel- oder Doppelklick zum Öffnen, getrennte Startordner und F1–F10-Funktionstasten.
 
+
+## Drag & Drop und Einfügen in Zielordner (0.8.1)
+
+- Ziehen mit der linken Maustaste verwendet die aktuelle Mehrfachauswahl; markierte Dateien und Ordner können gemeinsam übertragen werden.
+- Beim Ablegen auf einen Ordner in LunaCommander erscheint die Auswahl **Kopieren**, **Verschieben** oder **Abbrechen** erst nach dem Loslassen.
+- Wird auf eine freie Fläche des Dateifensters abgelegt, ist der aktuell angezeigte Ordner das Ziel.
+- Beim Rechtsklick auf einen Ordner führt **Einfügen** direkt in diesen Ordner; auf einer freien Fläche wird in den angezeigten Ordner eingefügt.
+- Ordner können nicht in sich selbst oder in einen ihrer Unterordner kopiert bzw. verschoben werden.
+- Dateiübertragungen laufen über die vorhandene Hintergrund-Warteschlange.
+- Beim Ziehen auf den Desktop werden Kopieren und Verschieben als mögliche XDND-Aktionen angeboten. Die konkrete Auswahloberfläche und die Standardaktion bestimmt der jeweilige Desktop-Dateimanager.
+
+## Zwischenablage – Nachbesserung für MATE/Caja (0.8.1)
+
+- Beim Einfügen wird die interne LunaCommander-Auswahl anhand der gespeicherten Quellpfade wiedererkannt, auch wenn ein MATE-/Caja-Zwischenablage-Manager das private LunaCommander-MIME-Format entfernt, aber die Datei-URLs beibehält.
+- Dadurch bleiben **Kopieren** und **Ausschneiden** samt Quellfenster und Verschiebe-Kennzeichen erhalten.
+- Eine fremde Zwischenablage mit anderen Datei-URLs wird weiterhin als externe Auswahl behandelt.
+- Bei einem abgebrochenen oder nicht gestarteten Verschiebevorgang bleibt die interne Ausschneiden-Auswahl erhalten.
 
 ## Zwischenablage und MATE/Caja
 
@@ -93,7 +110,7 @@ Beispiel, wenn das ZIP im Download-Ordner liegt:
 
 ```bash
 mkdir -p ~/Programme
-unzip ~/Downloads/LunaCommander_0.8.0_GITHUB.zip -d ~/Programme
+unzip ~/Downloads/LunaCommander_0.8.1_GITHUB.zip -d ~/Programme
 cd ~/Programme/lunacommander
 python3 main.py
 ```
@@ -104,7 +121,7 @@ Im Download-Ordner ausführen:
 
 ```bash
 sudo apt update
-sudo apt install ./lunacommander_0.8.0_all.deb
+sudo apt install ./lunacommander_0.8.1_all.deb
 ```
 
 Danach über das Anwendungsmenü **LunaCommander** oder im Terminal mit folgendem Befehl starten:
@@ -118,7 +135,7 @@ Das DEB installiert die Anwendung nach `/usr/share/lunacommander` und legt den P
 ## Projektinformationen
 
 - Projekt: LunaCommander
-- Version: 0.8.0
+- Version: 0.8.1
 - Maintainer: LunaProject
 - Zielplattform: Debian 13 / Raspberry Pi OS, ARM64
 - Lizenz: siehe Projekt-/Quellcodehinweise im Repository.

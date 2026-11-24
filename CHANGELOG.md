@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.8.1 
+
+# Korrektur der Zwischenablage nach Ordnerwechsel
+- Quellordner von Kopieren und Ausschneiden wird beim Auslösen dauerhaft festgehalten. Ein anschließender Ordnerwechsel verändert den gespeicherten Ursprung nicht mehr.
+- Einfügen nach dem Verlassen des Quellordners verwendet weiterhin die ursprünglich markierten Dateien und Ordner.
+- Die interne Erkennung der Zwischenablage vergleicht jetzt mit dem gespeicherten Quellpfad statt mit dem möglicherweise bereits gewechselten Pfad des Dateifensters.
+# Reparaturpaket für Kopieren/Einfügen und MATE-Desktop-Drop
+- Nachbesserung für MATE/Caja: Die interne Zwischenablage wird zusätzlich anhand der kanonischen Quellpfade erkannt, falls ein Clipboard-Manager das private MIME-Kennzeichen entfernt, aber `text/uri-list` beibehält.
+- Kopieren und Ausschneiden verwenden dadurch weiterhin die intern gespeicherte Quellpane und den korrekten Kopier-/Verschiebemodus; fremde Datei-URLs bleiben davon getrennt.
+- Ein Ausschneiden-Auftrag wird erst aus dem internen Speicher entfernt, wenn mindestens ein Übertragungsauftrag tatsächlich in die Warteschlange übernommen wurde.
+- Korrigiert den QAction-Callback des Kontextmenüs: Das von Qt übergebene `checked`-Argument kann den Zielpfad nicht mehr überschreiben.
+- Der beim Rechtsklick geöffnete Dateibereich wird explizit als Zielbereich an `paste()` übergeben; Einfügen auf einem Ordner verwendet dessen Pfad.
+- LunaCommander kennzeichnet seine eigene Datei-Zwischenablage und verarbeitet interne Kopier-/Ausschneidevorgänge über die eigene Transferwarteschlange statt sie fälschlich als externe Caja-Zwischenablage zu behandeln.
+#  Drag & Drop
+- Drag & Drop mit linker Maustaste exportiert weiterhin die gesamte markierte Mehrfachauswahl einschließlich gemischter Datei- und Ordnerauswahl.
+- Desktop-Erkennung verwendet `xdg-user-dir DESKTOP` und fällt auf Qt's Desktop-Pfad zurück; es wird nicht pauschal `~/Desktop` angenommen.
+- Aufräumarbeiten nach Desktop-Drops laufen im Hintergrund.
+- Interne Drops auf LunaCommander-Ordner zeigen weiterhin genau einen Dialog und werden nicht doppelt abgefragt.
+
 ## 0.8.0 Duplikatfinder (Erweiterung) Bug Fixes
 - Gesamtfensterbreite um ca. 8 mm vergrößert (Startbreite 1520 statt 1500 Qt-Pixel; Mindestbreite 1070 statt 1050), damit die Beschriftung der F2-Schaltfläche „Eigenschaften“ mehr Platz erhält.
 - Bestehende Funktionen, insbesondere Ausschneiden/Einfügen, bleiben unverändert.
